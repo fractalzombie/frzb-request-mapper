@@ -1,0 +1,78 @@
+{
+    "name": "frzb/request-mapper",
+    "type": "library",
+    "description": "The RequestMapper component allows you to serialize JSON request to Request class and validate it",
+    "keywords": [
+        "library",
+        "symfony",
+        "component",
+        "dependency",
+        "injection",
+        "validation",
+        "serialize",
+        "serializer",
+        "mapper",
+        "request",
+        "request-mapper",
+        "frzb"
+    ],
+    "homepage": "https://github.com/fractalzombie/frzb-request-mapper",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mykhailo Shtanko",
+            "email": "fractalzombie@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.0",
+        "psr/container": "^1.1.1|^2.0",
+        "symfony/dependency-injection": "^v5.3",
+        "symfony/deprecation-contracts": "^2.4",
+        "symfony/http-kernel": "^v5.3",
+        "symfony/framework-bundle": "^v5.3",
+        "symfony/service-contracts": "^1.1.6|^2",
+        "symfony/serializer-pack": "^v1.0.4",
+        "symfony/validator": "^v5.3",
+        "symfony/event-dispatcher": "^v5.3",
+        "frzb/dependency-injection": "^1.1.0",
+        "symfony/yaml": "^v5.3",
+        "fakerphp/faker": "1.17.x-dev"
+    },
+    "require-dev": {
+        "symfony/config": "^5.3",
+        "phpunit/php-code-coverage": "^9.2",
+        "symfony/expression-language": "^5.3",
+        "phpunit/phpunit": "^9.5",
+        "symfony/phpunit-bridge": "^5.3",
+        "friendsofphp/php-cs-fixer": "^v3.2",
+        "sempro/phpunit-pretty-print": "dev-develop",
+        "dg/bypass-finals": "^v1.3.1",
+        "symfony/test-pack": "^v1.0.9"
+    },
+    "suggest": {
+        "symfony/config": "",
+        "symfony/finder": "For using double-star glob patterns or when GLOB_BRACE portability is required",
+        "symfony/expression-language": "For using expressions in service container configuration",
+        "symfony/proxy-manager-bridge": "Generate service proxies to lazy load them"
+    },
+    "conflict": {
+        "ext-psr": "<1.1|>=2",
+        "symfony/config": "<5.3|>6.0",
+        "symfony/finder": "<5.3|>6.0",
+        "symfony/proxy-manager-bridge": "<5.3|>6.0"
+    },
+    "provide": {
+        "psr/container-implementation": "1.0",
+        "symfony/service-implementation": "1.0|2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "FRZB\\Component\\RequestMapper\\": ""
+        },
+        "exclude-from-classmap": [
+            "/Tests/"
+        ]
+    },
+    "minimum-stability": "dev"
+}

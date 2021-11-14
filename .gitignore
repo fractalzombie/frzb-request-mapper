@@ -1,0 +1,38 @@
+###> filesystem tmp files
+\#*
+*~
+.\#*
+###< filesystem tmp files
+
+###> symfony/framework-bundle ###
+**/.env.local
+**/.env.local.php
+**/.env.*.local
+**/public/bundles/
+**/var/
+**/vendor/
+###< symfony/framework-bundle ###
+
+###> symfony/phpunit-bridge ###
+.phpunit
+.phpunit.result.cache
+/phpunit.xml
+bin/phpunit
+###< symfony/phpunit-bridge ###
+
+###> project ###
+Makefile
+.idea
+.DS_Store
+**/.env
+###< project ###
+
+###> friendsofphp/php-cs-fixer ###
+**/.php-cs-fixer.php
+**/.php-cs-fixer.cache
+###< friendsofphp/php-cs-fixer ###
+
+###> phpunit/phpunit ###
+**/phpunit.xml
+**/.phpunit.result.cache
+###< phpunit/phpunit ###
