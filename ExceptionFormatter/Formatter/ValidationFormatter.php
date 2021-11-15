@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Component\HttpFoundation\Response;
 
 #[AutoconfigureTag(ExceptionFormatterLocator::EXCEPTION_FORMATTERS_TAG)]
-final class ValidationFormatter implements FormatterInterface
+class ValidationFormatter implements FormatterInterface
 {
     public function format(\Throwable $e): ErrorContract
     {
@@ -24,7 +24,7 @@ final class ValidationFormatter implements FormatterInterface
             ? self::formatErrors(...$e->getErrors())
             : null;
 
-        return new ErrorContract($message, $status, $errors);
+        return new ErrorContract($message, $status, $errors, $e->getTrace());
     }
 
     public static function getExceptionClass(): string

@@ -11,18 +11,25 @@ use Symfony\Component\Validator\ConstraintViolation;
 #[Immutable]
 final class Error
 {
+    private string $type;
     private string $field;
     private string $message;
 
-    public function __construct(string $field, string $message)
+    public function __construct(string $type, string $field, string $message)
     {
+        $this->type = $type;
         $this->field = StringUtil::removeBrackets($field);
         $this->message = $message;
     }
 
     public static function fromConstraint(ConstraintViolation $violation): self
     {
-        return new self($violation->getPropertyPath(), (string) $violation->getMessage());
+        return new self($violation->getConstraint()::class, $violation->getPropertyPath(), $violation->getMessage());
+    }
+
+    public function getType(): string
+    {
+        return $this->type;
     }
 
     public function getField(): string

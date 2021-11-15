@@ -6,7 +6,7 @@ namespace FRZB\Component\RequestMapper\Exception;
 
 use JetBrains\PhpStorm\Pure;
 
-class ConverterNotFoundException extends \OutOfBoundsException
+final class ConverterNotFoundException extends \OutOfBoundsException
 {
     #[Pure]
     public function __construct(string $converterType, int $code = 0, ?\Throwable $previous = null)

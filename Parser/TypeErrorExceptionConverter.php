@@ -9,7 +9,7 @@ use FRZB\Component\RequestMapper\Data\Error;
 use FRZB\Component\RequestMapper\Data\TypeError;
 
 #[AsService]
-final class TypeErrorExceptionConverter implements ExceptionConverterInterface
+class TypeErrorExceptionConverter implements ExceptionConverterInterface
 {
     public const TYPE_ERROR_MESSAGE_TEMPLATE = 'Invalid parameter "%s" type, expected "%s", proposed "%s"';
     public const ARGUMENT_ERROR_MESSAGE_TEMPLATE = 'Argument with position "%s" not exists';
@@ -32,7 +32,7 @@ final class TypeErrorExceptionConverter implements ExceptionConverterInterface
         $expectedClass = self::getClassShortName($error->getExpected());
         $proposedClass = self::getClassShortName($error->getProposed());
 
-        return new Error($parameter->getName(), sprintf(self::TYPE_ERROR_MESSAGE_TEMPLATE, $parameter->getName(), $expectedClass, $proposedClass));
+        return new Error(TypeError::class, $parameter->getName(), sprintf(self::TYPE_ERROR_MESSAGE_TEMPLATE, $parameter->getName(), $expectedClass, $proposedClass));
     }
 
     /**

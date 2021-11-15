@@ -10,7 +10,7 @@ use FRZB\Component\RequestMapper\Locator\ConverterLocatorInterface as ConverterL
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
 #[AutoconfigureTag(ConverterLocator::REQUEST_MAPPER_CONVERTERS_TAG)]
-final class AttributeConverter extends AbstractTypeConverter
+class AttributeConverter extends AbstractTypeConverter
 {
     private const ROUTE_PARAMS_KEY = '_route_params';
 

@@ -14,6 +14,7 @@ use FRZB\Component\RequestMapper\Tests\Utils\TestConstant;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 /**
  * @group request-mapper
@@ -49,7 +50,7 @@ class ExceptionFormatterLocatorTest extends KernelTestCase
         ];
 
         yield sprintf('"%s" uses "%s" converter', ValidationException::class, ValidationFormatter::class) => [
-            'exception' => ValidationException::fromErrors(new Error('field', 'field cannot be null')),
+            'exception' => ValidationException::fromErrors(new Error(NotNull::class, 'field', 'field cannot be null')),
             'formatter_class' => ValidationFormatter::class,
             'exists_in_locator' => true,
         ];

@@ -9,7 +9,7 @@ use FRZB\Component\RequestMapper\Exception\ClassExtractorException;
 use Symfony\Component\Serializer\Annotation\DiscriminatorMap;
 
 #[AsService]
-final class DiscriminatorMapExtractor
+class DiscriminatorMapExtractor
 {
     /**
      * @param class-string $class

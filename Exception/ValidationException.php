@@ -8,7 +8,7 @@ use FRZB\Component\RequestMapper\Data\Error;
 use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Validator\ConstraintViolationListInterface as ConstraintViolationList;
 
-class ValidationException extends \Exception
+final class ValidationException extends \Exception
 {
     public const DEFAULT_MESSAGE = 'Validation error';
 

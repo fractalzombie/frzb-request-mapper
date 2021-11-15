@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\Collection;
 
 #[AsService]
-final class ConstraintExtractor
+class ConstraintExtractor
 {
     /** @param class-string $class */
     public function extract(string $class): ?Collection

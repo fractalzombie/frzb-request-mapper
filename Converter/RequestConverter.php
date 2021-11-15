@@ -10,7 +10,7 @@ use FRZB\Component\RequestMapper\Locator\ConverterLocatorInterface as ConverterL
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
 #[AutoconfigureTag(ConverterLocator::REQUEST_MAPPER_CONVERTERS_TAG)]
-final class RequestConverter extends AbstractTypeConverter
+class RequestConverter extends AbstractTypeConverter
 {
     public static function getType(): string
     {

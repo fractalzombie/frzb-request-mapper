@@ -14,7 +14,7 @@ use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\DependencyInjection\Attribute\TaggedLocator;
 
 #[AsService]
-final class ConverterLocator implements ConverterLocatorInterface
+class ConverterLocator implements ConverterLocatorInterface
 {
     private ServiceLocator $serviceLocator;
 

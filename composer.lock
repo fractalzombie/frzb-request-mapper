@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "571649d27ee1e4e4f5d77fd61e09b821",
+    "content-hash": "057a2fecfd8ec8f99e55f8e5599c8a54",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -927,12 +927,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dependency-injection.git",
-                "reference": "a770a587a3cfeb7e516d70fd6567c773dc36c6f9"
+                "reference": "d335c6e0d6404025b606137fb59519c0518bed33"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/a770a587a3cfeb7e516d70fd6567c773dc36c6f9",
-                "reference": "a770a587a3cfeb7e516d70fd6567c773dc36c6f9",
+                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/d335c6e0d6404025b606137fb59519c0518bed33",
+                "reference": "d335c6e0d6404025b606137fb59519c0518bed33",
                 "shasum": ""
             },
             "require": {
@@ -1007,7 +1007,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-11-12T18:41:31+00:00"
+            "time": "2021-11-15T08:21:06+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
@@ -1444,12 +1444,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/framework-bundle.git",
-                "reference": "80adbfa00d121e508aad44f360646078a8faab51"
+                "reference": "b99965da0a38586984d36b95927d712a1abce37a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/framework-bundle/zipball/80adbfa00d121e508aad44f360646078a8faab51",
-                "reference": "80adbfa00d121e508aad44f360646078a8faab51",
+                "url": "https://api.github.com/repos/symfony/framework-bundle/zipball/b99965da0a38586984d36b95927d712a1abce37a",
+                "reference": "b99965da0a38586984d36b95927d712a1abce37a",
                 "shasum": ""
             },
             "require": {
@@ -1588,7 +1588,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-11-14T17:13:58+00:00"
+            "time": "2021-11-14T18:10:40+00:00"
         },
         {
             "name": "symfony/http-client-contracts",
@@ -6446,7 +6446,6 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "fakerphp/faker": 20,
         "sempro/phpunit-pretty-print": 20
     },
     "prefer-stable": false,

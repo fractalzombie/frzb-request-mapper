@@ -8,7 +8,7 @@ use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Serializer\Annotation\DiscriminatorMap;
 use Throwable;
 
-class ClassExtractorException extends \RuntimeException
+final class ClassExtractorException extends \RuntimeException
 {
     private string $property;
 

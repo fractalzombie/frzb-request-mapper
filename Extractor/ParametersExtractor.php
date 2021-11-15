@@ -9,7 +9,7 @@ use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Validator\Constraint;
 
 #[AsService]
-final class ParametersExtractor
+class ParametersExtractor
 {
     /**
      * @param array<string, Constraint[]> $fields

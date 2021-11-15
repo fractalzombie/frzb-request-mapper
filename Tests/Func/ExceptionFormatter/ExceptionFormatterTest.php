@@ -12,6 +12,7 @@ use FRZB\Component\RequestMapper\Tests\Utils\TestConstant;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 /**
  * @group request-mapper
@@ -37,6 +38,8 @@ final class ExceptionFormatterTest extends KernelTestCase
         self::assertSame($errorContract->message, $formattedErrorContract->message);
         self::assertSame($errorContract->status, $formattedErrorContract->status);
         self::assertSame($errorContract->errors, $formattedErrorContract->errors);
+        self::assertIsArray($formattedErrorContract->trace);
+        self::assertNotNull($formattedErrorContract->trace);
     }
 
     public function caseProvider(): iterable
@@ -47,7 +50,7 @@ final class ExceptionFormatterTest extends KernelTestCase
         ];
 
         yield sprintf('Format "%s"', ValidationException::class) => [
-            'exception' => ValidationException::fromErrors(new Error('field', 'field cannot be null')),
+            'exception' => ValidationException::fromErrors(new Error(NotNull::class, 'field', 'field cannot be null')),
             'error_contract' => new ErrorContract(ValidationException::DEFAULT_MESSAGE, Response::HTTP_UNPROCESSABLE_ENTITY, ['field' => 'field cannot be null']),
         ];
 

@@ -9,7 +9,7 @@ use FRZB\Component\RequestMapper\Data\ErrorContract;
 use FRZB\Component\RequestMapper\Locator\ExceptionFormatterLocatorInterface;
 
 #[AsService]
-final class ExceptionFormatter implements ExceptionFormatterInterface
+class ExceptionFormatter implements ExceptionFormatterInterface
 {
     private ExceptionFormatterLocatorInterface $formatterLocator;
 

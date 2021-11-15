@@ -14,7 +14,7 @@ use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as EventDispatcher;
 
-#[AsEventListener(event: KernelEvents::CONTROLLER, method: 'onKernelController', priority: -5)]
+#[AsEventListener(event: KernelEvents::CONTROLLER, method: 'onKernelController', priority: -255)]
 final class RequestMapperListener
 {
     public function __construct(

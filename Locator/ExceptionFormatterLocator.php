@@ -9,7 +9,7 @@ use FRZB\Component\RequestMapper\ExceptionFormatter\Formatter\FormatterInterface
 use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
 
 #[AsService]
-final class ExceptionFormatterLocator implements ExceptionFormatterLocatorInterface
+class ExceptionFormatterLocator implements ExceptionFormatterLocatorInterface
 {
     /** @var array<FormatterInterface> */
     private array $formatters;

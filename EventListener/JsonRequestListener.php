@@ -15,7 +15,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as EventDispatcher;
 
-#[AsEventListener(event: KernelEvents::REQUEST, method: 'onKernelRequest', priority: 5)]
+#[AsEventListener(event: KernelEvents::REQUEST, method: 'onKernelRequest', priority: 20)]
 final class JsonRequestListener
 {
     private const EXCEPTION_HEADERS = [

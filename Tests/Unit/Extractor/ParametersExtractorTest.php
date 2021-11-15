@@ -27,9 +27,7 @@ class ParametersExtractorTest extends TestCase
         $this->parametersExtractor = new ParametersExtractor();
     }
 
-    /**
-     * @dataProvider caseProvider
-     */
+    /** @dataProvider caseProvider */
     public function testExtractMethod(string $class, array $parameters): void
     {
         $constraints = $this->constraintExtractor->extract($class);

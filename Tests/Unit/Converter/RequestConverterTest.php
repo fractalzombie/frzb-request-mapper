@@ -71,7 +71,7 @@ final class RequestConverterTest extends TestCase
             $this->exceptionConverter
                 ->expects(self::once())
                 ->method('convert')
-                ->willReturn(new Error('someField', 'someError'))
+                ->willReturn(new Error('SomeType', 'someField', 'someError'))
             ;
 
             $this->expectException(ValidationException::class);

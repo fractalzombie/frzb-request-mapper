@@ -13,6 +13,7 @@ use FRZB\Component\RequestMapper\Extractor\ConstraintExtractor;
 use FRZB\Component\RequestMapper\Extractor\DiscriminatorMapExtractor;
 use FRZB\Component\RequestMapper\Extractor\ParametersExtractor;
 use FRZB\Component\RequestMapper\Parser\ExceptionConverterInterface as ExceptionConverter;
+use Symfony\Component\Serializer\Annotation\DiscriminatorMap;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface as Denormalizer;
 use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Validator\ValidatorInterface as Validator;
@@ -38,7 +39,9 @@ abstract class AbstractTypeConverter implements TypeConverter
             $parameters = $this->getContent($data);
             $class = $this->classExtractor->extract($data->getClass(), $parameters);
         } catch (ClassExtractorException $e) {
-            throw ValidationException::fromErrors(new Error($e->getProperty(), $e->getMessage()));
+            throw ValidationException::fromErrors(
+                new Error(DiscriminatorMap::class, $e->getProperty(), $e->getMessage())
+            );
         }
 
         if ($data->isValidationNeeded()) {

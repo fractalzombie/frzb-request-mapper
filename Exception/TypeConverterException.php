@@ -4,6 +4,6 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\Exception;
 
-class TypeConverterException extends \RuntimeException
+final class TypeConverterException extends \RuntimeException
 {
 }
