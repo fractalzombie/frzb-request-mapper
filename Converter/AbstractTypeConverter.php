@@ -28,7 +28,7 @@ abstract class AbstractTypeConverter implements TypeConverter
         private ExceptionConverter $exceptionConverter,
         private DiscriminatorMapExtractor $classExtractor,
         private ConstraintExtractor $constraintExtractor,
-        private ParametersExtractor $parametersMerge,
+        private ParametersExtractor $parametersExtractor,
     ) {
     }
 
@@ -46,7 +46,7 @@ abstract class AbstractTypeConverter implements TypeConverter
 
         if ($data->isValidationNeeded()) {
             $constraints = $this->constraintExtractor->extract($class);
-            $parameters = $this->parametersMerge->extract($constraints?->fields ?? [], $parameters);
+            $parameters = $this->parametersExtractor->extract($data->getClass(), $parameters, $constraints);
 
             $this->validate($parameters, $data->getValidationGroups(), $constraints);
         }
