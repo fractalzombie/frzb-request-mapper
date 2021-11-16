@@ -24,7 +24,9 @@ class ParametersExtractor
         $mapped = [];
 
         foreach ($this->getPropertyMapping($class) as $serializedName => $propertyName) {
-            $mapped[$propertyName] = $params[$serializedName];
+            if (array_key_exists($serializedName, $params)) {
+                $mapped[$propertyName] = $params[$serializedName];
+            }
         }
 
         $constraintKeys = array_keys($constraints?->fields ?? []);
