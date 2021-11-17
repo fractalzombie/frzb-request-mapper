@@ -5,63 +5,61 @@ declare(strict_types=1);
 namespace FRZB\Component\RequestMapper\Extractor;
 
 use FRZB\Component\DependencyInjection\Attribute\AsService;
-use Symfony\Component\Serializer\Annotation\SerializedName;
+use FRZB\Component\RequestMapper\Utils\SerializerUtil;
 use Symfony\Component\Validator\Constraints\Collection;
 
 #[AsService]
 class ParametersExtractor
 {
     /**
-     * @param class-string $class
+     * @param class-string         $class
      * @param array<string, mixed> $parameters
-     * @param Collection|null $constraints
      *
      * @return array<string, mixed>
      */
     public function extract(string $class, array $parameters, ?Collection $constraints = null): array
     {
         $params = $parameters;
-        $mapped = [];
-
-        foreach ($this->getPropertyMapping($class) as $serializedName => $propertyName) {
-            if (array_key_exists($serializedName, $params)) {
-                $mapped[$propertyName] = $params[$serializedName];
-            }
-        }
+        $mapped = $this->mapProperties($this->getPropertyMapping($class), $parameters, $constraints);
 
         $constraintKeys = array_keys($constraints?->fields ?? []);
         $parameterKeys = array_keys($params);
 
         foreach (array_diff($constraintKeys, $parameterKeys) as $parameter) {
-            $params[$parameter] = null;
-        }
-
-        if ($constraints && !empty($mapped)) {
-            $constraints->allowExtraFields = true;
+            unset($params[$parameter]);
         }
 
         return array_merge($params, $mapped);
     }
 
-    private function getPropertyMapping(string $class): array
+    private function mapProperties(array $properties, array $parameters, ?Collection $constraints = null): array
     {
-        $properties = [];
+        $mapped = [];
 
-        /** @noinspection PhpUnhandledExceptionInspection */
-        foreach ((new \ReflectionClass($class))->getProperties() as $property) {
-            /** @var SerializedName[] $attributes */
-            $attributes = array_map(
-                static fn (\ReflectionAttribute $a) => $a->newInstance(),
-                $property->getAttributes(SerializedName::class)
-            );
-
-            if ($attributes) {
-                foreach ($attributes as $attribute) {
-                    $properties[$attribute->getSerializedName()] = $property->getName();
-                }
-            }
+        foreach ($properties as $serializedName => [$propertyName, $propertyType, $isAllowsNull]) {
+            $value = $parameters[$serializedName] ?? null;
+            $isComplexType = \is_array($value) && class_exists($propertyType);
+            $mapped[$serializedName] = $isComplexType ? $this->extract($propertyType, $value) : $value;
         }
 
-        return $properties;
+        return $mapped;
+    }
+
+    private function getPropertyMapping(string $class): array
+    {
+        $mapping = [];
+
+        try {
+            $properties = (new \ReflectionClass($class))->getProperties();
+        } catch (\ReflectionException) {
+            $properties = [];
+        }
+
+        foreach ($properties as $property) {
+            $serializedName = SerializerUtil::getSerializedNameAttribute($property)->getSerializedName();
+            $mapping[$serializedName] = [$property->getName(), $property->getType()?->getName(), $property->getType()?->allowsNull()];
+        }
+
+        return $mapping;
     }
 }

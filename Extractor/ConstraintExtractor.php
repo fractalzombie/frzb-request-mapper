@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace FRZB\Component\RequestMapper\Extractor;
 
 use FRZB\Component\DependencyInjection\Attribute\AsService;
-use Symfony\Component\Validator\Constraint;
+use FRZB\Component\RequestMapper\Utils\ClassUtil;
+use FRZB\Component\RequestMapper\Utils\ConstraintsUtil;
+use FRZB\Component\RequestMapper\Utils\SerializerUtil;
 use Symfony\Component\Validator\Constraints\Collection;
 
 #[AsService]
@@ -20,7 +22,7 @@ class ConstraintExtractor
             return null;
         }
 
-        return new Collection($this->extractConstraints($rClass));
+        return ConstraintsUtil::createCollection($this->extractConstraints($rClass));
     }
 
     private function extractConstraints(\ReflectionClass $rClass): array
@@ -32,10 +34,10 @@ class ConstraintExtractor
         }
 
         foreach ($rClass->getProperties() as $property) {
-            $attributes = $property->getAttributes();
-            $attributes = array_map(static fn (\ReflectionAttribute $a) => $a->newInstance(), $attributes);
-            $attributes = array_values(array_filter($attributes, static fn (object $a) => $a instanceof Constraint));
-            $constraints[$property->getName()] = $attributes;
+            $propertyName = SerializerUtil::getSerializedNameAttribute($property)->getSerializedName();
+            $constraints[$propertyName] = ClassUtil::isNotBuiltinAndExists($propertyClass = $property->getType()->getName())
+                ? ConstraintsUtil::createCollection($this->extractConstraints(new \ReflectionClass($propertyClass)))
+                : ConstraintsUtil::fromProperty($property);
         }
 
         return $constraints;
