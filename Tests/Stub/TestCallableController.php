@@ -10,15 +10,11 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 /**
  * @internal
  */
-class TestController
+class TestCallableController
 {
     #[ParamConverter(class: TestRequest::class, name: 'dto')]
-    public function method(TestRequest $dto): JsonResponse
+    public function __invoke(TestRequest $dto): JsonResponse
     {
-        try {
-            return new JsonResponse(json_encode($dto, \JSON_THROW_ON_ERROR));
-        } catch (\JsonException) {
-            return new JsonResponse([]);
-        }
+        return new JsonResponse($dto);
     }
 }

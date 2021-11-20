@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * @internal
  */
-class RequestHelper
+final class RequestHelper
 {
     public static function makeRequest(
         string $method,

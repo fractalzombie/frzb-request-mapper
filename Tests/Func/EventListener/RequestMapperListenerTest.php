@@ -7,17 +7,11 @@ namespace FRZB\Component\RequestMapper\Tests\Func\EventListener;
 use Faker\Factory;
 use Faker\Generator;
 use FRZB\Component\RequestMapper\Attribute\ParamConverter;
-use FRZB\Component\RequestMapper\Converter\AttributeConverter;
-use FRZB\Component\RequestMapper\Converter\QueryConverter;
-use FRZB\Component\RequestMapper\Converter\RequestConverter;
-use FRZB\Component\RequestMapper\Data\ConverterType;
 use FRZB\Component\RequestMapper\EventListener\RequestMapperListener;
+use FRZB\Component\RequestMapper\Tests\Stub\TestCallableController;
+use FRZB\Component\RequestMapper\Tests\Stub\TestCallableControllerWithoutParameterName;
 use FRZB\Component\RequestMapper\Tests\Stub\TestController;
-use FRZB\Component\RequestMapper\Tests\Stub\TestController2;
-use FRZB\Component\RequestMapper\Tests\Stub\TestController3;
-use FRZB\Component\RequestMapper\Tests\Stub\TestController4;
-use FRZB\Component\RequestMapper\Tests\Stub\TestController5;
-use FRZB\Component\RequestMapper\Tests\Stub\TestController6;
+use FRZB\Component\RequestMapper\Tests\Stub\TestControllerWithoutParameterName;
 use FRZB\Component\RequestMapper\Tests\Stub\TestRequest;
 use FRZB\Component\RequestMapper\Tests\Utils\RequestHelper;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -44,19 +38,18 @@ final class RequestMapperListenerTest extends KernelTestCase
     }
 
     /**
-     * @param array|callable|object $controller
-     *
      * @dataProvider dataProvider
      *
      * @throws \Throwable
      */
-    public function testOnKernelController(array $params, string $method, string $class, string $parameter, mixed $controller): void
+    public function testOnKernelController(array $params, string $method, string $class, string $parameter, callable|object|array $controller): void
     {
         $request = RequestHelper::makeRequest(method: $method, params: $params, generator: $this->generator);
         $controllerEvent = $this->makeControllerEvent($request, $controller);
 
         $this->listener->onKernelController($controllerEvent);
 
+        self::assertNotNull($request->attributes->get($parameter));
         self::assertSame($class, $request->attributes->get($parameter)::class);
 
         foreach ($params as $param => $value) {
@@ -71,76 +64,52 @@ final class RequestMapperListenerTest extends KernelTestCase
     {
         $params = ['name' => 'some name', 'model' => 'Product'];
 
-        yield sprintf('Test with callable controller with "%s"', RequestConverter::class) => [
+        yield 'Test callable controller' => [
             'params' => $params,
             'method' => Request::METHOD_POST,
             'class' => TestRequest::class,
             'parameter' => 'dto',
-            'controller' => new TestController(),
+            'controller' => new TestCallableController(),
         ];
 
-        yield sprintf('Test with method controller with "%s"', RequestConverter::class) => [
+        yield 'Test callable controller without parameter name' => [
             'params' => $params,
             'method' => Request::METHOD_POST,
             'class' => TestRequest::class,
             'parameter' => 'dto',
-            'controller' => [new TestController2(), 'method'],
+            'controller' => new TestCallableControllerWithoutParameterName(),
         ];
 
-        yield sprintf('Test with function controller with "%s"', RequestConverter::class) => [
+        yield 'Test controller' => [
             'params' => $params,
             'method' => Request::METHOD_POST,
             'class' => TestRequest::class,
             'parameter' => 'dto',
-            'controller' => #[ParamConverter('dto', ConverterType::REQUEST, TestRequest::class)] static fn (TestRequest $dto) => null,
+            'controller' => [new TestController(), 'method'],
         ];
 
-        yield sprintf('Test with callable controller with "%s"', QueryConverter::class) => [
-            'params' => $params,
-            'method' => Request::METHOD_GET,
-            'class' => TestRequest::class,
-            'parameter' => 'dto',
-            'controller' => new TestController6(),
-        ];
-
-        yield sprintf('Test with method controller with "%s"', QueryConverter::class) => [
-            'params' => $params,
-            'method' => Request::METHOD_GET,
-            'class' => TestRequest::class,
-            'parameter' => 'dto',
-            'controller' => [new TestController5(), 'method'],
-        ];
-
-        yield sprintf('Test with function controller with "%s"', QueryConverter::class) => [
-            'params' => $params,
-            'method' => Request::METHOD_GET,
-            'class' => TestRequest::class,
-            'parameter' => 'dto',
-            'controller' => #[ParamConverter('dto', ConverterType::QUERY, TestRequest::class)] static fn (TestRequest $dto) => null,
-        ];
-
-        yield sprintf('Test with callable controller with "%s"', AttributeConverter::class) => [
+        yield 'Test controller without parameter name' => [
             'params' => $params,
             'method' => Request::METHOD_POST,
             'class' => TestRequest::class,
             'parameter' => 'dto',
-            'controller' => new TestController3(),
+            'controller' => [new TestControllerWithoutParameterName(), 'method'],
         ];
 
-        yield sprintf('Test with method controller with "%s"', AttributeConverter::class) => [
+        yield 'Test function controller' => [
             'params' => $params,
             'method' => Request::METHOD_POST,
             'class' => TestRequest::class,
             'parameter' => 'dto',
-            'controller' => [new TestController4(), 'method'],
+            'controller' => #[ParamConverter(class: TestRequest::class, name: 'dto')] static fn (TestRequest $dto) => null,
         ];
 
-        yield sprintf('Test with function controller with "%s"', AttributeConverter::class) => [
+        yield 'Test function controller without parameter name' => [
             'params' => $params,
             'method' => Request::METHOD_POST,
             'class' => TestRequest::class,
             'parameter' => 'dto',
-            'controller' => #[ParamConverter('dto', ConverterType::ATTRIBUTE, TestRequest::class)] static fn (TestRequest $dto) => null,
+            'controller' => #[ParamConverter(class: TestRequest::class)] static fn (TestRequest $dto) => null,
         ];
     }
 

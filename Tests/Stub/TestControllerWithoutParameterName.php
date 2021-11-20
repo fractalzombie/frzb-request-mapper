@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace FRZB\Component\RequestMapper\Tests\Stub;
 
 use FRZB\Component\RequestMapper\Attribute\ParamConverter;
-use FRZB\Component\RequestMapper\Data\ConverterType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class TestController5
+/**
+ * @internal
+ */
+class TestControllerWithoutParameterName
 {
-    #[ParamConverter('dto', ConverterType::QUERY, TestRequest::class)]
+    #[ParamConverter(class: TestRequest::class)]
     public function method(TestRequest $dto): JsonResponse
     {
         try {

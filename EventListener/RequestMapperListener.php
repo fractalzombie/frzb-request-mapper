@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace FRZB\Component\RequestMapper\EventListener;
 
 use FRZB\Component\RequestMapper\Attribute\ParamConverter;
+use FRZB\Component\RequestMapper\Converter\ConverterInterface as Converter;
 use FRZB\Component\RequestMapper\Data\ConverterData;
 use FRZB\Component\RequestMapper\Event\ListenerExceptionEvent;
-use FRZB\Component\RequestMapper\Locator\ConverterLocatorInterface as ConverterLocator;
 use FRZB\Component\RequestMapper\Request\HasHeaders;
+use FRZB\Component\RequestMapper\Utils\HeadersUtil;
+use FRZB\Component\RequestMapper\Utils\ParamConverterUtil;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -18,7 +20,7 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as EventDispatche
 final class RequestMapperListener
 {
     public function __construct(
-        private ConverterLocator $converterLocator,
+        private Converter $converter,
         private EventDispatcher $dispatcher,
     ) {
     }
@@ -37,16 +39,16 @@ final class RequestMapperListener
         }
 
         foreach ($method->getParameters() as $parameter) {
-            $attribute = $attributes[$parameter->getName()] ?? null;
             $parameterType = (string) $parameter->getType();
-            $isRequest = is_a($request, $parameterType) || is_subclass_of($request, $parameterType);
+            $attribute = ParamConverterUtil::getAttribute($parameter, $attributes);
+            $isNativeRequest = is_a($request, $parameterType) || is_subclass_of($request, $parameterType);
 
-            if (!$attribute || $isRequest) {
+            if (!$attribute || $isNativeRequest) {
                 continue;
             }
 
             try {
-                $object = $this->converterLocator->get($attribute->getType())->convert(new ConverterData($request, $attribute));
+                $object = $this->converter->convert(new ConverterData($request, $attribute));
             } catch (\Throwable $e) {
                 $this->dispatcher->dispatch(new ListenerExceptionEvent($event, $e, self::class));
 
@@ -54,10 +56,10 @@ final class RequestMapperListener
             }
 
             if ($object instanceof HasHeaders) {
-                $object->setHeaders($request->headers->all());
+                $object->setHeaders(HeadersUtil::getHeaders($request));
             }
 
-            $request->attributes->set($attribute->getName(), $object);
+            $request->attributes->set($attribute->getName() ?? $parameter->getName(), $object);
         }
     }
 
@@ -71,22 +73,11 @@ final class RequestMapperListener
         };
     }
 
-    /**
-     * @return array<ParamConverter>
-     *
-     * @noinspection PhpIncompatibleReturnTypeInspection
-     */
+    /** @return array<ParamConverter> */
     private function getAttributes(\ReflectionMethod|\ReflectionFunction $method): array
     {
-        $reflectionAttributes = $method->getAttributes(ParamConverter::class);
-
-        if (!$reflectionAttributes) {
-            return [];
-        }
-
-        $mapReflection = static fn (\ReflectionAttribute $ra): ParamConverter => $ra->newInstance();
-        $mapAttributes = static fn (ParamConverter $pc): array => [$pc->getName() => $pc];
-
-        return array_merge(...array_map($mapAttributes, array_map($mapReflection, $reflectionAttributes)));
+        return ParamConverterUtil::fromReflectionAttributes(
+            ...$method->getAttributes(ParamConverter::class, \ReflectionAttribute::IS_INSTANCEOF)
+        );
     }
 }

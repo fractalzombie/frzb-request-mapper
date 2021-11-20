@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\Utils;
 
-class ClassUtil
+/**
+ * @internal
+ */
+final class ClassUtil
 {
     public static function isNotBuiltinAndExists(string $class): bool
     {

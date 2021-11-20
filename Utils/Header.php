@@ -7,7 +7,9 @@ declare(strict_types=1);
 namespace FRZB\Component\RequestMapper\Utils;
 
 /**
- * HTTP Headers based on IANA Message Headers Registry and Wikipedia list.
+ * @internal
+ *
+ * HTTP Headers based on IANA Message Headers Registry and Wikipedia list
  *
  * @see https://www.iana.org/assignments/message-headers/message-headers.xml#perm-headers
  * @see https://www.iana.org/assignments/message-headers/message-headers.xml#prov-headers

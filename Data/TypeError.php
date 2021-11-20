@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\Data;
 
+use FRZB\Component\RequestMapper\Exception\TypeErrorInvalidArgumentException;
 use FRZB\Component\RequestMapper\Utils\ObjectUtil;
 
 final class TypeError
 {
-    public const NOT_ALL_PARAMETERS_TEMPLATE = 'Params have not needed values "%s"';
-
     /** @var class-string */
     private string $class;
     private string $method;
@@ -38,9 +37,7 @@ final class TypeError
     public static function fromArray(array $params): self
     {
         if (!ObjectUtil::isArrayHasAllPropertiesFromClass($params, self::class)) {
-            $message = sprintf(self::NOT_ALL_PARAMETERS_TEMPLATE, implode(', ', array_keys($params)));
-
-            throw new \InvalidArgumentException($message);
+            throw TypeErrorInvalidArgumentException::fromParams($params);
         }
 
         return new self(

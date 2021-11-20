@@ -6,7 +6,10 @@ namespace FRZB\Component\RequestMapper\Utils;
 
 use Symfony\Component\Serializer\Annotation\SerializedName;
 
-class SerializerUtil
+/**
+ * @internal
+ */
+final class SerializerUtil
 {
     public static function getSerializedNameAttribute(\ReflectionProperty $rProperty): SerializedName
     {

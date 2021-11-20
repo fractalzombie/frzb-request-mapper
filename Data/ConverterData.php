@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace FRZB\Component\RequestMapper\Data;
 
 use FRZB\Component\RequestMapper\Attribute\ParamConverter;
+use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 
+#[Immutable]
 final class ConverterData
 {
     private const DEFAULT_VALIDATION_GROUP = 'Default';
@@ -35,18 +37,6 @@ final class ConverterData
     public function getClass(): string
     {
         return $this->attribute->getClass();
-    }
-
-    #[Pure]
-    public function getConverterType(): string
-    {
-        return $this->attribute->getType();
-    }
-
-    #[Pure]
-    public function getParameterName(): string
-    {
-        return $this->attribute->getName();
     }
 
     #[Pure]

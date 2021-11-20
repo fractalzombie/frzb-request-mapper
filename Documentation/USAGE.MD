@@ -22,7 +22,6 @@ has constraints.
 <?php
 
 use FRZB\Component\RequestMapper\Attribute\ParamConverter;
-use FRZB\Component\RequestMapper\Data\ConverterType;
 use FRZB\Component\RequestMapper\Tests\Stub\CreateUserRequest;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,7 +30,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class UserController {
     #[Route(path: '/api/v1/users', name: self::class, methods: [Request::METHOD_POST])]
-    #[ParamConverter(name: 'request', type: ConverterType::REQUEST, class: CreateUserRequest::class)]
+    #[ParamConverter(name: 'request', class: CreateUserRequest::class)]
     public function __invoke(CreateUserRequest $request): JsonResponse
     {
         $payload = [

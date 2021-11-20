@@ -10,8 +10,6 @@ use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 
 /**
  * @internal
- *
- * @codeCoverageIgnore
  */
 class Kernel extends BaseKernel
 {

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FRZB\Component\RequestMapper\Tests\Unit\Data;
 
 use FRZB\Component\RequestMapper\Data\TypeError;
+use FRZB\Component\RequestMapper\Exception\TypeErrorInvalidArgumentException;
 use FRZB\Component\RequestMapper\Tests\Stub\CreateUserRequest;
 use PHPUnit\Framework\TestCase;
 
@@ -19,8 +20,8 @@ final class TypeErrorTest extends TestCase
     public function testCreation(array $params, bool $throws = false): void
     {
         if ($throws) {
-            $message = sprintf(TypeError::NOT_ALL_PARAMETERS_TEMPLATE, implode(', ', array_keys($params)));
-            $this->expectException(\InvalidArgumentException::class);
+            $message = sprintf('Params have not needed values "%s"', implode(', ', array_keys($params)));
+            $this->expectException(TypeErrorInvalidArgumentException::class);
             $this->expectExceptionMessage($message);
         }
 

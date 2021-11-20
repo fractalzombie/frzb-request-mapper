@@ -6,6 +6,9 @@ namespace FRZB\Component\RequestMapper\Tests\Stub;
 
 use JetBrains\PhpStorm\Pure;
 
+/**
+ * @internal
+ */
 class CreateUserSettingsRequest extends CreateSettingsRequest
 {
     public const TYPE = 'user';

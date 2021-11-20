@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\Tests\Stub;
 
+/**
+ * @internal
+ */
 class TestRequestWithoutParameters
 {
     public string $name;

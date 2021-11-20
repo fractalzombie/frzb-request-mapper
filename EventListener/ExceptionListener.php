@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\EventListener;
 
-use FRZB\Component\RequestMapper\Attribute\ParamConverter;
 use FRZB\Component\RequestMapper\Event\ListenerExceptionEvent;
 use FRZB\Component\RequestMapper\ExceptionFormatter\ExceptionFormatterInterface as ExceptionFormatter;
 use FRZB\Component\RequestMapper\Utils\Header;
@@ -17,6 +16,8 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as EventDispatche
 #[AsEventListener(event: KernelEvents::EXCEPTION, method: 'onKernelException', priority: 10)]
 final class ExceptionListener
 {
+    private const ALLOWED_CONTENT_TYPES = ['application/json'];
+
     public function __construct(
         private ExceptionFormatter $exceptionFormatter,
         private EventDispatcher $eventDispatcher,
@@ -41,6 +42,6 @@ final class ExceptionListener
     #[Pure]
     public function isAllowed(?string $contentType): bool
     {
-        return \in_array($contentType, ParamConverter::ALLOWED_CONTENT_TYPES, true);
+        return \in_array($contentType, self::ALLOWED_CONTENT_TYPES, true);
     }
 }

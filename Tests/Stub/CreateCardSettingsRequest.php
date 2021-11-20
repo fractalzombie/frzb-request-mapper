@@ -6,6 +6,9 @@ namespace FRZB\Component\RequestMapper\Tests\Stub;
 
 use JetBrains\PhpStorm\Pure;
 
+/**
+ * @internal
+ */
 class CreateCardSettingsRequest extends CreateSettingsRequest
 {
     public const TYPE = 'card';
