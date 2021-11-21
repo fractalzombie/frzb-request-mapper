@@ -67,29 +67,29 @@ final class RequestConverterTest extends KernelTestCase
     public function caseProvider(): iterable
     {
         $params = ['name' => TestConstant::USER_NAME, 'userId' => TestConstant::USER_ID, 'amount' => TestConstant::USER_AMOUNT];
-        $attribute = new ParamConverter(class: CreateUserRequest::class, name: 'request');
+        $attribute = new ParamConverter(parameterClass: CreateUserRequest::class, parameterName: 'request');
         $request = RequestHelper::makeRequest(method: Request::METHOD_POST, params: $params);
         $userRequest = new CreateUserRequest(...$params);
 
-        yield sprintf('Convert data with "%s" and valid params', RequestConverter::class) => [
+        yield 'Converter data with valid params' => [
             'converter_data' => new ConverterData($request, $attribute),
             'user_request' => $userRequest,
         ];
 
-        $attribute = new ParamConverter(class: CreateUserRequest::class, name: 'request');
+        $attribute = new ParamConverter(parameterClass: CreateUserRequest::class);
         $request = RequestHelper::makeRequest(method: Request::METHOD_POST);
         $errors = [
             new Error(NotBlank::class, 'name', 'This value should not be blank.'),
         ];
 
-        yield sprintf('Convert data with "%s" and empty params', RequestConverter::class) => [
+        yield 'Converter data with empty params' => [
             'converter_data' => new ConverterData($request, $attribute),
             'user_request' => null,
             'errors' => $errors,
         ];
 
         $params = ['name' => random_int(\PHP_INT_MIN, \PHP_INT_MAX), 'userId' => random_int(\PHP_INT_MIN, \PHP_INT_MAX), 'amount' => 'some amount'];
-        $attribute = new ParamConverter(class: CreateUserRequest::class, name: 'request');
+        $attribute = new ParamConverter(parameterClass: CreateUserRequest::class);
         $request = RequestHelper::makeRequest(method: Request::METHOD_POST, params: $params);
         $errors = [
             new Error(Type::class, 'name', 'This value should be of type string.'),
@@ -98,7 +98,7 @@ final class RequestConverterTest extends KernelTestCase
             new Error(Type::class, 'amount', 'This value should be of type float.'),
         ];
 
-        yield sprintf('Convert data with "%s" and invalid params', RequestConverter::class) => [
+        yield 'Converter data with invalid params' => [
             'converter_data' => new ConverterData($request, $attribute),
             'user_request' => null,
             'errors' => $errors,

@@ -10,8 +10,10 @@ use FRZB\Component\RequestMapper\Converter\ConverterInterface as Converter;
 use FRZB\Component\RequestMapper\EventListener\RequestMapperListener;
 use FRZB\Component\RequestMapper\Tests\Stub\TestCallableController;
 use FRZB\Component\RequestMapper\Tests\Stub\TestCallableControllerWithoutParameterName;
+use FRZB\Component\RequestMapper\Tests\Stub\TestCallableControllerWithoutParameterNameAndParameterClass;
 use FRZB\Component\RequestMapper\Tests\Stub\TestController;
 use FRZB\Component\RequestMapper\Tests\Stub\TestControllerWithoutParameterName;
+use FRZB\Component\RequestMapper\Tests\Stub\TestControllerWithoutParameterNameAndParameterClass;
 use FRZB\Component\RequestMapper\Tests\Stub\TestRequest;
 use FRZB\Component\RequestMapper\Tests\Utils\RequestHelper;
 use PHPUnit\Framework\TestCase;
@@ -34,23 +36,23 @@ final class RequestMapperListenerTest extends TestCase
      */
     public function testOnKernelController(
         array $params,
-        string $method,
-        string $class,
-        string $parameter,
+        string $httpMethod,
+        string $targetClass,
+        string $parameterName,
         callable|object|array $controller
     ): void {
-        $request = RequestHelper::makeRequest(method: $method, params: $params, generator: Factory::create());
-        $converter = $this->makeConverter($class, $params);
+        $request = RequestHelper::makeRequest(method: $httpMethod, params: $params, generator: Factory::create());
+        $converter = $this->makeConverter($targetClass, $params);
         $eventDispatcher = $this->makeEventDispatcherMock();
         $controllerEvent = $this->makeControllerEvent($request, $controller);
 
         (new RequestMapperListener($converter, $eventDispatcher))->onKernelController($controllerEvent);
 
-        self::assertNotNull($request->attributes->get($parameter));
-        self::assertSame($class, $request->attributes->get($parameter)::class);
+        self::assertNotNull($request->attributes->get($parameterName));
+        self::assertSame($targetClass, $request->attributes->get($parameterName)::class);
 
         foreach ($params as $param => $value) {
-            $object = $request->attributes->get($parameter);
+            $object = $request->attributes->get($parameterName);
             $paramRef = new \ReflectionProperty($object, $param);
             $paramRef->setAccessible(true);
             self::assertSame($value, $paramRef->getValue($object));
@@ -63,50 +65,74 @@ final class RequestMapperListenerTest extends TestCase
 
         yield 'Test callable controller' => [
             'params' => $params,
-            'method' => Request::METHOD_POST,
-            'class' => TestRequest::class,
-            'parameter' => 'dto',
+            'http_method' => Request::METHOD_POST,
+            'target_class' => TestRequest::class,
+            'parameter_name' => 'dto',
             'controller' => new TestCallableController(),
         ];
 
         yield 'Test callable controller without parameter name' => [
             'params' => $params,
-            'method' => Request::METHOD_POST,
-            'class' => TestRequest::class,
-            'parameter' => 'dto',
+            'http_method' => Request::METHOD_POST,
+            'target_class' => TestRequest::class,
+            'parameter_name' => 'dto',
             'controller' => new TestCallableControllerWithoutParameterName(),
+        ];
+
+        yield 'Test callable controller without parameter name and parameter class' => [
+            'params' => $params,
+            'http_method' => Request::METHOD_POST,
+            'target_class' => TestRequest::class,
+            'parameter_name' => 'dto',
+            'controller' => new TestCallableControllerWithoutParameterNameAndParameterClass(),
         ];
 
         yield 'Test controller' => [
             'params' => $params,
-            'method' => Request::METHOD_POST,
-            'class' => TestRequest::class,
-            'parameter' => 'dto',
+            'http_method' => Request::METHOD_POST,
+            'target_class' => TestRequest::class,
+            'parameter_name' => 'dto',
             'controller' => [new TestController(), 'method'],
         ];
 
         yield 'Test controller without parameter name' => [
             'params' => $params,
-            'method' => Request::METHOD_POST,
-            'class' => TestRequest::class,
-            'parameter' => 'dto',
+            'http_method' => Request::METHOD_POST,
+            'target_class' => TestRequest::class,
+            'parameter_name' => 'dto',
             'controller' => [new TestControllerWithoutParameterName(), 'method'],
+        ];
+
+        yield 'Test controller without parameter name and parameter class' => [
+            'params' => $params,
+            'http_method' => Request::METHOD_POST,
+            'target_class' => TestRequest::class,
+            'parameter_name' => 'dto',
+            'controller' => [new TestControllerWithoutParameterNameAndParameterClass(), 'method'],
         ];
 
         yield 'Test function controller' => [
             'params' => $params,
-            'method' => Request::METHOD_POST,
-            'class' => TestRequest::class,
-            'parameter' => 'dto',
-            'controller' => #[ParamConverter(class: TestRequest::class, name: 'dto')] static fn (TestRequest $dto) => null,
+            'http_method' => Request::METHOD_POST,
+            'target_class' => TestRequest::class,
+            'parameter_name' => 'dto',
+            'controller' => #[ParamConverter(parameterClass: TestRequest::class, parameterName: 'dto')] static fn (TestRequest $dto) => null,
         ];
 
         yield 'Test function controller without parameter name' => [
             'params' => $params,
-            'method' => Request::METHOD_POST,
-            'class' => TestRequest::class,
-            'parameter' => 'dto',
-            'controller' => #[ParamConverter(class: TestRequest::class)] static fn (TestRequest $dto) => null,
+            'http_method' => Request::METHOD_POST,
+            'target_class' => TestRequest::class,
+            'parameter_name' => 'dto',
+            'controller' => #[ParamConverter(parameterClass: TestRequest::class)] static fn (TestRequest $dto) => null,
+        ];
+
+        yield 'Test function controller without parameter name and parameter class' => [
+            'params' => $params,
+            'http_method' => Request::METHOD_POST,
+            'target_class' => TestRequest::class,
+            'parameter_name' => 'dto',
+            'controller' => #[ParamConverter] static fn (TestRequest $dto) => null,
         ];
     }
 

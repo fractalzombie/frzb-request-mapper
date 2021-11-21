@@ -38,7 +38,7 @@ class RequestConverter implements ConverterInterface
     {
         try {
             $parameters = $data->getRequest()->request->all();
-            $class = $this->classExtractor->extract($data->getClass(), $parameters);
+            $class = $this->classExtractor->extract($data->getParameterClass(), $parameters);
         } catch (ClassExtractorException $e) {
             throw ValidationException::fromErrors(
                 new Error(DiscriminatorMap::class, $e->getProperty(), $e->getMessage())
@@ -47,13 +47,13 @@ class RequestConverter implements ConverterInterface
 
         if ($data->isValidationNeeded()) {
             $constraints = $this->constraintExtractor->extract($class);
-            $parameters = $this->parametersExtractor->extract($data->getClass(), $parameters, $constraints);
+            $parameters = $this->parametersExtractor->extract($data->getParameterClass(), $parameters, $constraints);
 
             $this->validate($parameters, $data->getValidationGroups(), $constraints);
         }
 
         try {
-            $object = $this->denormalizer->denormalize($parameters, $class, self::DENORMALIZE_TYPE, $data->getContext());
+            $object = $this->denormalizer->denormalize($parameters, $class, self::DENORMALIZE_TYPE, $data->getSerializerContext());
         } catch (\TypeError $e) {
             $error = $this->exceptionConverter->convert($e, $parameters);
 

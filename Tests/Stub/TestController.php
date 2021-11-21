@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  */
 class TestController
 {
-    #[ParamConverter(class: TestRequest::class, name: 'dto')]
+    #[ParamConverter(parameterClass: TestRequest::class, parameterName: 'dto')]
     public function method(TestRequest $dto): JsonResponse
     {
         try {

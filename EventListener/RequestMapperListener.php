@@ -59,7 +59,7 @@ final class RequestMapperListener
                 $object->setHeaders(HeadersUtil::getHeaders($request));
             }
 
-            $request->attributes->set($attribute->getName() ?? $parameter->getName(), $object);
+            $request->attributes->set($attribute->getParameterName() ?? $parameter->getName(), $object);
         }
     }
 

@@ -10,9 +10,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 /**
  * @internal
  */
-class TestControllerWithoutParameterName
+class TestControllerWithoutParameterNameAndParameterClass
 {
-    #[ParamConverter(parameterClass: TestRequest::class)]
+    #[ParamConverter]
     public function method(TestRequest $dto): JsonResponse
     {
         try {

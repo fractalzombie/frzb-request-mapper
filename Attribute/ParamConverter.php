@@ -4,28 +4,30 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\Attribute;
 
+use JetBrains\PhpStorm\Pure;
+
 #[\Attribute(\Attribute::IS_REPEATABLE | \Attribute::TARGET_METHOD | \Attribute::TARGET_FUNCTION)]
 final class ParamConverter
 {
-    /** @param class-string $class */
+    /** @param null|class-string $parameterClass */
     public function __construct(
-        private string $class,
-        private ?string $name = null,
+        private ?string $parameterClass = null,
+        private ?string $parameterName = null,
         private bool $isValidationNeeded = true,
-        private array $context = [],
+        private array $serializerContext = [],
         private array $validationGroups = []
     ) {
     }
 
-    /** @return class-string */
-    public function getClass(): string
+    /** @return null|class-string */
+    public function getParameterClass(): ?string
     {
-        return $this->class;
+        return $this->parameterClass;
     }
 
-    public function getName(): ?string
+    public function getParameterName(): ?string
     {
-        return $this->name;
+        return $this->parameterName;
     }
 
     public function isValidationNeeded(): bool
@@ -33,13 +35,23 @@ final class ParamConverter
         return $this->isValidationNeeded;
     }
 
-    public function getContext(): array
+    public function getSerializerContext(): array
     {
-        return $this->context;
+        return $this->serializerContext;
     }
 
     public function getValidationGroups(): array
     {
         return $this->validationGroups;
+    }
+
+    #[Pure]
+    public function equals(object $object): bool
+    {
+        return match (true) {
+            $object instanceof \ReflectionParameter => $object->getType()?->getName() === $this->parameterClass || $object->getName() === $this->parameterName,
+            $object instanceof self => $object->getParameterClass() === $this->parameterClass || $object->getParameterName() === $this->parameterName,
+            default => false
+        };
     }
 }

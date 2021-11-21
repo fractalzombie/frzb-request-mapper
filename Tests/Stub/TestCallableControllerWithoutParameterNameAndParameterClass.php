@@ -10,9 +10,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 /**
  * @internal
  */
-class TestCallableController
+class TestCallableControllerWithoutParameterNameAndParameterClass
 {
-    #[ParamConverter(parameterClass: TestRequest::class, parameterName: 'dto')]
+    #[ParamConverter]
     public function __invoke(TestRequest $dto): JsonResponse
     {
         return new JsonResponse($dto);

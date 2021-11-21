@@ -34,9 +34,9 @@ final class ConverterData
      * @return class-string
      */
     #[Pure]
-    public function getClass(): string
+    public function getParameterClass(): string
     {
-        return $this->attribute->getClass();
+        return $this->attribute->getParameterClass();
     }
 
     #[Pure]
@@ -46,9 +46,9 @@ final class ConverterData
     }
 
     #[Pure]
-    public function getContext(): array
+    public function getSerializerContext(): array
     {
-        return array_merge($this->attribute->getContext(), self::DEFAULT_CONTEXT);
+        return array_merge($this->attribute->getSerializerContext(), self::DEFAULT_CONTEXT);
     }
 
     #[Pure]
