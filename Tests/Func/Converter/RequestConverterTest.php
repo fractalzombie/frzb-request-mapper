@@ -58,9 +58,9 @@ final class RequestConverterTest extends KernelTestCase
         }
 
         self::assertSame($request::class, $object::class);
-        self::assertSame($request?->getName(), $object?->getName());
-        self::assertSame($request?->getUserId(), $object?->getUserId());
-        self::assertSame($request?->getAmount(), $object?->getAmount());
+        self::assertSame($request?->getName(), $object->getName());
+        self::assertSame($request?->getUserId(), $object->getUserId());
+        self::assertSame($request?->getAmount(), $object->getAmount());
     }
 
     /** @throws \Exception */

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\Data;
 
-use FRZB\Component\RequestMapper\Utils\StringUtil;
 use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Validator\ConstraintViolation;

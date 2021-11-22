@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\Tests\Unit\Utils;
 
+use FRZB\Component\RequestMapper\Tests\Stub\CreateNestedUserRequest;
 use FRZB\Component\RequestMapper\Tests\Stub\CreateUserRequest;
+use FRZB\Component\RequestMapper\Tests\Stub\CreateUserRequestWithSerializedName;
 use FRZB\Component\RequestMapper\Utils\ClassUtil;
 use PHPUnit\Framework\TestCase;
 
@@ -93,6 +95,30 @@ class ClassUtilTest extends TestCase
             'class_name' => 'string',
             'haystack' => ['Request', 'DTO', 'Dto'],
             'contains' => false,
+        ];
+    }
+
+    /** @dataProvider propertyMappingCaseProvider */
+    public function testGetPropertyMappingMethod(string $className, array $expectedMapping): void
+    {
+        self::assertSame($expectedMapping, ClassUtil::getPropertyMapping($className));
+    }
+
+    public function propertyMappingCaseProvider(): iterable
+    {
+        yield sprintf('class "%s", mapping "%s"', CreateUserRequest::class, implode(', ', ['name', 'userId', 'amount'])) => [
+            'class_name' => CreateUserRequest::class,
+            'expected_mapping' => ['name' => 'string', 'userId' => 'string', 'amount' => 'float'],
+        ];
+
+        yield sprintf('class "%s", mapping "%s"', CreateUserRequestWithSerializedName::class, implode(', ', ['name', 'uuid', 'amountOfWallet'])) => [
+            'class_name' => CreateUserRequestWithSerializedName::class,
+            'expected_mapping' => ['name' => 'string', 'uuid' => 'string', 'amountOfWallet' => 'float'],
+        ];
+
+        yield sprintf('class "%s", mapping "%s"', CreateNestedUserRequest::class, implode(', ', ['name', 'request'])) => [
+            'class_name' => CreateNestedUserRequest::class,
+            'expected_mapping' => ['name' => 'string', 'request' => CreateUserRequest::class],
         ];
     }
 }

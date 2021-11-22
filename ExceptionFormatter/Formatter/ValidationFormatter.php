@@ -22,7 +22,7 @@ class ValidationFormatter implements FormatterInterface
             : Response::HTTP_INTERNAL_SERVER_ERROR;
         $errors = ($e instanceof ValidationException)
             ? self::formatErrors(...$e->getErrors())
-            : null;
+            : [];
 
         return new ErrorContract($message, $status, $errors, $e->getTrace());
     }

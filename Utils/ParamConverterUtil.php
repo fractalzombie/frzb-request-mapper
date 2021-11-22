@@ -37,7 +37,7 @@ final class ParamConverterUtil
     /**
      * @param \ReflectionAttribute ...$attributes
      *
-     * @return array<class-string, ParamConverter|string>
+     * @return array<class-string|string|string, ParamConverter>
      */
     public static function fromReflectionAttributes(\ReflectionAttribute ...$attributes): array
     {
@@ -57,7 +57,7 @@ final class ParamConverterUtil
 
     private static function searchAttribute(\ReflectionParameter $parameter, array $attributes): ?ParamConverter
     {
-        $filteredAttributes = array_filter($attributes, static fn (ParamConverter $pc) => $pc->equals($parameter));
+        $filteredAttributes = array_filter($attributes, static fn (ParamConverter $pc): bool => $pc->equals($parameter));
 
         return current($filteredAttributes) ?: self::fromReflectionParameter($parameter);
     }

@@ -33,9 +33,7 @@ final class ExceptionListener
         if ($this->isAllowed($contentType) || $this->isAllowed($acceptType)) {
             $errorContract = $this->exceptionFormatter->format($event->getThrowable());
 
-            $this->eventDispatcher->dispatch(
-                new ListenerExceptionEvent($event, $event->getThrowable(), self::class, $errorContract)
-            );
+            $this->eventDispatcher->dispatch(new ListenerExceptionEvent($event, $event->getThrowable(), self::class, $errorContract));
         }
     }
 

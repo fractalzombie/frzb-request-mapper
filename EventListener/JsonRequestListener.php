@@ -51,7 +51,7 @@ final class JsonRequestListener
             } catch (\JsonException $e) {
                 $this->dispatcher->dispatch(new ListenerExceptionEvent($event, $e, self::class));
 
-                throw new BadRequestHttpException($e->getMessage(), $e, $e->getCode(), self::EXCEPTION_HEADERS);
+                throw new BadRequestHttpException($e->getMessage(), $e, (int) $e->getCode(), self::EXCEPTION_HEADERS);
             }
         }
     }

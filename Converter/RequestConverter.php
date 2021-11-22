@@ -47,7 +47,7 @@ class RequestConverter implements ConverterInterface
 
         if ($data->isValidationNeeded()) {
             $constraints = $this->constraintExtractor->extract($class);
-            $parameters = $this->parametersExtractor->extract($data->getParameterClass(), $parameters, $constraints);
+            $parameters = $this->parametersExtractor->extract($data->getParameterClass(), $parameters);
 
             $this->validate($parameters, $data->getValidationGroups(), $constraints);
         }
@@ -65,6 +65,7 @@ class RequestConverter implements ConverterInterface
         return $object;
     }
 
+    /** @throws ValidationException */
     private function validate(mixed $target, array $validationGroups, ?Collection $constraints = null): void
     {
         if (($violations = $this->validator->validate($target, $constraints, $validationGroups))->count()) {

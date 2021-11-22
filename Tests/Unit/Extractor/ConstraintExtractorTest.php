@@ -30,15 +30,15 @@ class ConstraintExtractorTest extends TestCase
     {
         $constraints = $this->extractor->extract(CreateUserRequest::class);
 
-        self::assertSame(Required::class, $constraints->fields['name']::class);
-        self::assertSame(NotBlank::class, $constraints->fields['name']->constraints[0]::class);
-        self::assertSame(Type::class, $constraints->fields['name']->constraints[1]::class);
+        self::assertSame(Required::class, $constraints?->fields['name']::class);
+        self::assertSame(NotBlank::class, $constraints?->fields['name']?->constraints[0]::class);
+        self::assertSame(Type::class, $constraints?->fields['name']?->constraints[1]::class);
 
-        self::assertSame(Required::class, $constraints->fields['userId']::class);
-        self::assertSame(Uuid::class, $constraints->fields['userId']->constraints[0]::class);
-        self::assertSame(Type::class, $constraints->fields['userId']->constraints[1]::class);
+        self::assertSame(Required::class, $constraints?->fields['userId']::class);
+        self::assertSame(Uuid::class, $constraints?->fields['userId']?->constraints[0]::class);
+        self::assertSame(Type::class, $constraints?->fields['userId']?->constraints[1]::class);
 
-        self::assertSame(Required::class, $constraints->fields['amount']::class);
-        self::assertSame(Type::class, $constraints->fields['amount']->constraints[0]::class);
+        self::assertSame(Required::class, $constraints?->fields['amount']::class);
+        self::assertSame(Type::class, $constraints?->fields['amount']?->constraints[0]::class);
     }
 }

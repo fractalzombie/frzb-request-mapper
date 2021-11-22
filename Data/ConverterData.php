@@ -31,10 +31,10 @@ final class ConverterData
     }
 
     /**
-     * @return class-string
+     * @return null|class-string
      */
     #[Pure]
-    public function getParameterClass(): string
+    public function getParameterClass(): ?string
     {
         return $this->attribute->getParameterClass();
     }

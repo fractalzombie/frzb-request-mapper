@@ -9,22 +9,46 @@ namespace FRZB\Component\RequestMapper\Utils;
  */
 final class ClassUtil
 {
-    public static function isNotBuiltinAndExists(string $class): bool
+    public static function isNotBuiltinAndExists(string $className): bool
     {
-        return class_exists($class) && !empty((new \ReflectionClass($class))->getNamespaceName());
+        return class_exists($className) && !empty((new \ReflectionClass($className))->getNamespaceName());
     }
 
-    public static function getShortName(string $class): string
+    /**
+     * @param class-string $className
+     *
+     * @return class-string|string
+     */
+    public static function getShortName(string $className): string
     {
         try {
-            return (new \ReflectionClass($class))->getShortName();
+            return (new \ReflectionClass($className))->getShortName();
         } catch (\ReflectionException) {
-            return $class;
+            return $className;
         }
     }
 
-    public static function isNameContains(string $class, string ...$haystack): bool
+    /** @param class-string $className */
+    public static function isNameContains(string $className, string ...$haystack): bool
     {
-        return \count(array_filter($haystack, static fn (string $value) => StringUtil::contains(self::getShortName($class), $value))) > 0;
+        $filter = static fn (string $value): bool => StringUtil::contains(self::getShortName($className), $value);
+
+        return \count(array_filter($haystack, $filter)) > 0;
+    }
+
+    /** @param class-string $className */
+    public static function getPropertyMapping(string $className): array
+    {
+        try {
+            $properties = (new \ReflectionClass($className))->getProperties();
+        } catch (\ReflectionException) {
+            $properties = [];
+        }
+
+        $map = static fn (\ReflectionProperty $p): array => [
+            SerializerUtil::getSerializedNameAttribute($p)->getSerializedName() => $p->getType()?->getName(),
+        ];
+
+        return array_merge(...array_map($map, $properties));
     }
 }
