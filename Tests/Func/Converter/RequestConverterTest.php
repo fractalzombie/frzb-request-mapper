@@ -79,7 +79,7 @@ final class RequestConverterTest extends KernelTestCase
         $attribute = new ParamConverter(parameterClass: CreateUserRequest::class);
         $request = RequestHelper::makeRequest(method: Request::METHOD_POST);
         $errors = [
-            new Error(NotBlank::class, 'name', 'This value should not be blank.'),
+            new Error(NotBlank::class, '[name]', 'This value should not be blank.'),
         ];
 
         yield 'Converter data with empty params' => [
@@ -92,10 +92,10 @@ final class RequestConverterTest extends KernelTestCase
         $attribute = new ParamConverter(parameterClass: CreateUserRequest::class);
         $request = RequestHelper::makeRequest(method: Request::METHOD_POST, params: $params);
         $errors = [
-            new Error(Type::class, 'name', 'This value should be of type string.'),
-            new Error(Uuid::class, 'userId', 'This is not a valid UUID.'),
-            new Error(Type::class, 'userId', 'This value should be of type string.'),
-            new Error(Type::class, 'amount', 'This value should be of type float.'),
+            new Error(Type::class, '[name]', 'This value should be of type string.'),
+            new Error(Uuid::class, '[userId]', 'This is not a valid UUID.'),
+            new Error(Type::class, '[userId]', 'This value should be of type string.'),
+            new Error(Type::class, '[amount]', 'This value should be of type float.'),
         ];
 
         yield 'Converter data with invalid params' => [

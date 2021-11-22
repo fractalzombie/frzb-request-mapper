@@ -6,6 +6,7 @@ namespace FRZB\Component\RequestMapper\Data;
 
 use FRZB\Component\RequestMapper\Utils\StringUtil;
 use JetBrains\PhpStorm\Immutable;
+use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Validator\ConstraintViolation;
 
 #[Immutable]
@@ -18,10 +19,11 @@ final class Error
     public function __construct(string $type, string $field, string $message)
     {
         $this->type = $type;
-        $this->field = StringUtil::removeBrackets($field);
+        $this->field = $field;
         $this->message = $message;
     }
 
+    #[Pure]
     public static function fromConstraint(ConstraintViolation $violation): self
     {
         return new self($violation->getConstraint()::class, $violation->getPropertyPath(), $violation->getMessage());

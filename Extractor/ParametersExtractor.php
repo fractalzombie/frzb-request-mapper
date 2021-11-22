@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FRZB\Component\RequestMapper\Extractor;
 
 use FRZB\Component\DependencyInjection\Attribute\AsService;
+use FRZB\Component\RequestMapper\Utils\ClassUtil;
 use FRZB\Component\RequestMapper\Utils\SerializerUtil;
 use Symfony\Component\Validator\Constraints\Collection;
 
@@ -38,8 +39,8 @@ class ParametersExtractor
 
         foreach ($properties as $serializedName => [$propertyName, $propertyType, $isAllowsNull]) {
             $value = $parameters[$serializedName] ?? null;
-            $isComplexType = \is_array($value) && class_exists($propertyType);
-            $mapped[$serializedName] = $isComplexType ? $this->extract($propertyType, $value) : $value;
+            $isComplexType = ClassUtil::isNotBuiltinAndExists($propertyType);
+            $mapped[$serializedName] = $isComplexType ? $this->extract($propertyType, $value ?? []) : $value;
         }
 
         return $mapped;

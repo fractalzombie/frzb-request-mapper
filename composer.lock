@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cca20aa27b906f65f9c0345ef36db743",
+    "content-hash": "d69692f6b8e4563e5e82fcc50370ac4e",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -824,7 +824,7 @@
                 "standards"
             ],
             "support": {
-                "source": "https://github.com/symfony/cache-contracts/tree/main"
+                "source": "https://github.com/symfony/cache-contracts/tree/v3.0.0"
             },
             "funding": [
                 {
@@ -1443,12 +1443,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/framework-bundle.git",
-                "reference": "cbe843684fbfe1d465f6afd7aa1e550ef2945e87"
+                "reference": "0c0fd35de3a6527b2823a4f07e6b77ef49ea5211"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/framework-bundle/zipball/cbe843684fbfe1d465f6afd7aa1e550ef2945e87",
-                "reference": "cbe843684fbfe1d465f6afd7aa1e550ef2945e87",
+                "url": "https://api.github.com/repos/symfony/framework-bundle/zipball/0c0fd35de3a6527b2823a4f07e6b77ef49ea5211",
+                "reference": "0c0fd35de3a6527b2823a4f07e6b77ef49ea5211",
                 "shasum": ""
             },
             "require": {
@@ -1585,7 +1585,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-11-21T13:04:35+00:00"
+            "time": "2021-11-22T15:27:47+00:00"
         },
         {
             "name": "symfony/http-client-contracts",
@@ -1648,7 +1648,7 @@
                 "standards"
             ],
             "support": {
-                "source": "https://github.com/symfony/http-client-contracts/tree/main"
+                "source": "https://github.com/symfony/http-client-contracts/tree/v3.0.0"
             },
             "funding": [
                 {
@@ -2754,17 +2754,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/service-contracts.git",
-                "reference": "56b990c18120c91eaf0d38a93fabfa2a1f7fa413"
+                "reference": "1ab11b933cd6bc5464b08e81e2c5b07dec58b0fc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/service-contracts/zipball/56b990c18120c91eaf0d38a93fabfa2a1f7fa413",
-                "reference": "56b990c18120c91eaf0d38a93fabfa2a1f7fa413",
+                "url": "https://api.github.com/repos/symfony/service-contracts/zipball/1ab11b933cd6bc5464b08e81e2c5b07dec58b0fc",
+                "reference": "1ab11b933cd6bc5464b08e81e2c5b07dec58b0fc",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.2.5",
-                "psr/container": "^1.1"
+                "psr/container": "^1.1",
+                "symfony/deprecation-contracts": "^2.1"
             },
             "conflict": {
                 "ext-psr": "<1.1|>=2"
@@ -2828,7 +2829,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-07-13T09:35:11+00:00"
+            "time": "2021-11-04T16:48:04+00:00"
         },
         {
             "name": "symfony/string",
@@ -2976,7 +2977,7 @@
                 "standards"
             ],
             "support": {
-                "source": "https://github.com/symfony/translation-contracts/tree/main"
+                "source": "https://github.com/symfony/translation-contracts/tree/v3.0.0"
             },
             "funding": [
                 {
@@ -3195,12 +3196,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-exporter.git",
-                "reference": "1fb0b25414f5ac8013efdb65f218ed1a33a7008c"
+                "reference": "32cf62f12d35d441da1ca4a4c0fc1cd5f2a207af"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-exporter/zipball/1fb0b25414f5ac8013efdb65f218ed1a33a7008c",
-                "reference": "1fb0b25414f5ac8013efdb65f218ed1a33a7008c",
+                "url": "https://api.github.com/repos/symfony/var-exporter/zipball/32cf62f12d35d441da1ca4a4c0fc1cd5f2a207af",
+                "reference": "32cf62f12d35d441da1ca4a4c0fc1cd5f2a207af",
                 "shasum": ""
             },
             "require": {
@@ -3259,7 +3260,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-11-20T17:59:37+00:00"
+            "time": "2021-11-22T10:44:58+00:00"
         },
         {
             "name": "symfony/yaml",
@@ -5376,6 +5377,7 @@
                     "type": "github"
                 }
             ],
+            "abandoned": true,
             "time": "2020-09-28T06:45:17+00:00"
         },
         {
@@ -5603,12 +5605,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "bea7632e3b1d12decedba0a7fe7a7e0ebf7ee2f4"
+                "reference": "4c10d71a5184a4de70eb3ad9c3e38d37b5ff3947"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/bea7632e3b1d12decedba0a7fe7a7e0ebf7ee2f4",
-                "reference": "bea7632e3b1d12decedba0a7fe7a7e0ebf7ee2f4",
+                "url": "https://api.github.com/repos/symfony/console/zipball/4c10d71a5184a4de70eb3ad9c3e38d37b5ff3947",
+                "reference": "4c10d71a5184a4de70eb3ad9c3e38d37b5ff3947",
                 "shasum": ""
             },
             "require": {
@@ -5694,7 +5696,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-11-04T16:48:04+00:00"
+            "time": "2021-11-22T11:33:26+00:00"
         },
         {
             "name": "symfony/css-selector",
