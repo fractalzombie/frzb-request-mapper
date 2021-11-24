@@ -9,13 +9,16 @@ use JetBrains\PhpStorm\Pure;
 #[\Attribute(\Attribute::IS_REPEATABLE | \Attribute::TARGET_METHOD | \Attribute::TARGET_FUNCTION)]
 final class ParamConverter
 {
+    public const DEFAULT_VALIDATION_GROUP = 'Default';
+
     /** @param null|class-string $parameterClass */
     public function __construct(
         private ?string $parameterClass = null,
         private ?string $parameterName = null,
         private bool $isValidationNeeded = true,
         private array $serializerContext = [],
-        private array $validationGroups = []
+        private array $validationGroups = [],
+        private bool $useDefaultValidationGroup = true,
     ) {
     }
 
@@ -42,7 +45,9 @@ final class ParamConverter
 
     public function getValidationGroups(): array
     {
-        return $this->validationGroups;
+        return $this->useDefaultValidationGroup
+            ? array_merge($this->validationGroups, [self::DEFAULT_VALIDATION_GROUP])
+            : $this->validationGroups;
     }
 
     #[Pure]
