@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FRZB\Component\RequestMapper\Parser;
 
 use FRZB\Component\DependencyInjection\Attribute\AsAlias;
-use FRZB\Component\RequestMapper\Data\Error;
+use FRZB\Component\RequestMapper\Data\ErrorInterface as Error;
 
 #[AsAlias(service: TypeErrorExceptionConverter::class)]
 interface ExceptionConverterInterface

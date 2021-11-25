@@ -7,7 +7,8 @@ namespace FRZB\Component\RequestMapper\Tests\Func\Converter;
 use FRZB\Component\RequestMapper\Attribute\ParamConverter;
 use FRZB\Component\RequestMapper\Converter\RequestConverter;
 use FRZB\Component\RequestMapper\Data\ConverterData;
-use FRZB\Component\RequestMapper\Data\Error;
+use FRZB\Component\RequestMapper\Data\ErrorInterface;
+use FRZB\Component\RequestMapper\Data\ValidationError;
 use FRZB\Component\RequestMapper\Exception\ValidationException;
 use FRZB\Component\RequestMapper\Tests\Stub\CreateUserRequest;
 use FRZB\Component\RequestMapper\Tests\Utils\RequestHelper;
@@ -35,7 +36,7 @@ final class RequestConverterTest extends KernelTestCase
     }
 
     /**
-     * @param Error[] $errors
+     * @param ErrorInterface[] $errors
      *
      * @dataProvider caseProvider
      */
@@ -79,7 +80,7 @@ final class RequestConverterTest extends KernelTestCase
         $attribute = new ParamConverter(parameterClass: CreateUserRequest::class);
         $request = RequestHelper::makeRequest(method: Request::METHOD_POST);
         $errors = [
-            new Error(NotBlank::class, '[name]', 'This value should not be blank.'),
+            new ValidationError(NotBlank::class, '[name]', 'This value should not be blank.'),
         ];
 
         yield 'Converter data with empty params' => [
@@ -92,10 +93,10 @@ final class RequestConverterTest extends KernelTestCase
         $attribute = new ParamConverter(parameterClass: CreateUserRequest::class);
         $request = RequestHelper::makeRequest(method: Request::METHOD_POST, params: $params);
         $errors = [
-            new Error(Type::class, '[name]', 'This value should be of type string.'),
-            new Error(Uuid::class, '[userId]', 'This is not a valid UUID.'),
-            new Error(Type::class, '[userId]', 'This value should be of type string.'),
-            new Error(Type::class, '[amount]', 'This value should be of type float.'),
+            new ValidationError(Type::class, '[name]', 'This value should be of type string.'),
+            new ValidationError(Uuid::class, '[userId]', 'This is not a valid UUID.'),
+            new ValidationError(Type::class, '[userId]', 'This value should be of type string.'),
+            new ValidationError(Type::class, '[amount]', 'This value should be of type float.'),
         ];
 
         yield 'Converter data with invalid params' => [

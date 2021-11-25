@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\Data;
 
+use FRZB\Component\RequestMapper\Exception\ErrorInvalidArgumentException;
 use JetBrains\PhpStorm\Immutable;
-use JetBrains\PhpStorm\Pure;
-use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\ConstraintViolation as Constraint;
+use Symfony\Component\Validator\ConstraintViolationInterface as ConstraintViolation;
 
 #[Immutable]
-final class Error
+final class ValidationError implements ErrorInterface
 {
     private string $type;
     private string $field;
@@ -22,10 +23,17 @@ final class Error
         $this->message = $message;
     }
 
-    #[Pure]
+    /** @noinspection PhpConditionAlreadyCheckedInspection */
     public static function fromConstraint(ConstraintViolation $violation): self
     {
-        return new self($violation->getConstraint()::class, $violation->getPropertyPath(), $violation->getMessage());
+        return match (true) {
+            $violation instanceof Constraint => new self(
+                $violation->getConstraint()::class,
+                $violation->getPropertyPath(),
+                (string) $violation->getMessage()
+            ),
+            default => throw ErrorInvalidArgumentException::fromConstraintValidation($violation),
+        };
     }
 
     public function getType(): string

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\Tests\Func\Locator;
 
-use FRZB\Component\RequestMapper\Data\Error;
+use FRZB\Component\RequestMapper\Data\ValidationError;
 use FRZB\Component\RequestMapper\Exception\ValidationException;
 use FRZB\Component\RequestMapper\ExceptionFormatter\Formatter\HttpExceptionFormatter;
 use FRZB\Component\RequestMapper\ExceptionFormatter\Formatter\ThrowableFormatter;
@@ -50,7 +50,7 @@ class ExceptionFormatterLocatorTest extends KernelTestCase
         ];
 
         yield sprintf('"%s" uses "%s" converter', ValidationException::class, ValidationFormatter::class) => [
-            'exception' => ValidationException::fromErrors(new Error(NotNull::class, 'field', 'field cannot be null')),
+            'exception' => ValidationException::fromErrors(new ValidationError(NotNull::class, 'field', 'field cannot be null')),
             'formatter_class' => ValidationFormatter::class,
             'exists_in_locator' => true,
         ];

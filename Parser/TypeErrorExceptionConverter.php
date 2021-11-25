@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace FRZB\Component\RequestMapper\Parser;
 
 use FRZB\Component\DependencyInjection\Attribute\AsService;
-use FRZB\Component\RequestMapper\Data\Error;
+use FRZB\Component\RequestMapper\Data\ErrorInterface as Error;
 use FRZB\Component\RequestMapper\Data\TypeError;
+use FRZB\Component\RequestMapper\Data\ValidationError;
+use FRZB\Component\RequestMapper\Utils\ClassUtil;
 
 #[AsService]
 class TypeErrorExceptionConverter implements ExceptionConverterInterface
@@ -26,40 +28,12 @@ class TypeErrorExceptionConverter implements ExceptionConverterInterface
         }
 
         $error = TypeError::fromArray($matches);
-        $parameters = self::getMethodParameters($error->getClass(), $error->getMethod());
+        $parameters = ClassUtil::getMethodParameters($error->getClass(), $error->getMethod());
         $parameter = $parameters[$error->getPosition() - 1] ?? throw new \InvalidArgumentException(sprintf(self::ARGUMENT_ERROR_MESSAGE_TEMPLATE, $error->getPosition()));
 
-        $expectedClass = self::getClassShortName($error->getExpected());
-        $proposedClass = self::getClassShortName($error->getProposed());
+        $expectedClass = ClassUtil::getShortName($error->getExpected());
+        $proposedClass = ClassUtil::getShortName($error->getProposed());
 
-        return new Error(TypeError::class, $parameter->getName(), sprintf(self::TYPE_ERROR_MESSAGE_TEMPLATE, $parameter->getName(), $expectedClass, $proposedClass));
-    }
-
-    /**
-     * @param class-string $class
-     *
-     * @return \ReflectionParameter[]
-     */
-    private static function getMethodParameters(string $class, string $method): array
-    {
-        try {
-            return (new \ReflectionMethod($class, $method))->getParameters();
-        } catch (\ReflectionException) {
-            return [];
-        }
-    }
-
-    /**
-     * @param class-string $class
-     *
-     * @return class-string|string
-     */
-    private static function getClassShortName(string $class): string
-    {
-        try {
-            return (new \ReflectionClass($class))->getShortName();
-        } catch (\ReflectionException) {
-            return $class;
-        }
+        return new ValidationError(TypeError::class, $parameter->getName(), sprintf(self::TYPE_ERROR_MESSAGE_TEMPLATE, $parameter->getName(), $expectedClass, $proposedClass));
     }
 }

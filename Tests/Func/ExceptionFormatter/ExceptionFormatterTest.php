@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\Tests\Func\ExceptionFormatter;
 
-use FRZB\Component\RequestMapper\Data\Error;
 use FRZB\Component\RequestMapper\Data\ErrorContract;
+use FRZB\Component\RequestMapper\Data\ValidationError;
 use FRZB\Component\RequestMapper\Exception\ValidationException;
 use FRZB\Component\RequestMapper\ExceptionFormatter\ExceptionFormatterInterface as ExceptionFormatter;
 use FRZB\Component\RequestMapper\Tests\Utils\TestConstant;
@@ -50,7 +50,7 @@ final class ExceptionFormatterTest extends KernelTestCase
         ];
 
         yield sprintf('Format "%s"', ValidationException::class) => [
-            'exception' => ValidationException::fromErrors(new Error(NotNull::class, 'field', 'field cannot be null')),
+            'exception' => ValidationException::fromErrors(new ValidationError(NotNull::class, 'field', 'field cannot be null')),
             'error_contract' => new ErrorContract(ValidationException::DEFAULT_MESSAGE, Response::HTTP_UNPROCESSABLE_ENTITY, ['field' => 'field cannot be null']),
         ];
 

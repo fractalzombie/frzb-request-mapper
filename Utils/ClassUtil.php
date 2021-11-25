@@ -51,4 +51,18 @@ final class ClassUtil
 
         return array_merge(...array_map($map, $properties));
     }
+
+    /**
+     * @param class-string $class
+     *
+     * @return \ReflectionParameter[]
+     */
+    public static function getMethodParameters(string $class, string $method): array
+    {
+        try {
+            return (new \ReflectionMethod($class, $method))->getParameters();
+        } catch (\ReflectionException) {
+            return [];
+        }
+    }
 }

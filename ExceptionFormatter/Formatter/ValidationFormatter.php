@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\ExceptionFormatter\Formatter;
 
-use FRZB\Component\RequestMapper\Data\Error;
 use FRZB\Component\RequestMapper\Data\ErrorContract;
+use FRZB\Component\RequestMapper\Data\ErrorInterface as Error;
 use FRZB\Component\RequestMapper\Exception\ValidationException;
 use FRZB\Component\RequestMapper\Locator\ExceptionFormatterLocatorInterface as ExceptionFormatterLocator;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;

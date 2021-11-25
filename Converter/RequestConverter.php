@@ -6,7 +6,7 @@ namespace FRZB\Component\RequestMapper\Converter;
 
 use FRZB\Component\DependencyInjection\Attribute\AsService;
 use FRZB\Component\RequestMapper\Data\ConverterData;
-use FRZB\Component\RequestMapper\Data\Error;
+use FRZB\Component\RequestMapper\Data\ValidationError;
 use FRZB\Component\RequestMapper\Exception\ClassExtractorException;
 use FRZB\Component\RequestMapper\Exception\ConverterException;
 use FRZB\Component\RequestMapper\Exception\ValidationException;
@@ -40,9 +40,9 @@ class RequestConverter implements ConverterInterface
             $parameters = $data->getRequest()->request->all();
             $class = $this->classExtractor->extract($data->getParameterClass(), $parameters);
         } catch (ClassExtractorException $e) {
-            throw ValidationException::fromErrors(
-                new Error(DiscriminatorMap::class, $e->getProperty(), $e->getMessage())
-            );
+            throw ValidationException::fromErrors(new ValidationError(DiscriminatorMap::class, $e->getProperty(), $e->getMessage()));
+        } catch (\Throwable $e) {
+            throw new ConverterException($e->getMessage(), (int) $e->getCode(), $e);
         }
 
         if ($data->isValidationNeeded()) {
@@ -55,9 +55,7 @@ class RequestConverter implements ConverterInterface
         try {
             $object = $this->denormalizer->denormalize($parameters, $class, self::DENORMALIZE_TYPE, $data->getSerializerContext());
         } catch (\TypeError $e) {
-            $error = $this->exceptionConverter->convert($e, $parameters);
-
-            throw ValidationException::fromErrors($error);
+            throw ValidationException::fromErrors($this->exceptionConverter->convert($e, $parameters));
         } catch (\Throwable $e) {
             throw new ConverterException($e->getMessage(), (int) $e->getCode(), $e);
         }
@@ -69,7 +67,7 @@ class RequestConverter implements ConverterInterface
     private function validate(mixed $target, array $validationGroups, ?Collection $constraints = null): void
     {
         if (($violations = $this->validator->validate($target, $constraints, $validationGroups))->count()) {
-            throw ValidationException::fromConstrainViolationList($violations);
+            throw ValidationException::fromConstraintViolationList($violations);
         }
     }
 }
