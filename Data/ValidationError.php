@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FRZB\Component\RequestMapper\Data;
 
 use FRZB\Component\RequestMapper\Exception\ErrorInvalidArgumentException;
-use FRZB\Component\RequestMapper\Utils\ClassUtil;
 use JetBrains\PhpStorm\Immutable;
 use Symfony\Component\Validator\ConstraintViolation as Constraint;
 use Symfony\Component\Validator\ConstraintViolationInterface as ConstraintViolation;
@@ -34,7 +33,7 @@ final class ValidationError implements ErrorInterface
     {
         return match (true) {
             $violation instanceof Constraint => new self(
-                ClassUtil::getShortName($violation->getConstraint()::class),
+                $violation->getConstraint()::class,
                 $violation->getPropertyPath(),
                 (string) $violation->getMessage()
             ),

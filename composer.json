@@ -1,6 +1,6 @@
 {
     "name": "frzb/request-mapper",
-    "version": "v1.3.2",
+    "version": "v1.3.3",
     "type": "library",
     "description": "The RequestMapper component allows you to serialize JSON request to Request class and validate it",
     "keywords": [
