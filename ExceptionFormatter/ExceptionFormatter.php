@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FRZB\Component\RequestMapper\ExceptionFormatter;
 
 use FRZB\Component\DependencyInjection\Attribute\AsService;
-use FRZB\Component\RequestMapper\Data\ErrorContract;
+use FRZB\Component\RequestMapper\Data\ContractErrorInterface as ContractError;
 use FRZB\Component\RequestMapper\Locator\ExceptionFormatterLocatorInterface;
 
 #[AsService]
@@ -18,7 +18,7 @@ class ExceptionFormatter implements ExceptionFormatterInterface
         $this->formatterLocator = $formatterLocator;
     }
 
-    public function format(\Throwable $e): ErrorContract
+    public function format(\Throwable $e): ContractError
     {
         return $this->formatterLocator->get($e)->format($e);
     }

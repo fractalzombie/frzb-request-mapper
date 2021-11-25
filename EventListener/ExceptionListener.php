@@ -13,7 +13,7 @@ use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as EventDispatcher;
 
-#[AsEventListener(event: KernelEvents::EXCEPTION, method: 'onKernelException', priority: 10)]
+#[AsEventListener(event: KernelEvents::EXCEPTION, method: 'onKernelException', priority: 20)]
 final class ExceptionListener
 {
     private const ALLOWED_CONTENT_TYPES = ['application/json'];
