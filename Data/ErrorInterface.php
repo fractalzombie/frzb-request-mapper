@@ -6,7 +6,7 @@ namespace FRZB\Component\RequestMapper\Data;
 
 use Symfony\Component\Validator\ConstraintViolationInterface as ConstraintViolation;
 
-interface ErrorInterface
+interface ErrorInterface extends \Stringable
 {
     public static function fromConstraint(ConstraintViolation $violation): self;
 
