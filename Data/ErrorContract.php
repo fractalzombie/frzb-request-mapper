@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\Data;
 
-interface ContractErrorInterface extends \Stringable, \JsonSerializable
+interface ErrorContract extends \Stringable, \JsonSerializable
 {
     public function getMessage(): string;
 

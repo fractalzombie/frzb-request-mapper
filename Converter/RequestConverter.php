@@ -40,9 +40,9 @@ class RequestConverter implements ConverterInterface
             $parameters = $data->getRequest()->request->all();
             $class = $this->classExtractor->extract($data->getParameterClass(), $parameters);
         } catch (ClassExtractorException $e) {
-            throw ValidationException::fromErrors(new ValidationError(DiscriminatorMap::class, $e->getProperty(), $e->getMessage()));
+            throw ValidationException::fromErrors(ValidationError::fromTypeAndClassExtractorException(DiscriminatorMap::class, $e));
         } catch (\Throwable $e) {
-            throw new ConverterException($e->getMessage(), (int) $e->getCode(), $e);
+            throw ConverterException::fromThrowable($e);
         }
 
         if ($data->isValidationNeeded()) {
@@ -57,7 +57,7 @@ class RequestConverter implements ConverterInterface
         } catch (\TypeError $e) {
             throw ValidationException::fromErrors($this->exceptionConverter->convert($e, $parameters));
         } catch (\Throwable $e) {
-            throw new ConverterException($e->getMessage(), (int) $e->getCode(), $e);
+            throw ConverterException::fromThrowable($e);
         }
 
         return $object;

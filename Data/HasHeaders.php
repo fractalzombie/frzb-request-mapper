@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FRZB\Component\RequestMapper\Request;
+namespace FRZB\Component\RequestMapper\Data;
 
 interface HasHeaders
 {

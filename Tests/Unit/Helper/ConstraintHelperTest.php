@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace FRZB\Component\RequestMapper\Tests\Unit\Utils;
+namespace FRZB\Component\RequestMapper\Tests\Unit\Helper;
 
+use FRZB\Component\RequestMapper\Helper\ConstraintsHelper;
 use FRZB\Component\RequestMapper\Tests\Stub\CreateUserRequest;
 use FRZB\Component\RequestMapper\Tests\Stub\TestRequest;
-use FRZB\Component\RequestMapper\Utils\ConstraintsUtil;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -18,7 +18,7 @@ use Symfony\Component\Validator\Constraints\Uuid;
  *
  * @internal
  */
-class ConstraintUtilTest extends TestCase
+class ConstraintHelperTest extends TestCase
 {
     /** @dataProvider fromPropertyCaseProvider */
     public function testFromPropertyMethod(array $properties, array $expectedConstraintClasses): void
@@ -26,7 +26,7 @@ class ConstraintUtilTest extends TestCase
         foreach ($properties as $property) {
             self::assertSame(
                 $expectedConstraintClasses[$property->getName()],
-                array_map(static fn (Constraint $constraint) => $constraint::class, ConstraintsUtil::fromProperty($property))
+                array_map(static fn (Constraint $constraint) => $constraint::class, ConstraintsHelper::fromProperty($property))
             );
         }
     }

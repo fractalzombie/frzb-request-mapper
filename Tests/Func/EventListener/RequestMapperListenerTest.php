@@ -8,6 +8,7 @@ use Faker\Factory;
 use Faker\Generator;
 use FRZB\Component\RequestMapper\Attribute\ParamConverter;
 use FRZB\Component\RequestMapper\EventListener\RequestMapperListener;
+use FRZB\Component\RequestMapper\Tests\Helper\RequestHelper;
 use FRZB\Component\RequestMapper\Tests\Stub\TestCallableController;
 use FRZB\Component\RequestMapper\Tests\Stub\TestCallableControllerWithoutParameterName;
 use FRZB\Component\RequestMapper\Tests\Stub\TestCallableControllerWithoutParameterNameAndParameterClass;
@@ -15,7 +16,7 @@ use FRZB\Component\RequestMapper\Tests\Stub\TestController;
 use FRZB\Component\RequestMapper\Tests\Stub\TestControllerWithoutParameterName;
 use FRZB\Component\RequestMapper\Tests\Stub\TestControllerWithoutParameterNameAndParameterClass;
 use FRZB\Component\RequestMapper\Tests\Stub\TestRequest;
-use FRZB\Component\RequestMapper\Tests\Utils\RequestHelper;
+use FRZB\Component\RequestMapper\Tests\Stub\TestRequestWithHeaders;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
@@ -51,7 +52,8 @@ final class RequestMapperListenerTest extends KernelTestCase
         string $parameterName,
         callable|object|array $controller
     ): void {
-        $request = RequestHelper::makeRequest(method: $httpMethod, params: $params, generator: $this->generator);
+        $headers = ['content-type' => 'application/json'];
+        $request = RequestHelper::makeRequest(method: $httpMethod, params: $params, headers: $headers, generator: $this->generator);
         $controllerEvent = $this->makeControllerEvent($request, $controller);
 
         $this->listener->onKernelController($controllerEvent);
@@ -141,6 +143,22 @@ final class RequestMapperListenerTest extends KernelTestCase
             'target_class' => TestRequest::class,
             'parameter_name' => 'dto',
             'controller' => #[ParamConverter] static fn (TestRequest $dto) => null,
+        ];
+
+        yield 'Test function controller with headers request' => [
+            'params' => array_merge($params, ['headers' => ['content-type' => 'application/json']]),
+            'http_method' => Request::METHOD_POST,
+            'target_class' => TestRequestWithHeaders::class,
+            'parameter_name' => 'dto',
+            'controller' => #[ParamConverter(parameterClass: TestRequestWithHeaders::class, parameterName: 'dto')] static fn (TestRequestWithHeaders $dto) => null,
+        ];
+
+        yield 'Test function controller native request' => [
+            'params' => $params,
+            'http_method' => Request::METHOD_POST,
+            'target_class' => TestRequest::class,
+            'parameter_name' => 'dto',
+            'controller' => #[ParamConverter(parameterClass: TestRequest::class, parameterName: 'dto')] static fn (TestRequest $dto, Request $request) => null,
         ];
     }
 

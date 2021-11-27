@@ -41,7 +41,9 @@
         </include>
         <exclude>
             <directory>./Tests</directory>
+            <directory>./Resources</directory>
             <directory>./vendor</directory>
+            <file>/.php-cs-fixer.dist.php</file>
         </exclude>
     </coverage>
 

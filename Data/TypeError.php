@@ -5,51 +5,30 @@ declare(strict_types=1);
 namespace FRZB\Component\RequestMapper\Data;
 
 use FRZB\Component\RequestMapper\Exception\TypeErrorInvalidArgumentException;
-use FRZB\Component\RequestMapper\Utils\ObjectUtil;
+use FRZB\Component\RequestMapper\Helper\ObjectHelper;
+use JetBrains\PhpStorm\Immutable;
 
+#[Immutable]
 final class TypeError
 {
-    /** @var class-string */
-    private string $class;
-    private string $method;
-    private int $position;
-
-    /** @var class-string */
-    private string $expected;
-
-    /** @var class-string */
-    private string $proposed;
-
-    /**
-     * @param class-string $class
-     * @param class-string $expected
-     * @param class-string $proposed
-     */
-    public function __construct(string $class, string $method, int $position, string $expected, string $proposed)
-    {
-        $this->class = $class;
-        $this->method = $method;
-        $this->position = $position;
-        $this->expected = $expected;
-        $this->proposed = $proposed;
+    public function __construct(
+        private string $class,
+        private string $method,
+        private int $position,
+        private string $expected,
+        private string $proposed
+    ) {
     }
 
     public static function fromArray(array $params): self
     {
-        if (!ObjectUtil::isArrayHasAllPropertiesFromClass($params, self::class)) {
+        if (!ObjectHelper::isArrayHasAllPropertiesFromClass($params, self::class)) {
             throw TypeErrorInvalidArgumentException::fromParams($params);
         }
 
-        return new self(
-            $params['class'],
-            $params['method'],
-            (int) $params['position'],
-            $params['expected'],
-            $params['proposed']
-        );
+        return new self($params['class'], $params['method'], (int) $params['position'], $params['expected'], $params['proposed']);
     }
 
-    /** @return class-string */
     public function getClass(): string
     {
         return $this->class;
@@ -65,13 +44,11 @@ final class TypeError
         return $this->position;
     }
 
-    /** @return class-string */
     public function getExpected(): string
     {
         return $this->expected;
     }
 
-    /** @return class-string */
     public function getProposed(): string
     {
         return $this->proposed;

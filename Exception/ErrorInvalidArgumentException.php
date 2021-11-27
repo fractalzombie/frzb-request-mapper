@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\Exception;
 
-use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Validator\ConstraintViolationInterface as ConstraintViolation;
 
 /**
- * This error should never be thrown.
+ * @codeCoverageIgnore This error should never be thrown.
  */
-class ErrorInvalidArgumentException extends \InvalidArgumentException
+final class ErrorInvalidArgumentException extends \InvalidArgumentException
 {
-    #[Pure]
     public static function fromConstraintValidation(ConstraintViolation $violation, ?\Throwable $previous = null): self
     {
         $message = sprintf(

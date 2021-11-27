@@ -8,7 +8,7 @@ use FRZB\Component\DependencyInjection\Attribute\AsService;
 use FRZB\Component\RequestMapper\Data\ErrorInterface as Error;
 use FRZB\Component\RequestMapper\Data\TypeError;
 use FRZB\Component\RequestMapper\Data\ValidationError;
-use FRZB\Component\RequestMapper\Utils\ClassUtil;
+use FRZB\Component\RequestMapper\Helper\ClassHelper;
 
 #[AsService]
 class TypeErrorExceptionConverter implements ExceptionConverterInterface
@@ -28,11 +28,11 @@ class TypeErrorExceptionConverter implements ExceptionConverterInterface
         }
 
         $error = TypeError::fromArray($matches);
-        $parameters = ClassUtil::getMethodParameters($error->getClass(), $error->getMethod());
+        $parameters = ClassHelper::getMethodParameters($error->getClass(), $error->getMethod());
         $parameter = $parameters[$error->getPosition() - 1] ?? throw new \InvalidArgumentException(sprintf(self::ARGUMENT_ERROR_MESSAGE_TEMPLATE, $error->getPosition()));
 
-        $expectedClass = ClassUtil::getShortName($error->getExpected());
-        $proposedClass = ClassUtil::getShortName($error->getProposed());
+        $expectedClass = ClassHelper::getShortName($error->getExpected());
+        $proposedClass = ClassHelper::getShortName($error->getProposed());
 
         return new ValidationError(TypeError::class, $parameter->getName(), sprintf(self::TYPE_ERROR_MESSAGE_TEMPLATE, $parameter->getName(), $expectedClass, $proposedClass));
     }

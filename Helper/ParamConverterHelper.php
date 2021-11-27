@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FRZB\Component\RequestMapper\Utils;
+namespace FRZB\Component\RequestMapper\Helper;
 
 use FRZB\Component\RequestMapper\Attribute\ParamConverter;
 use JetBrains\PhpStorm\Pure;
@@ -10,11 +10,10 @@ use JetBrains\PhpStorm\Pure;
 /**
  * @internal
  */
-final class ParamConverterUtil
+final class ParamConverterHelper
 {
     private const REQUEST_POSTFIXES = ['Request', 'Dto', 'DTO'];
 
-    /** @param array<class-string, ParamConverter|string> $attributes */
     public static function getAttribute(\ReflectionParameter $parameter, array $attributes): ?ParamConverter
     {
         return $attributes[$parameter->getName()]
@@ -34,11 +33,7 @@ final class ParamConverterUtil
         return $attribute->newInstance();
     }
 
-    /**
-     * @param \ReflectionAttribute ...$attributes
-     *
-     * @return array<class-string|string|string, ParamConverter>
-     */
+    /** @return array<string, ParamConverter> */
     public static function fromReflectionAttributes(\ReflectionAttribute ...$attributes): array
     {
         $mapReflection = static fn (\ReflectionAttribute $ra): ParamConverter => self::fromReflectionAttribute($ra);
@@ -50,7 +45,7 @@ final class ParamConverterUtil
     public static function fromReflectionParameter(\ReflectionParameter $parameter): ?ParamConverter
     {
         return match (true) {
-            !$parameter->getType()?->getName(), !ClassUtil::isNameContains($parameter->getType()?->getName(), ...self::REQUEST_POSTFIXES) => null,
+            !$parameter->getType()?->getName(), !ClassHelper::isNameContains($parameter->getType()?->getName(), ...self::REQUEST_POSTFIXES) => null,
             default => new ParamConverter(parameterClass: $parameter->getType()?->getName(), parameterName: $parameter->getName()),
         };
     }

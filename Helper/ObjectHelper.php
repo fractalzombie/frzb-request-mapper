@@ -2,14 +2,13 @@
 
 declare(strict_types=1);
 
-namespace FRZB\Component\RequestMapper\Utils;
+namespace FRZB\Component\RequestMapper\Helper;
 
 /**
  * @internal
  */
-final class ObjectUtil
+final class ObjectHelper
 {
-    /** @param class-string $class */
     public static function isArrayHasAllPropertiesFromClass(array $array, string $class): bool
     {
         try {
@@ -19,7 +18,7 @@ final class ObjectUtil
         }
 
         foreach ($rClass->getProperties() as $property) {
-            $propertyValue = $array[$property->getName()] ?? $array[StringUtil::toSnakeCase($property->getName())] ?? null;
+            $propertyValue = $array[$property->getName()] ?? $array[StringHelper::toSnakeCase($property->getName())] ?? null;
 
             if (!$propertyValue) {
                 return false;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FRZB\Component\RequestMapper\Tests\Utils;
+namespace FRZB\Component\RequestMapper\Tests\Helper;
 
 /**
  * @internal

@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\Tests\Unit\Extractor;
 
+use FRZB\Component\RequestMapper\Exception\ClassExtractorException;
 use FRZB\Component\RequestMapper\Extractor\DiscriminatorMapExtractor;
+use FRZB\Component\RequestMapper\Tests\Helper\TestConstant;
 use FRZB\Component\RequestMapper\Tests\Stub\CreateCardSettingsRequest;
 use FRZB\Component\RequestMapper\Tests\Stub\CreateSettingsRequest;
 use FRZB\Component\RequestMapper\Tests\Stub\CreateUserRequest;
 use FRZB\Component\RequestMapper\Tests\Stub\CreateUserSettingsRequest;
-use FRZB\Component\RequestMapper\Tests\Utils\TestConstant;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -27,8 +28,12 @@ class DiscriminatorMapExtractorTest extends TestCase
     }
 
     /** @dataProvider caseProvider */
-    public function testExtractMethod(string $givenClass, string $expectedClass, array $parameters): void
+    public function testExtractMethod(string $givenClass, string $expectedClass, array $parameters, bool $throws = false): void
     {
+        if ($throws) {
+            $this->expectException(ClassExtractorException::class);
+        }
+
         $extractedClass = $this->extractor->extract($givenClass, $parameters);
 
         self::assertSame($expectedClass, $extractedClass);
@@ -52,6 +57,26 @@ class DiscriminatorMapExtractorTest extends TestCase
             'given_class' => CreateSettingsRequest::class,
             'expected_class' => CreateCardSettingsRequest::class,
             'parameters' => ['type' => CreateCardSettingsRequest::TYPE, 'primaryAccountNumber' => TestConstant::UUID],
+        ];
+
+        yield sprintf('Class "%s" with invalid discriminator type "%s" and expected class "%s"', CreateSettingsRequest::class, 'invalid', CreateCardSettingsRequest::class) => [
+            'given_class' => CreateSettingsRequest::class,
+            'expected_class' => CreateCardSettingsRequest::class,
+            'parameters' => ['type' => 'invalid', 'primaryAccountNumber' => TestConstant::UUID],
+            'throws' => true,
+        ];
+
+        yield sprintf('Class "%s" with discriminator type "%s" and expected class "%s" and null parameter', CreateSettingsRequest::class, null, CreateCardSettingsRequest::class) => [
+            'given_class' => CreateSettingsRequest::class,
+            'expected_class' => CreateCardSettingsRequest::class,
+            'parameters' => [],
+            'throws' => true,
+        ];
+
+        yield sprintf('Class "%s" without discriminator and is not exists', 'NotExistedClass') => [
+            'given_class' => 'NotExistedClass',
+            'expected_class' => 'NotExistedClass',
+            'parameters' => ['type' => CreateCardSettingsRequest::TYPE],
         ];
     }
 }

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace FRZB\Component\RequestMapper\Tests\Unit\Utils;
+namespace FRZB\Component\RequestMapper\Tests\Unit\Helper;
 
+use FRZB\Component\RequestMapper\Helper\SerializerHelper;
 use FRZB\Component\RequestMapper\Tests\Stub\CreateUserRequest;
 use FRZB\Component\RequestMapper\Tests\Stub\CreateUserRequestWithSerializedName;
-use FRZB\Component\RequestMapper\Utils\SerializerUtil;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -14,14 +14,14 @@ use PHPUnit\Framework\TestCase;
  *
  * @internal
  */
-class SerializerUtilTest extends TestCase
+class SerializerHelperTest extends TestCase
 {
     /** @dataProvider caseProvider */
     public function testGetSerializedNameAttributeMethod(array $properties, array $expectedPropertyNames): void
     {
         foreach ($properties as $index => $property) {
             $expectedPropertyName = $expectedPropertyNames[$index];
-            $serializedPropertyName = SerializerUtil::getSerializedNameAttribute($property)->getSerializedName();
+            $serializedPropertyName = SerializerHelper::getSerializedNameAttribute($property)->getSerializedName();
             self::assertSame($expectedPropertyName, $serializedPropertyName);
         }
     }

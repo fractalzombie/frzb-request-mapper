@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace FRZB\Component\RequestMapper\Utils;
+namespace FRZB\Component\RequestMapper\Helper;
 
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @internal
  */
-final class HeadersUtil
+final class HeadersHelper
 {
     public static function getHeaders(Request $request): array
     {

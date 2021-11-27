@@ -13,7 +13,6 @@ use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 #[Immutable]
 final class ConverterData
 {
-    private const DEFAULT_VALIDATION_GROUP = 'Default';
     private const DEFAULT_CONTEXT = [AbstractObjectNormalizer::DISABLE_TYPE_ENFORCEMENT => true];
 
     private Request $request;
@@ -30,9 +29,6 @@ final class ConverterData
         return $this->request;
     }
 
-    /**
-     * @return null|class-string
-     */
     #[Pure]
     public function getParameterClass(): ?string
     {
@@ -54,6 +50,6 @@ final class ConverterData
     #[Pure]
     public function getValidationGroups(): array
     {
-        return $this->attribute->getValidationGroups() ?: [self::DEFAULT_VALIDATION_GROUP];
+        return $this->attribute->getValidationGroups();
     }
 }

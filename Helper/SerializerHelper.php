@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace FRZB\Component\RequestMapper\Utils;
+namespace FRZB\Component\RequestMapper\Helper;
 
 use Symfony\Component\Serializer\Annotation\SerializedName;
 
 /**
  * @internal
  */
-final class SerializerUtil
+final class SerializerHelper
 {
     public static function getSerializedNameAttribute(\ReflectionProperty $rProperty): SerializedName
     {

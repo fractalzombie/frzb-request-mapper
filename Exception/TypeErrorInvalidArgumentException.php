@@ -7,7 +7,7 @@ namespace FRZB\Component\RequestMapper\Exception;
 use JetBrains\PhpStorm\Pure;
 use Throwable;
 
-class TypeErrorInvalidArgumentException extends \InvalidArgumentException
+final class TypeErrorInvalidArgumentException extends \InvalidArgumentException
 {
     private const MESSAGE_TEMPLATE = 'Params have not needed values "%s"';
 

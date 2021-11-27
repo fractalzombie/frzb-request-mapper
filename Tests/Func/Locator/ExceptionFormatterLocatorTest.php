@@ -10,7 +10,7 @@ use FRZB\Component\RequestMapper\ExceptionFormatter\Formatter\HttpExceptionForma
 use FRZB\Component\RequestMapper\ExceptionFormatter\Formatter\ThrowableFormatter;
 use FRZB\Component\RequestMapper\ExceptionFormatter\Formatter\ValidationFormatter;
 use FRZB\Component\RequestMapper\Locator\ExceptionFormatterLocatorInterface as ExceptionFormatterLocator;
-use FRZB\Component\RequestMapper\Tests\Utils\TestConstant;
+use FRZB\Component\RequestMapper\Tests\Helper\TestConstant;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;

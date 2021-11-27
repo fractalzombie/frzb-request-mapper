@@ -1,6 +1,6 @@
 {
     "name": "frzb/request-mapper",
-    "version": "v1.3.4",
+    "version": "v1.4.0",
     "type": "library",
     "description": "The RequestMapper component allows you to serialize JSON request to Request class and validate it",
     "keywords": [
@@ -26,7 +26,7 @@
         }
     ],
     "require": {
-        "php": ">=8.0",
+        "php": ">=8.0.2",
         "psr/container": "^1.1.1|^2.0|^3.0",
         "symfony/dependency-injection": "^v5.4|^6.0",
         "symfony/deprecation-contracts": "^2.4",
@@ -42,15 +42,15 @@
     },
     "require-dev": {
         "symfony/config": "^5.4|^6.0",
-        "phpunit/php-code-coverage": "^9.2",
         "symfony/expression-language": "^5.4|^6.0",
         "phpunit/phpunit": "^9.5",
+        "phpunit/php-code-coverage": "^9.2",
+        "php-coveralls/php-coveralls": "^2.5",
         "symfony/phpunit-bridge": "^5.4|^6.0",
         "friendsofphp/php-cs-fixer": "^v3.3",
         "sempro/phpunit-pretty-print": "dev-develop",
         "dg/bypass-finals": "^v1.3.1",
-        "symfony/test-pack": "^v1.0.9",
-        "vimeo/psalm": "^4.13.0"
+        "symfony/test-pack": "^v1.0.9"
     },
     "suggest": {
         "symfony/config": "",
@@ -75,6 +75,14 @@
         },
         "exclude-from-classmap": [
             "/Tests/"
+        ]
+    },
+    "scripts": {
+        "test": [
+            "php vendor/bin/phpunit --colors=always --verbose --configuration phpunit.xml.dist --log-junit var/tests/.phpunit.output.xml"
+        ],
+        "test-coverage": [
+            "php -n -dzend_extension=xdebug -dxdebug.mode=coverage vendor/bin/phpunit --colors=always --verbose --configuration phpunit.xml.dist --log-junit var/tests/.phpunit.output.xml --coverage-html var/tests/coverage --coverage-clover var/tests/coverage/coverage.xml"
         ]
     },
     "minimum-stability": "dev"

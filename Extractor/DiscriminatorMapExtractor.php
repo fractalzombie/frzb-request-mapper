@@ -11,35 +11,28 @@ use Symfony\Component\Serializer\Annotation\DiscriminatorMap;
 #[AsService]
 class DiscriminatorMapExtractor
 {
-    /**
-     * @param class-string $class
-     *
-     * @throws ClassExtractorException
-     *
-     * @return class-string
-     */
+    /** @throws ClassExtractorException */
     public function extract(string $class, array $parameters): string
     {
         if ($discriminatorMap = $this->getDiscriminatorMapAttribute($class)) {
             $property = $discriminatorMap->getTypeProperty();
             $mapping = $discriminatorMap->getMapping();
-            $parameter = $parameters[$property] ?? throw ClassExtractorException::createWhenParameterIsNull($discriminatorMap);
-            $class = $mapping[$parameter] ?? throw ClassExtractorException::createWhenParameterInvalid($discriminatorMap);
+            $parameter = $parameters[$property] ?? throw ClassExtractorException::fromDiscriminatorMapWhenParameterIsNull($discriminatorMap);
+            $class = $mapping[$parameter] ?? throw ClassExtractorException::fromDiscriminatorMapWhenParameterInvalid($discriminatorMap);
         }
 
         return $class;
     }
 
-    /** @param class-string $class */
     private function getDiscriminatorMapAttribute(string $class): ?DiscriminatorMap
     {
         try {
             $discriminators = array_map(
                 static fn (\ReflectionAttribute $attribute) => $attribute->newInstance(),
-                (new \ReflectionClass($class))->getAttributes(DiscriminatorMap::class)
+                (new \ReflectionClass($class))->getAttributes(DiscriminatorMap::class),
             );
 
-            return \count($discriminators) ? current($discriminators) : null;
+            return current($discriminators) ?: null;
         } catch (\ReflectionException) {
             return null;
         }

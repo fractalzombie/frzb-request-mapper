@@ -10,17 +10,14 @@ use Throwable;
 
 final class ClassExtractorException extends \RuntimeException
 {
-    private string $property;
-
     #[Pure]
-    public function __construct(string $property, string $message, int $code = 0, ?Throwable $previous = null)
+    public function __construct(private string $property, string $message, int $code = 0, ?Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
-        $this->property = $property;
     }
 
     #[Pure]
-    public static function createWhenParameterIsNull(DiscriminatorMap $discriminatorMap): self
+    public static function fromDiscriminatorMapWhenParameterIsNull(DiscriminatorMap $discriminatorMap): self
     {
         $property = $discriminatorMap->getTypeProperty();
         $message = sprintf('%s cannot be null or empty', $property);
@@ -29,7 +26,7 @@ final class ClassExtractorException extends \RuntimeException
     }
 
     #[Pure]
-    public static function createWhenParameterInvalid(DiscriminatorMap $discriminatorMap): self
+    public static function fromDiscriminatorMapWhenParameterInvalid(DiscriminatorMap $discriminatorMap): self
     {
         $property = $discriminatorMap->getTypeProperty();
         $expectedValues = array_keys($discriminatorMap->getMapping());

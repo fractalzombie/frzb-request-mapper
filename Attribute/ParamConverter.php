@@ -11,7 +11,6 @@ final class ParamConverter
 {
     public const DEFAULT_VALIDATION_GROUP = 'Default';
 
-    /** @param null|class-string $parameterClass */
     public function __construct(
         private ?string $parameterClass = null,
         private ?string $parameterName = null,
@@ -22,7 +21,6 @@ final class ParamConverter
     ) {
     }
 
-    /** @return null|class-string */
     public function getParameterClass(): ?string
     {
         return $this->parameterClass;
@@ -54,8 +52,8 @@ final class ParamConverter
     public function equals(object $object): bool
     {
         return match (true) {
-            $object instanceof \ReflectionParameter => $object->getType()?->getName() === $this->parameterClass || $object->getName() === $this->parameterName,
-            $object instanceof self => $object->getParameterClass() === $this->parameterClass || $object->getParameterName() === $this->parameterName,
+            $object instanceof \ReflectionParameter => $object->getType()?->getName() === $this->parameterClass && $object->getName() === $this->parameterName,
+            $object instanceof self => $object->getParameterClass() === $this->parameterClass && $object->getParameterName() === $this->parameterName,
             default => false
         };
     }

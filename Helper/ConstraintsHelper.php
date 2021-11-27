@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FRZB\Component\RequestMapper\Utils;
+namespace FRZB\Component\RequestMapper\Helper;
 
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\Collection;
@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints\Collection;
 /**
  * @internal
  */
-final class ConstraintsUtil
+final class ConstraintsHelper
 {
     public static function createCollection(array $fields, bool $allowExtraFields = true, bool $allowMissingFields = true): Collection
     {

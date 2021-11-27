@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace FRZB\Component\RequestMapper\Data;
 
 use JetBrains\PhpStorm\ArrayShape;
+use JetBrains\PhpStorm\Immutable;
 
-final class ContractError implements ContractErrorInterface
+#[Immutable]
+final class FormattedError implements ErrorContract
 {
     public function __construct(
         private string $message,

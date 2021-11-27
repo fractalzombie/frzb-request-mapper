@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FRZB\Component\RequestMapper\EventListener;
 
 use FRZB\Component\RequestMapper\Event\ListenerExceptionEvent;
-use FRZB\Component\RequestMapper\Utils\Header;
+use FRZB\Component\RequestMapper\Helper\Header;
 use JetBrains\PhpStorm\Pure;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\InputBag;

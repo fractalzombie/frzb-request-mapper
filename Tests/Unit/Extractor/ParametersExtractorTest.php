@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace FRZB\Component\RequestMapper\Tests\Unit\Extractor;
 
 use FRZB\Component\RequestMapper\Extractor\ParametersExtractor;
+use FRZB\Component\RequestMapper\Tests\Helper\TestConstant;
 use FRZB\Component\RequestMapper\Tests\Stub\CreateNestedUserRequest;
 use FRZB\Component\RequestMapper\Tests\Stub\CreateUserRequest;
 use FRZB\Component\RequestMapper\Tests\Stub\CreateUserRequestWithSerializedName;
 use FRZB\Component\RequestMapper\Tests\Stub\TestRequest;
-use FRZB\Component\RequestMapper\Tests\Utils\TestConstant;
 use PHPUnit\Framework\TestCase;
 
 /**

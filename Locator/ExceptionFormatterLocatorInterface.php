@@ -12,7 +12,7 @@ interface ExceptionFormatterLocatorInterface
 {
     public const EXCEPTION_FORMATTERS_TAG = 'frzb.request_mapper.exception_formatters';
 
-    public function get(\Throwable $e): FormatterInterface;
+    public function get(\Throwable $e): FormatterInterface|callable;
 
     public function has(\Throwable $e): bool;
 }

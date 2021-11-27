@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace FRZB\Component\RequestMapper\Tests\Unit\Utils;
+namespace FRZB\Component\RequestMapper\Tests\Unit\Helper;
 
+use FRZB\Component\RequestMapper\Helper\ClassHelper;
 use FRZB\Component\RequestMapper\Tests\Stub\CreateNestedUserRequest;
 use FRZB\Component\RequestMapper\Tests\Stub\CreateUserRequest;
 use FRZB\Component\RequestMapper\Tests\Stub\CreateUserRequestWithSerializedName;
-use FRZB\Component\RequestMapper\Utils\ClassUtil;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -15,12 +15,12 @@ use PHPUnit\Framework\TestCase;
  *
  * @internal
  */
-class ClassUtilTest extends TestCase
+class ClassHelperTest extends TestCase
 {
     /** @dataProvider builtinCaseProvider */
     public function testIsNotBuiltinAndExistsMethod(string $class, bool $isNotBuiltinAndExists): void
     {
-        self::assertSame($isNotBuiltinAndExists, ClassUtil::isNotBuiltinAndExists($class));
+        self::assertSame($isNotBuiltinAndExists, ClassHelper::isNotBuiltinAndExists($class));
     }
 
     public function builtinCaseProvider(): iterable
@@ -44,7 +44,7 @@ class ClassUtilTest extends TestCase
     /** @dataProvider shortNameCaseProvider */
     public function testGetShortNameMethod(string $className, string $expectedName): void
     {
-        self::assertSame($expectedName, ClassUtil::getShortName($className));
+        self::assertSame($expectedName, ClassHelper::getShortName($className));
     }
 
     public function shortNameCaseProvider(): iterable
@@ -68,7 +68,7 @@ class ClassUtilTest extends TestCase
     /** @dataProvider nameContainsCaseProvider */
     public function testIsNameContainsMethod(string $className, array $haystack, bool $contains): void
     {
-        self::assertSame($contains, ClassUtil::isNameContains($className, ...$haystack));
+        self::assertSame($contains, ClassHelper::isNameContains($className, ...$haystack));
     }
 
     public function nameContainsCaseProvider(): iterable
@@ -101,7 +101,7 @@ class ClassUtilTest extends TestCase
     /** @dataProvider propertyMappingCaseProvider */
     public function testGetPropertyMappingMethod(string $className, array $expectedMapping): void
     {
-        self::assertSame($expectedMapping, ClassUtil::getPropertyMapping($className));
+        self::assertSame($expectedMapping, ClassHelper::getPropertyMapping($className));
     }
 
     public function propertyMappingCaseProvider(): iterable
@@ -119,6 +119,37 @@ class ClassUtilTest extends TestCase
         yield sprintf('class "%s", mapping "%s"', CreateNestedUserRequest::class, implode(', ', ['name', 'request'])) => [
             'class_name' => CreateNestedUserRequest::class,
             'expected_mapping' => ['name' => 'string', 'request' => CreateUserRequest::class],
+        ];
+
+        yield sprintf('class "%s", mapping "%s"', 'NoClass', implode(', ', [])) => [
+            'class_name' => 'NoClass',
+            'expected_mapping' => [],
+        ];
+    }
+
+    /** @dataProvider methodParametersCaseProvider */
+    public function testGetMethodParametersMethod(string $className, string $method, array $expectedMapping): void
+    {
+        $mapping = array_map(
+            static fn (\ReflectionParameter $p) => $p->getName(),
+            ClassHelper::getMethodParameters($className, $method),
+        );
+
+        self::assertSame($expectedMapping, $mapping);
+    }
+
+    public function methodParametersCaseProvider(): iterable
+    {
+        yield sprintf('class "%s", mapping "%s"', CreateUserRequest::class, implode(', ', ['name', 'userId', 'amount'])) => [
+            'class_name' => CreateUserRequest::class,
+            'method' => '__construct',
+            'expected_mapping' => ['name', 'userId', 'amount'],
+        ];
+
+        yield sprintf('class "%s", mapping "%s"', 'NoClass', implode(', ', [])) => [
+            'class_name' => 'NoClass',
+            'method' => 'no_method',
+            'expected_mapping' => [],
         ];
     }
 }

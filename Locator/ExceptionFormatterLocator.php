@@ -11,25 +11,19 @@ use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
 #[AsService]
 class ExceptionFormatterLocator implements ExceptionFormatterLocatorInterface
 {
-    /** @var array<FormatterInterface> */
+    /** @var array<callable|FormatterInterface> */
     private array $formatters;
 
     public function __construct(
         #[TaggedIterator(self::EXCEPTION_FORMATTERS_TAG, defaultIndexMethod: 'getExceptionClass', defaultPriorityMethod: 'getPriority')]
         iterable $formatters
     ) {
-        $this->formatters = $formatters instanceof \Traversable ? iterator_to_array($formatters) : $formatters;
+        $this->formatters = $formatters instanceof \Traversable ? iterator_to_array($formatters) : (array) $formatters;
     }
 
-    public function get(\Throwable $e): FormatterInterface
+    public function get(\Throwable $e): FormatterInterface|callable
     {
-        foreach ($this->formatters as $exceptionClass => $formatter) {
-            if ($e::class === $exceptionClass || is_subclass_of($e, $exceptionClass)) {
-                return $formatter;
-            }
-        }
-
-        return $this->formatters[\Throwable::class];
+        return $this->formatters[$e::class] ?? $this->formatters[\Throwable::class];
     }
 
     public function has(\Throwable $e): bool

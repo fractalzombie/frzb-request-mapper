@@ -6,8 +6,7 @@ namespace FRZB\Component\RequestMapper\EventListener;
 
 use FRZB\Component\RequestMapper\Event\ListenerExceptionEvent;
 use FRZB\Component\RequestMapper\ExceptionFormatter\ExceptionFormatterInterface as ExceptionFormatter;
-use FRZB\Component\RequestMapper\Utils\Header;
-use JetBrains\PhpStorm\Pure;
+use FRZB\Component\RequestMapper\Helper\Header;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -16,7 +15,7 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as EventDispatche
 #[AsEventListener(event: KernelEvents::EXCEPTION, method: 'onKernelException', priority: 20)]
 final class ExceptionListener
 {
-    private const ALLOWED_CONTENT_TYPES = ['application/json'];
+    private const ALLOWED_CONTENT_TYPE = 'application/json';
 
     public function __construct(
         private ExceptionFormatter $exceptionFormatter,
@@ -27,19 +26,13 @@ final class ExceptionListener
     public function onKernelException(ExceptionEvent $event): void
     {
         $request = $event->getRequest();
-        $contentType = $request->headers->get(Header::CONTENT_TYPE);
-        $acceptType = $request->headers->get(Header::ACCEPT);
+        $isContentTypeAllowed = $request->headers->contains(Header::CONTENT_TYPE, self::ALLOWED_CONTENT_TYPE);
+        $isAcceptTypeAllowed = $request->headers->contains(Header::ACCEPT, self::ALLOWED_CONTENT_TYPE);
 
-        if ($this->isAllowed($contentType) || $this->isAllowed($acceptType)) {
+        if ($isContentTypeAllowed || $isAcceptTypeAllowed) {
             $errorContract = $this->exceptionFormatter->format($event->getThrowable());
 
             $this->eventDispatcher->dispatch(new ListenerExceptionEvent($event, $event->getThrowable(), self::class, $errorContract));
         }
-    }
-
-    #[Pure]
-    public function isAllowed(?string $contentType): bool
-    {
-        return \in_array($contentType, self::ALLOWED_CONTENT_TYPES, true);
     }
 }
