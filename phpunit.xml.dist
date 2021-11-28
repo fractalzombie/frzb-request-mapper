@@ -40,10 +40,11 @@
             <directory suffix=".php">./</directory>
         </include>
         <exclude>
-            <directory>./Tests</directory>
-            <directory>./Resources</directory>
-            <directory>./vendor</directory>
-            <file>/.php-cs-fixer.dist.php</file>
+            <directory>Tests</directory>
+            <directory>Resources</directory>
+            <directory>vendor</directory>
+            <file>.php-cs-fixer.dist.php</file>
+            <file>bootstrap.php</file>
         </exclude>
     </coverage>
 
