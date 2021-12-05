@@ -29,6 +29,11 @@ final class ConverterData
         return $this->request;
     }
 
+    public function getRequestParameters(): array
+    {
+        return $this->request->request->all();
+    }
+
     #[Pure]
     public function getParameterClass(): ?string
     {

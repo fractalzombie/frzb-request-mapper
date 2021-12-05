@@ -60,13 +60,15 @@ class RequestConverterTest extends TestCase
     }
 
     /** @dataProvider caseProvider */
-    public function testConvertMethod(string $service, InvokedCountMatcher $expects, string $method, \Throwable $exception, string $expectedExceptionClass): void
+    public function testConvertMethod(string $service, InvokedCountMatcher $expects, string $method, \Throwable $exception, string $expectedExceptionClass, array $parameters, bool $willServiceThrow = true): void
     {
-        $attribute = new ParamConverter(parameterClass: CreateSettingsRequest::class, parameterName: 'request');
+        $attribute = new ParamConverter(...$parameters);
         $request = RequestHelper::makeRequest(method: Request::METHOD_POST, params: []);
         $data = new ConverterData($request, $attribute);
 
-        $this->{$service}->expects($expects)->method($method)->willThrowException($exception);
+        if ($willServiceThrow) {
+            $this->{$service}->expects($expects)->method($method)->willThrowException($exception);
+        }
 
         $this->expectException($expectedExceptionClass);
 
@@ -81,6 +83,7 @@ class RequestConverterTest extends TestCase
             'method' => 'extract',
             'exception' => new ClassExtractorException('request', TestConstant::EXCEPTION_MESSAGE),
             'expected_exception_class' => ValidationException::class,
+            'parameters' => ['parameterClass' => CreateSettingsRequest::class, 'parameterName' => 'request'],
         ];
 
         yield sprintf('%s::%s expects %s, exception %s, expected exception %s', DiscriminatorMapExtractor::class, 'extract', 'once', \TypeError::class, ConverterException::class) => [
@@ -89,6 +92,7 @@ class RequestConverterTest extends TestCase
             'method' => 'extract',
             'exception' => new \TypeError(TestConstant::EXCEPTION_MESSAGE),
             'expected_exception_class' => ConverterException::class,
+            'parameters' => ['parameterClass' => CreateSettingsRequest::class, 'parameterName' => 'request'],
         ];
 
         yield sprintf('%s::%s expects %s, exception %s, expected exception %s', Denormalizer::class, 'denormalize', 'once', \TypeError::class, ValidationException::class) => [
@@ -97,6 +101,7 @@ class RequestConverterTest extends TestCase
             'method' => 'denormalize',
             'exception' => new \TypeError(TestConstant::EXCEPTION_MESSAGE),
             'expected_exception_class' => ValidationException::class,
+            'parameters' => ['parameterClass' => CreateSettingsRequest::class, 'parameterName' => 'request'],
         ];
 
         yield sprintf('%s::%s expects %s, exception %s, expected exception %s', Denormalizer::class, 'denormalize', 'once', LogicException::class, ConverterException::class) => [
@@ -105,6 +110,17 @@ class RequestConverterTest extends TestCase
             'method' => 'denormalize',
             'exception' => new LogicException(TestConstant::EXCEPTION_MESSAGE),
             'expected_exception_class' => ConverterException::class,
+            'parameters' => ['parameterClass' => CreateSettingsRequest::class, 'parameterName' => 'request'],
+        ];
+
+        yield sprintf('%s::%s expects %s, exception %s, expected exception %s', RequestConverter::class, 'convert', 'once', ConverterException::class, ConverterException::class) => [
+            'service' => 'converter',
+            'expects' => self::once(),
+            'method' => 'convert',
+            'exception' => ConverterException::nullableParameterClass(),
+            'expected_exception_class' => ConverterException::class,
+            'parameters' => [],
+            'will_service_throw' => false,
         ];
     }
 }

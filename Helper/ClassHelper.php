@@ -46,10 +46,10 @@ final class ClassHelper
     }
 
     /** @return \ReflectionParameter[] */
-    public static function getMethodParameters(string $class, string $method): array
+    public static function getMethodParameters(string $className, string $classMethod): array
     {
         try {
-            return (new \ReflectionMethod($class, $method))->getParameters();
+            return (new \ReflectionMethod($className, $classMethod))->getParameters();
         } catch (\ReflectionException) {
             return [];
         }

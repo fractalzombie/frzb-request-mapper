@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - uses: actions/checkout@v2
@@ -23,9 +23,6 @@ jobs:
           coverage: xdebug
           tools: pecl, phpunit
           ini-values: post_max_size=256M
-
-      - name: check if rdkafka is there
-        run: php -v && php --ri rdkafka
 
       - name: Cache Composer packages
         id: composer-cache
