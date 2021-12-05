@@ -36,9 +36,11 @@ class RequestConverter implements ConverterInterface
 
     public function convert(ConverterData $data): object
     {
+        $parameters = $data->getRequestParameters();
+        $parameterClass = $data->getParameterClass() ?? throw ConverterException::nullableParameterClass();
+
         try {
-            $parameters = $data->getRequest()->request->all();
-            $class = $this->classExtractor->extract($data->getParameterClass(), $parameters);
+            $class = $this->classExtractor->extract($parameterClass, $parameters);
         } catch (ClassExtractorException $e) {
             throw ValidationException::fromErrors(ValidationError::fromTypeAndClassExtractorException(DiscriminatorMap::class, $e));
         } catch (\Throwable $e) {
@@ -47,7 +49,7 @@ class RequestConverter implements ConverterInterface
 
         if ($data->isValidationNeeded()) {
             $constraints = $this->constraintExtractor->extract($class);
-            $parameters = $this->parametersExtractor->extract($data->getParameterClass(), $parameters);
+            $parameters = $this->parametersExtractor->extract($parameterClass, $parameters);
 
             $this->validate($parameters, $data->getValidationGroups(), $constraints);
         }

@@ -1,6 +1,6 @@
 {
     "name": "frzb/request-mapper",
-    "version": "v1.4.1",
+    "version": "v1.4.2",
     "type": "library",
     "description": "The RequestMapper component allows you to serialize JSON request to Request class and validate it",
     "keywords": [
@@ -26,7 +26,7 @@
         }
     ],
     "require": {
-        "php": ">=8.0.2",
+        "php": "^8.0|^8.1",
         "psr/container": "^1.1.1|^2.0|^3.0",
         "symfony/dependency-injection": "^v5.4|^6.0",
         "symfony/deprecation-contracts": "^2.4",
@@ -85,5 +85,15 @@
             "php -n -dzend_extension=xdebug -dxdebug.mode=coverage vendor/bin/phpunit --colors=always --verbose --configuration phpunit.xml.dist --log-junit var/tests/.phpunit.output.xml --coverage-html var/tests/coverage --coverage-clover var/tests/coverage/coverage.xml"
         ]
     },
-    "minimum-stability": "dev"
+    "conflict": {
+        "symfony/symfony": "*"
+    },
+    "extra": {
+        "symfony": {
+            "allow-contrib": false,
+            "require": "5.4.*||6.0.*"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
