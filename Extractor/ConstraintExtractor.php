@@ -16,14 +16,13 @@ class ConstraintExtractor
     public function extract(string $class): ?Collection
     {
         try {
-            $rClass = new \ReflectionClass($class);
+            return ConstraintsHelper::createCollection($this->extractConstraints(new \ReflectionClass($class)));
         } catch (\ReflectionException) {
             return null;
         }
-
-        return ConstraintsHelper::createCollection($this->extractConstraints($rClass));
     }
 
+    /** @throws \ReflectionException */
     private function extractConstraints(\ReflectionClass $rClass): array
     {
         $constraints = [];
@@ -34,7 +33,8 @@ class ConstraintExtractor
 
         foreach ($rClass->getProperties() as $property) {
             $propertyName = SerializerHelper::getSerializedNameAttribute($property)->getSerializedName();
-            $constraints[$propertyName] = ClassHelper::isNotBuiltinAndExists($propertyClass = $property->getType()?->getName())
+            $propertyClass = $property->getType()?->/** @scrutinizer ignore-call */ getName();
+            $constraints[$propertyName] = ClassHelper::isNotBuiltinAndExists($propertyClass)
                 ? ConstraintsHelper::createCollection($this->extractConstraints(new \ReflectionClass($propertyClass)))
                 : ConstraintsHelper::fromProperty($property);
         }

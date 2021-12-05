@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+
+  pull_request:
+    branches: [ main ]
+
+  page_build:
+  release:
+    types: [ published, created, edited ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php:
+          - "8.0"
+          - "8.1"
+        include:
+          - php-version: "8.0"
+            composer-options: "--ignore-platform-reqs"
+
+          - php-version: "8.1"
+            composer-options: "--ignore-platform-reqs"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "${{ matrix.php }}"
+          extensions: mbstring, intl
+          coverage: xdebug
+          tools: pecl, phpunit, composer
+          ini-values: post_max_size=256M
+        env:
+          runner: self-hosted
+
+      - name: Setup Composer
+        uses: ramsey/composer-install@v1
+        with:
+          composer-options: "${{ matrix.composer-options }}"
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate
+
+      - name: Cache Composer packages
+        id: composer-cache
+        uses: actions/cache@v2
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-
+
+      - name: Install dependencies
+        if: steps.composer-cache.outputs.cache-hit != 'true'
+        run: composer update --prefer-dist --no-progress
+
+      - name: Unit Tests
+        run: ./vendor/bin/phpunit --colors=always --verbose --configuration phpunit.xml.dist --log-junit var/tests/.phpunit.output.xml

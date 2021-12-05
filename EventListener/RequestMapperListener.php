@@ -52,7 +52,7 @@ final class RequestMapperListener
     private function getReflectionMethod(mixed $controller): \ReflectionMethod|\ReflectionFunction
     {
         return match (true) {
-            \is_array($controller) => new \ReflectionMethod(...$controller),
+            \is_array($controller) => new \ReflectionMethod(/** @scrutinizer ignore-type */ ...$controller),
             \is_object($controller) && \is_callable([$controller, '__invoke']) => new \ReflectionMethod($controller, '__invoke'),
             default => new \ReflectionFunction($controller),
         };

@@ -39,7 +39,7 @@ final class ClassHelper
         }
 
         $map = static fn (\ReflectionProperty $p): array => [
-            SerializerHelper::getSerializedNameAttribute($p)->getSerializedName() => $p->getType()?->getName(),
+            SerializerHelper::getSerializedNameAttribute($p)->getSerializedName() => $p->getType()?->/** @scrutinizer ignore-call */ getName(),
         ];
 
         return array_merge(...array_map($map, $properties));

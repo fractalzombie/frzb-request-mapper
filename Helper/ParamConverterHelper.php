@@ -17,7 +17,7 @@ final class ParamConverterHelper
     public static function getAttribute(\ReflectionParameter $parameter, array $attributes): ?ParamConverter
     {
         return $attributes[$parameter->getName()]
-            ?? $attributes[$parameter->getType()?->getName()]
+            ?? $attributes[$parameter->getType()?->/** @scrutinizer ignore-call */ getName()]
             ?? self::searchAttribute($parameter, $attributes);
     }
 
@@ -44,9 +44,12 @@ final class ParamConverterHelper
 
     public static function fromReflectionParameter(\ReflectionParameter $parameter): ?ParamConverter
     {
+        $parameterName = $parameter->getName();
+        $parameterType = $parameter->getType()?->/** @scrutinizer ignore-call */ getName();
+
         return match (true) {
-            !$parameter->getType()?->getName(), !ClassHelper::isNameContains($parameter->getType()?->getName(), ...self::REQUEST_POSTFIXES) => null,
-            default => new ParamConverter(parameterClass: $parameter->getType()?->getName(), parameterName: $parameter->getName()),
+            !$parameterType, !ClassHelper::isNameContains($parameterType, ...self::REQUEST_POSTFIXES) => null,
+            default => new ParamConverter(parameterClass: $parameterType, parameterName: $parameterName),
         };
     }
 

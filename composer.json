@@ -1,6 +1,5 @@
 {
     "name": "frzb/request-mapper",
-    "version": "v1.4.2",
     "type": "library",
     "description": "The RequestMapper component allows you to serialize JSON request to Request class and validate it",
     "keywords": [
@@ -60,6 +59,7 @@
         "symfony/proxy-manager-bridge": "Generate service proxies to lazy load them"
     },
     "conflict": {
+        "symfony/symfony": "*",
         "ext-psr": "<1.1|>=2",
         "symfony/config": "<5.4|>6.0",
         "symfony/finder": "<5.4|>6.0",
@@ -84,9 +84,6 @@
         "test-coverage": [
             "php -n -dzend_extension=xdebug -dxdebug.mode=coverage vendor/bin/phpunit --colors=always --verbose --configuration phpunit.xml.dist --log-junit var/tests/.phpunit.output.xml --coverage-html var/tests/coverage --coverage-clover var/tests/coverage/coverage.xml"
         ]
-    },
-    "conflict": {
-        "symfony/symfony": "*"
     },
     "extra": {
         "symfony": {
