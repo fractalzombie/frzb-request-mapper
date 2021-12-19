@@ -46,7 +46,7 @@
         "phpunit/php-code-coverage": "^9.2",
         "php-coveralls/php-coveralls": "^2.5",
         "symfony/phpunit-bridge": "^5.4|^6.0",
-        "friendsofphp/php-cs-fixer": "^v3.3",
+        "friendsofphp/php-cs-fixer": "^v3.4",
         "sempro/phpunit-pretty-print": "dev-develop",
         "dg/bypass-finals": "^v1.3.1",
         "symfony/test-pack": "^v1.0.9"
