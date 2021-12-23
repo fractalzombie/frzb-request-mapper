@@ -40,7 +40,7 @@ jobs:
           tools: pecl, phpunit, composer
           ini-values: post_max_size=256M
         env:
-          runner: self-hosted
+          runner: request-mapper
 
       - name: Setup Composer
         uses: ramsey/composer-install@v1
