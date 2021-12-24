@@ -1,13 +1,12 @@
 language: php
 dist: impish
-sudo: false
 
 matrix:
   include:
     - php: 8.0
 
 install:
-  - travis_retry composer install --no-suggest --prefer-dist -n -o
+  - travis_retry composer install
 
 script:
   - mkdir -p build/logs
