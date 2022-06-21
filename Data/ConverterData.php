@@ -15,13 +15,10 @@ final class ConverterData
 {
     private const DEFAULT_CONTEXT = [AbstractObjectNormalizer::DISABLE_TYPE_ENFORCEMENT => true];
 
-    private Request $request;
-    private ParamConverter $attribute;
-
-    public function __construct(Request $request, ParamConverter $attribute)
-    {
-        $this->request = $request;
-        $this->attribute = $attribute;
+    public function __construct(
+        private readonly Request $request,
+        private readonly ParamConverter $attribute,
+    ) {
     }
 
     public function getRequest(): Request

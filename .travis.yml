@@ -3,7 +3,7 @@ dist: impish
 
 matrix:
   include:
-    - php: 8.0
+    - php: 8.1
 
 install:
   - travis_retry composer install

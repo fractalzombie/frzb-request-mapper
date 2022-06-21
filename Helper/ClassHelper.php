@@ -38,9 +38,10 @@ final class ClassHelper
             $properties = [];
         }
 
-        $map = static fn (\ReflectionProperty $p): array => [
-            SerializerHelper::getSerializedNameAttribute($p)->getSerializedName() => $p->getType()?->/** @scrutinizer ignore-call */ getName(),
-        ];
+        $map = static fn (\ReflectionProperty $p): array => match (true) {
+            ConstraintsHelper::hasArrayTypeAttribute($p) => [SerializerHelper::getSerializedNameAttribute($p)->getSerializedName() => [ConstraintsHelper::getArrayTypeAttribute($p)->typeName]],
+            default => [SerializerHelper::getSerializedNameAttribute($p)->getSerializedName() => $p->getType()?->/** @scrutinizer ignore-call */ getName()],
+        };
 
         return array_merge(...array_map($map, $properties));
     }

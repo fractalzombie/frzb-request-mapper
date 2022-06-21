@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
 class ExceptionFormatterLocator implements ExceptionFormatterLocatorInterface
 {
     /** @var array<callable|FormatterInterface> */
-    private array $formatters;
+    private readonly array $formatters;
 
     public function __construct(
         #[TaggedIterator(self::EXCEPTION_FORMATTERS_TAG, defaultIndexMethod: 'getExceptionClass', defaultPriorityMethod: 'getPriority')]

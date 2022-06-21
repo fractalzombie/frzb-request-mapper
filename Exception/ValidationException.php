@@ -15,7 +15,7 @@ final class ValidationException extends \LogicException
     public const DEFAULT_MESSAGE = 'Validation error';
 
     /** @var Error[] */
-    private array $errors;
+    private readonly array $errors;
 
     #[Pure]
     private function __construct(Error ...$errors)

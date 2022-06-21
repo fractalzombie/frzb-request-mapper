@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\Helper;
 
+use FRZB\Component\RequestMapper\Attribute\ArrayType;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\Collection;
 
@@ -20,9 +21,16 @@ final class ConstraintsHelper
     /** @return array<Constraint> */
     public static function fromProperty(\ReflectionProperty $rProperty): array
     {
-        return array_map(
-            static fn (\ReflectionAttribute $a) => $a->newInstance(),
-            $rProperty->getAttributes(Constraint::class, \ReflectionAttribute::IS_INSTANCEOF)
-        );
+        return AttributeHelper::getAttributes($rProperty, Constraint::class);
+    }
+
+    public static function getArrayTypeAttribute(\ReflectionProperty $rProperty): ?ArrayType
+    {
+        return AttributeHelper::getAttribute($rProperty, ArrayType::class);
+    }
+
+    public static function hasArrayTypeAttribute(\ReflectionProperty $rProperty): bool
+    {
+        return 'array' === $rProperty->getType()?->getName() && null !== AttributeHelper::getAttribute($rProperty, ArrayType::class);
     }
 }

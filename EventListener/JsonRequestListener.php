@@ -34,7 +34,7 @@ final class JsonRequestListener
     ];
 
     public function __construct(
-        private EventDispatcher $dispatcher
+        private readonly EventDispatcher $dispatcher,
     ) {
     }
 

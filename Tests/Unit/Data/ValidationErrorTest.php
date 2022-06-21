@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FRZB\Component\RequestMapper\Tests\Unit\Data;
 
 use FRZB\Component\RequestMapper\Data\ValidationError;
-use FRZB\Component\RequestMapper\Tests\Stub\CreateUserRequest;
+use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateUserRequest;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -18,7 +18,7 @@ class ValidationErrorTest extends TestCase
     public function testToStringMethod(): void
     {
         self::assertSame(
-            'type: "FRZB\Component\RequestMapper\Tests\Stub\CreateUserRequest", field: "[userId]", message: "This is not a valid UUID."',
+            'type: "FRZB\Component\RequestMapper\Tests\Stub\Request\CreateUserRequest", field: "[userId]", message: "This is not a valid UUID."',
             (string) new ValidationError(CreateUserRequest::class, '[userId]', 'This is not a valid UUID.'),
         );
     }

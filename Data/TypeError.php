@@ -12,11 +12,11 @@ use JetBrains\PhpStorm\Immutable;
 final class TypeError
 {
     public function __construct(
-        private string $class,
-        private string $method,
-        private int $position,
-        private string $expected,
-        private string $proposed
+        private readonly string $class,
+        private readonly string $method,
+        private readonly int $position,
+        private readonly string $expected,
+        private readonly string $proposed,
     ) {
     }
 

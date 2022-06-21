@@ -6,10 +6,10 @@ namespace FRZB\Component\RequestMapper\Tests\Unit\Extractor;
 
 use FRZB\Component\RequestMapper\Extractor\ParametersExtractor;
 use FRZB\Component\RequestMapper\Tests\Helper\TestConstant;
-use FRZB\Component\RequestMapper\Tests\Stub\CreateNestedUserRequest;
-use FRZB\Component\RequestMapper\Tests\Stub\CreateUserRequest;
-use FRZB\Component\RequestMapper\Tests\Stub\CreateUserRequestWithSerializedName;
-use FRZB\Component\RequestMapper\Tests\Stub\TestRequest;
+use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateNestedUserRequest;
+use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateUserRequest;
+use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateUserWithSerializedNameRequest;
+use FRZB\Component\RequestMapper\Tests\Stub\Request\TestRequest;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -63,7 +63,7 @@ class ParametersExtractorTest extends TestCase
             'amountOfWallet' => TestConstant::USER_AMOUNT,
         ];
 
-        yield sprintf('"%s" with parameters: "%s"', CreateUserRequestWithSerializedName::class, implode(', ', array_keys($parameters))) => [
+        yield sprintf('"%s" with parameters: "%s"', CreateUserWithSerializedNameRequest::class, implode(', ', array_keys($parameters))) => [
             'class' => CreateUserRequest::class,
             'parameters' => array_merge($parameters, ['userId' => TestConstant::USER_ID, 'amount' => TestConstant::USER_AMOUNT]),
         ];

@@ -6,7 +6,7 @@ namespace FRZB\Component\RequestMapper\Tests\Unit\Data;
 
 use FRZB\Component\RequestMapper\Data\TypeError;
 use FRZB\Component\RequestMapper\Exception\TypeErrorInvalidArgumentException;
-use FRZB\Component\RequestMapper\Tests\Stub\CreateUserRequest;
+use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateUserRequest;
 use PHPUnit\Framework\TestCase;
 
 /**

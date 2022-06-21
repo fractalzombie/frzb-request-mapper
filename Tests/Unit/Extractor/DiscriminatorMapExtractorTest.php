@@ -7,10 +7,10 @@ namespace FRZB\Component\RequestMapper\Tests\Unit\Extractor;
 use FRZB\Component\RequestMapper\Exception\ClassExtractorException;
 use FRZB\Component\RequestMapper\Extractor\DiscriminatorMapExtractor;
 use FRZB\Component\RequestMapper\Tests\Helper\TestConstant;
-use FRZB\Component\RequestMapper\Tests\Stub\CreateCardSettingsRequest;
-use FRZB\Component\RequestMapper\Tests\Stub\CreateSettingsRequest;
-use FRZB\Component\RequestMapper\Tests\Stub\CreateUserRequest;
-use FRZB\Component\RequestMapper\Tests\Stub\CreateUserSettingsRequest;
+use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateCardSettingsRequest;
+use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateSettingsRequest;
+use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateUserRequest;
+use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateUserSettingsRequest;
 use PHPUnit\Framework\TestCase;
 
 /**

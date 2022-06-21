@@ -12,7 +12,7 @@ build:
               file: var/tests/coverage/coverage.xml
               format: clover
   environment:
-    php: 8.0.13
+    php: 8.1
 
 filter:
   excluded_paths:

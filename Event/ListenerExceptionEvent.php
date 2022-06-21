@@ -10,10 +10,10 @@ use Symfony\Contracts\EventDispatcher\Event;
 final class ListenerExceptionEvent extends Event
 {
     public function __construct(
-        private Event $event,
-        private \Throwable $exception,
-        private string $listenerClass,
-        private ?ErrorContract $errorContract = null,
+        private readonly Event $event,
+        private readonly \Throwable $exception,
+        private readonly string $listenerClass,
+        private readonly ?ErrorContract $errorContract = null,
     ) {
     }
 

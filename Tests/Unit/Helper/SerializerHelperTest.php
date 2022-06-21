@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace FRZB\Component\RequestMapper\Tests\Unit\Helper;
 
 use FRZB\Component\RequestMapper\Helper\SerializerHelper;
-use FRZB\Component\RequestMapper\Tests\Stub\CreateUserRequest;
-use FRZB\Component\RequestMapper\Tests\Stub\CreateUserRequestWithSerializedName;
+use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateUserRequest;
+use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateUserWithSerializedNameRequest;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -28,8 +28,8 @@ class SerializerHelperTest extends TestCase
 
     public function caseProvider(): iterable
     {
-        yield sprintf('with "%s"', CreateUserRequestWithSerializedName::class) => [
-            'properties' => (new \ReflectionClass(CreateUserRequestWithSerializedName::class))->getProperties(),
+        yield sprintf('with "%s"', CreateUserWithSerializedNameRequest::class) => [
+            'properties' => (new \ReflectionClass(CreateUserWithSerializedNameRequest::class))->getProperties(),
             'expected_properties' => ['name', 'uuid', 'amountOfWallet'],
         ];
 

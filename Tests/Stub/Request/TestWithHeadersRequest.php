@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace FRZB\Component\RequestMapper\Tests\Stub;
+namespace FRZB\Component\RequestMapper\Tests\Stub\Request;
 
 use FRZB\Component\RequestMapper\Data\HasHeaders;
 
 /**
  * @internal
  */
-class TestRequestWithHeaders implements HasHeaders
+class TestWithHeadersRequest implements HasHeaders
 {
     public function __construct(
         public string $name,

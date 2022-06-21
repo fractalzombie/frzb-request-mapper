@@ -15,9 +15,9 @@ use Symfony\Component\Validator\ConstraintViolationInterface as ConstraintViolat
 final class ValidationError implements ErrorInterface
 {
     public function __construct(
-        private string $type,
-        private string $field,
-        private string $message
+        private readonly string $type,
+        private readonly string $field,
+        private readonly string $message,
     ) {
     }
 

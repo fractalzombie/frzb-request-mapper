@@ -6,7 +6,7 @@ namespace FRZB\Component\RequestMapper\Tests\Unit\Helper;
 
 use FRZB\Component\RequestMapper\Helper\ObjectHelper;
 use FRZB\Component\RequestMapper\Tests\Helper\TestConstant;
-use FRZB\Component\RequestMapper\Tests\Stub\CreateUserRequest;
+use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateUserRequest;
 use PHPUnit\Framework\TestCase;
 
 /**

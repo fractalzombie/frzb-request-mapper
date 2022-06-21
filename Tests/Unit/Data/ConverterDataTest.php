@@ -8,7 +8,7 @@ use FRZB\Component\RequestMapper\Attribute\ParamConverter;
 use FRZB\Component\RequestMapper\Data\ConverterData;
 use FRZB\Component\RequestMapper\Tests\Helper\RequestHelper;
 use FRZB\Component\RequestMapper\Tests\Helper\TestConstant;
-use FRZB\Component\RequestMapper\Tests\Stub\CreateUserRequest;
+use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateUserRequest;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;

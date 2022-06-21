@@ -11,10 +11,10 @@ use JetBrains\PhpStorm\Immutable;
 final class FormattedError implements ErrorContract
 {
     public function __construct(
-        private string $message,
-        private int $status,
-        private array $errors = [],
-        private array $trace = [],
+        private readonly string $message,
+        private readonly int $status,
+        private readonly array $errors = [],
+        private readonly array $trace = [],
     ) {
     }
 

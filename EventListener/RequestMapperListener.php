@@ -18,7 +18,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 final class RequestMapperListener
 {
     public function __construct(
-        private Converter $converter,
+        private readonly Converter $converter,
     ) {
     }
 

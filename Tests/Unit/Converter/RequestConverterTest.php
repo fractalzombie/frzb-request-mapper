@@ -16,7 +16,7 @@ use FRZB\Component\RequestMapper\Extractor\ParametersExtractor;
 use FRZB\Component\RequestMapper\Parser\ExceptionConverterInterface as ExceptionConverter;
 use FRZB\Component\RequestMapper\Tests\Helper\RequestHelper;
 use FRZB\Component\RequestMapper\Tests\Helper\TestConstant;
-use FRZB\Component\RequestMapper\Tests\Stub\CreateSettingsRequest;
+use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateSettingsRequest;
 use PHPUnit\Framework\MockObject\Rule\InvokedCount as InvokedCountMatcher;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;

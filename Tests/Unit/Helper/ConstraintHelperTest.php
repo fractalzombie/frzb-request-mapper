@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace FRZB\Component\RequestMapper\Tests\Unit\Helper;
 
 use FRZB\Component\RequestMapper\Helper\ConstraintsHelper;
-use FRZB\Component\RequestMapper\Tests\Stub\CreateUserRequest;
-use FRZB\Component\RequestMapper\Tests\Stub\TestRequest;
+use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateUserRequest;
+use FRZB\Component\RequestMapper\Tests\Stub\Request\TestRequest;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\NotBlank;

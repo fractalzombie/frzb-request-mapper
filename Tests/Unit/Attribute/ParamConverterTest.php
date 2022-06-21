@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace FRZB\Component\RequestMapper\Tests\Unit\Attribute;
 
 use FRZB\Component\RequestMapper\Attribute\ParamConverter;
-use FRZB\Component\RequestMapper\Tests\Stub\CreateUserRequest;
-use FRZB\Component\RequestMapper\Tests\Stub\TestController;
-use FRZB\Component\RequestMapper\Tests\Stub\TestRequest;
+use FRZB\Component\RequestMapper\Tests\Stub\Controller\TestController;
+use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateUserRequest;
+use FRZB\Component\RequestMapper\Tests\Stub\Request\TestRequest;
 use PHPUnit\Framework\TestCase;
 
 /**

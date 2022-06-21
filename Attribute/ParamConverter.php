@@ -12,12 +12,12 @@ final class ParamConverter
     public const DEFAULT_VALIDATION_GROUP = 'Default';
 
     public function __construct(
-        private ?string $parameterClass = null,
-        private ?string $parameterName = null,
-        private bool $isValidationNeeded = true,
-        private array $serializerContext = [],
-        private array $validationGroups = [],
-        private bool $useDefaultValidationGroup = true,
+        private readonly ?string $parameterClass = null,
+        private readonly ?string $parameterName = null,
+        private readonly bool $isValidationNeeded = true,
+        private readonly array $serializerContext = [],
+        private readonly array $validationGroups = [],
+        private readonly bool $useDefaultValidationGroup = true,
     ) {
     }
 

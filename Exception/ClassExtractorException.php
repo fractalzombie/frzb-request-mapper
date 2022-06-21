@@ -11,8 +11,12 @@ use Throwable;
 final class ClassExtractorException extends \RuntimeException
 {
     #[Pure]
-    public function __construct(private string $property, string $message, int $code = 0, ?Throwable $previous = null)
-    {
+    public function __construct(
+        private readonly string $property,
+        string $message,
+        int $code = 0,
+        ?Throwable $previous = null
+    ) {
         parent::__construct($message, $code, $previous);
     }
 

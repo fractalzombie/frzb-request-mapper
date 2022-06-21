@@ -9,14 +9,14 @@ use Faker\Generator;
 use FRZB\Component\RequestMapper\Attribute\ParamConverter;
 use FRZB\Component\RequestMapper\EventListener\RequestMapperListener;
 use FRZB\Component\RequestMapper\Tests\Helper\RequestHelper;
-use FRZB\Component\RequestMapper\Tests\Stub\TestCallableController;
-use FRZB\Component\RequestMapper\Tests\Stub\TestCallableControllerWithoutParameterName;
-use FRZB\Component\RequestMapper\Tests\Stub\TestCallableControllerWithoutParameterNameAndParameterClass;
-use FRZB\Component\RequestMapper\Tests\Stub\TestController;
-use FRZB\Component\RequestMapper\Tests\Stub\TestControllerWithoutParameterName;
-use FRZB\Component\RequestMapper\Tests\Stub\TestControllerWithoutParameterNameAndParameterClass;
-use FRZB\Component\RequestMapper\Tests\Stub\TestRequest;
-use FRZB\Component\RequestMapper\Tests\Stub\TestRequestWithHeaders;
+use FRZB\Component\RequestMapper\Tests\Stub\Controller\TestCallableController;
+use FRZB\Component\RequestMapper\Tests\Stub\Controller\TestCallableWithoutParameterNameAndParameterClassController;
+use FRZB\Component\RequestMapper\Tests\Stub\Controller\TestCallableWithoutParameterNameController;
+use FRZB\Component\RequestMapper\Tests\Stub\Controller\TestController;
+use FRZB\Component\RequestMapper\Tests\Stub\Controller\TestWithoutParameterNameAndParameterClassController;
+use FRZB\Component\RequestMapper\Tests\Stub\Controller\TestWithoutParameterNameController;
+use FRZB\Component\RequestMapper\Tests\Stub\Request\TestRequest;
+use FRZB\Component\RequestMapper\Tests\Stub\Request\TestWithHeadersRequest;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
@@ -86,7 +86,7 @@ final class RequestMapperListenerTest extends KernelTestCase
             'http_method' => Request::METHOD_POST,
             'target_class' => TestRequest::class,
             'parameter_name' => 'dto',
-            'controller' => new TestCallableControllerWithoutParameterName(),
+            'controller' => new TestCallableWithoutParameterNameController(),
         ];
 
         yield 'Test callable controller without parameter name and parameter class' => [
@@ -94,7 +94,7 @@ final class RequestMapperListenerTest extends KernelTestCase
             'http_method' => Request::METHOD_POST,
             'target_class' => TestRequest::class,
             'parameter_name' => 'dto',
-            'controller' => new TestCallableControllerWithoutParameterNameAndParameterClass(),
+            'controller' => new TestCallableWithoutParameterNameAndParameterClassController(),
         ];
 
         yield 'Test controller' => [
@@ -110,7 +110,7 @@ final class RequestMapperListenerTest extends KernelTestCase
             'http_method' => Request::METHOD_POST,
             'target_class' => TestRequest::class,
             'parameter_name' => 'dto',
-            'controller' => [new TestControllerWithoutParameterName(), 'method'],
+            'controller' => [new TestWithoutParameterNameController(), 'method'],
         ];
 
         yield 'Test controller without parameter name and parameter class' => [
@@ -118,7 +118,7 @@ final class RequestMapperListenerTest extends KernelTestCase
             'http_method' => Request::METHOD_POST,
             'target_class' => TestRequest::class,
             'parameter_name' => 'dto',
-            'controller' => [new TestControllerWithoutParameterNameAndParameterClass(), 'method'],
+            'controller' => [new TestWithoutParameterNameAndParameterClassController(), 'method'],
         ];
 
         yield 'Test function controller' => [
@@ -148,9 +148,9 @@ final class RequestMapperListenerTest extends KernelTestCase
         yield 'Test function controller with headers request' => [
             'params' => array_merge($params, ['headers' => ['content-type' => 'application/json']]),
             'http_method' => Request::METHOD_POST,
-            'target_class' => TestRequestWithHeaders::class,
+            'target_class' => TestWithHeadersRequest::class,
             'parameter_name' => 'dto',
-            'controller' => #[ParamConverter(parameterClass: TestRequestWithHeaders::class, parameterName: 'dto')] static fn (TestRequestWithHeaders $dto) => null,
+            'controller' => #[ParamConverter(parameterClass: TestWithHeadersRequest::class, parameterName: 'dto')] static fn (TestWithHeadersRequest $dto) => null,
         ];
 
         yield 'Test function controller native request' => [

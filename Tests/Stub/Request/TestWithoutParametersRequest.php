@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace FRZB\Component\RequestMapper\Tests\Stub;
+namespace FRZB\Component\RequestMapper\Tests\Stub\Request;
 
 /**
  * @internal
  */
-class TestRequestWithoutParameters
+class TestWithoutParametersRequest
 {
     public string $name;
     public string $model;

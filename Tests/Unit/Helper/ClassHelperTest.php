@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace FRZB\Component\RequestMapper\Tests\Unit\Helper;
 
 use FRZB\Component\RequestMapper\Helper\ClassHelper;
-use FRZB\Component\RequestMapper\Tests\Stub\CreateNestedUserRequest;
-use FRZB\Component\RequestMapper\Tests\Stub\CreateUserRequest;
-use FRZB\Component\RequestMapper\Tests\Stub\CreateUserRequestWithSerializedName;
+use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateNestedUserRequest;
+use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateUserRequest;
+use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateUserWithSerializedNameRequest;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -111,8 +111,8 @@ class ClassHelperTest extends TestCase
             'expected_mapping' => ['name' => 'string', 'userId' => 'string', 'amount' => 'float'],
         ];
 
-        yield sprintf('class "%s", mapping "%s"', CreateUserRequestWithSerializedName::class, implode(', ', ['name', 'uuid', 'amountOfWallet'])) => [
-            'class_name' => CreateUserRequestWithSerializedName::class,
+        yield sprintf('class "%s", mapping "%s"', CreateUserWithSerializedNameRequest::class, implode(', ', ['name', 'uuid', 'amountOfWallet'])) => [
+            'class_name' => CreateUserWithSerializedNameRequest::class,
             'expected_mapping' => ['name' => 'string', 'uuid' => 'string', 'amountOfWallet' => 'float'],
         ];
 

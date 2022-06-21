@@ -12,7 +12,7 @@ use FRZB\Component\RequestMapper\Data\ValidationError;
 use FRZB\Component\RequestMapper\Exception\ValidationException;
 use FRZB\Component\RequestMapper\Tests\Helper\RequestHelper;
 use FRZB\Component\RequestMapper\Tests\Helper\TestConstant;
-use FRZB\Component\RequestMapper\Tests\Stub\CreateUserRequest;
+use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateUserRequest;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;

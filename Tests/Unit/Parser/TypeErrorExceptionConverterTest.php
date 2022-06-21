@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace FRZB\Component\RequestMapper\Tests\Unit\Parser;
 
 use FRZB\Component\RequestMapper\Parser\TypeErrorExceptionConverter;
-use FRZB\Component\RequestMapper\Tests\Stub\TestRequest;
-use FRZB\Component\RequestMapper\Tests\Stub\TestRequestWithoutParameters;
+use FRZB\Component\RequestMapper\Tests\Stub\Request\TestRequest;
+use FRZB\Component\RequestMapper\Tests\Stub\Request\TestWithoutParametersRequest;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -77,7 +77,7 @@ final class TypeErrorExceptionConverterTest extends TestCase
 
         yield 'test it with bad parameter' => [
             'parameter' => 'name',
-            'class' => TestRequestWithoutParameters::class,
+            'class' => TestWithoutParametersRequest::class,
             'expected' => 'string',
             'proposed' => 'array',
             'template' => 'Argument 1 passed to %s::__construct() must be of the type %s, %s given, called in /some/path/SomeFile.php on line 16 and defined in /some/path/SomeFile.php on line 20',

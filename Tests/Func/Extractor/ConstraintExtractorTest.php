@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace FRZB\Component\RequestMapper\Tests\Unit\Extractor;
+namespace FRZB\Component\RequestMapper\Tests\Func\Extractor;
 
 use FRZB\Component\RequestMapper\Extractor\ConstraintExtractor;
-use FRZB\Component\RequestMapper\Tests\Stub\CreateNestedUserRequest;
-use FRZB\Component\RequestMapper\Tests\Stub\CreateUserRequest;
-use FRZB\Component\RequestMapper\Tests\Stub\CreateUserSettingsRequest;
-use PHPUnit\Framework\TestCase;
+use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateNestedUserRequest;
+use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateUserRequest;
+use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateUserSettingsRequest;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Required;
 use Symfony\Component\Validator\Constraints\Type;
@@ -19,13 +19,13 @@ use Symfony\Component\Validator\Constraints\Uuid;
  *
  * @internal
  */
-class ConstraintExtractorTest extends TestCase
+class ConstraintExtractorTest extends KernelTestCase
 {
     private ConstraintExtractor $extractor;
 
     protected function setUp(): void
     {
-        $this->extractor = new ConstraintExtractor();
+        $this->extractor = self::getContainer()->get(ConstraintExtractor::class);
     }
 
     public function testExtractMethod(): void

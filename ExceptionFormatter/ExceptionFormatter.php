@@ -11,11 +11,9 @@ use FRZB\Component\RequestMapper\Locator\ExceptionFormatterLocatorInterface;
 #[AsService]
 class ExceptionFormatter implements ExceptionFormatterInterface
 {
-    private ExceptionFormatterLocatorInterface $formatterLocator;
-
-    public function __construct(ExceptionFormatterLocatorInterface $formatterLocator)
-    {
-        $this->formatterLocator = $formatterLocator;
+    public function __construct(
+        private readonly ExceptionFormatterLocatorInterface $formatterLocator,
+    ) {
     }
 
     public function format(\Throwable $e): ContractError

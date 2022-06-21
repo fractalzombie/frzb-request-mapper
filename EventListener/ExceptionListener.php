@@ -18,8 +18,8 @@ final class ExceptionListener
     private const ALLOWED_CONTENT_TYPE = 'application/json';
 
     public function __construct(
-        private ExceptionFormatter $exceptionFormatter,
-        private EventDispatcher $eventDispatcher,
+        private readonly ExceptionFormatter $exceptionFormatter,
+        private readonly EventDispatcher $eventDispatcher,
     ) {
     }
 

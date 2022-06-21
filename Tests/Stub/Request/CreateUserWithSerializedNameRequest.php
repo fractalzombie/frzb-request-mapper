@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace FRZB\Component\RequestMapper\Tests\Stub;
+namespace FRZB\Component\RequestMapper\Tests\Stub\Request;
 
+use Symfony\Component\Serializer\Annotation\SerializedName;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Validator\Constraints\Uuid;
@@ -12,17 +13,19 @@ use Symfony\Contracts\Service\Attribute\Required;
 /**
  * @internal
  */
-class CreateUserRequest
+class CreateUserWithSerializedNameRequest
 {
     #[Required]
     #[NotBlank]
     #[Type('string')]
     private string $name;
 
+    #[SerializedName('uuid')]
     #[Uuid]
     #[Type('string')]
     private ?string $userId;
 
+    #[SerializedName('amountOfWallet')]
     #[Type('float')]
     private ?float $amount;
 

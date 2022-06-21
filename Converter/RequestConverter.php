@@ -25,12 +25,12 @@ class RequestConverter implements ConverterInterface
     private const DENORMALIZE_TYPE = 'array';
 
     public function __construct(
-        private Validator $validator,
-        private Denormalizer $denormalizer,
-        private ExceptionConverter $exceptionConverter,
-        private DiscriminatorMapExtractor $classExtractor,
-        private ConstraintExtractor $constraintExtractor,
-        private ParametersExtractor $parametersExtractor,
+        private readonly Validator $validator,
+        private readonly Denormalizer $denormalizer,
+        private readonly ExceptionConverter $exceptionConverter,
+        private readonly DiscriminatorMapExtractor $classExtractor,
+        private readonly ConstraintExtractor $constraintExtractor,
+        private readonly ParametersExtractor $parametersExtractor,
     ) {
     }
 
@@ -48,8 +48,8 @@ class RequestConverter implements ConverterInterface
         }
 
         if ($data->isValidationNeeded()) {
-            $constraints = $this->constraintExtractor->extract($class);
             $parameters = $this->parametersExtractor->extract($parameterClass, $parameters);
+            $constraints = $this->constraintExtractor->extract($class, $parameters);
 
             $this->validate($parameters, $data->getValidationGroups(), $constraints);
         }

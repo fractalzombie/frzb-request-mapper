@@ -4,41 +4,77 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\Extractor;
 
+use Fp\Collections\ArrayList;
 use FRZB\Component\DependencyInjection\Attribute\AsService;
 use FRZB\Component\RequestMapper\Helper\ClassHelper;
 use FRZB\Component\RequestMapper\Helper\ConstraintsHelper;
 use FRZB\Component\RequestMapper\Helper\SerializerHelper;
+use Symfony\Component\Validator\Constraints\All;
 use Symfony\Component\Validator\Constraints\Collection;
+use Symfony\Component\Validator\Exception\NoSuchMetadataException;
+use Symfony\Component\Validator\Mapping\ClassMetadata as ClassMetadataImpl;
+use Symfony\Component\Validator\Mapping\ClassMetadataInterface as ClassMetadata;
+use Symfony\Component\Validator\Mapping\Factory\MetadataFactoryInterface as MetadataFactory;
+use Symfony\Component\Validator\Mapping\PropertyMetadata as PropertyMetadataImpl;
+use Symfony\Component\Validator\Mapping\PropertyMetadataInterface as PropertyMetadata;
+use Symfony\Component\Validator\Validator\ValidatorInterface as Validator;
 
-#[AsService]
+#[AsService(arguments: ['$metadataFactory' => Validator::class])]
 class ConstraintExtractor
 {
-    public function extract(string $class): ?Collection
+    public function __construct(
+        private readonly MetadataFactory $metadataFactory,
+    ) {
+    }
+
+    public function extract(string $class, array $parameters = []): ?Collection
     {
         try {
-            return ConstraintsHelper::createCollection($this->extractConstraints(new \ReflectionClass($class)));
-        } catch (\ReflectionException) {
+            return ConstraintsHelper::createCollection($this->extractConstraints($class, $parameters));
+        } catch (NoSuchMetadataException|\ReflectionException) {
             return null;
         }
     }
 
-    /** @throws \ReflectionException */
-    private function extractConstraints(\ReflectionClass $rClass): array
+    /** @throws NoSuchMetadataException|\ReflectionException */
+    public function extractConstraints(string $class, array $parameters = []): array
     {
         $constraints = [];
+        $classMetadata = $this->getClassMetadataFor($class);
+        $reflectionClass = new \ReflectionClass($class);
 
-        if ($parentClass = $rClass->getParentClass()) {
-            $constraints = $this->extractConstraints($parentClass);
-        }
+        foreach ($reflectionClass->getProperties() as $property) {
+            $propertyName = $property->getName();
+            $propertyMetadata = $this->getPropertyMetadataFor($classMetadata, $propertyName);
+            $propertyReflectionMember = $this->getPropertyReflectionMember($class, $propertyMetadata);
+            $propertySerializedName = SerializerHelper::getSerializedNameAttribute($propertyReflectionMember)?->getSerializedName();
+            $propertyTypeName = $propertyReflectionMember->getType()?->getName();
+            $propertyValue = $parameters[$propertySerializedName] ?? $parameters[$propertyName] ?? [];
+            $arrayTypeName = ConstraintsHelper::getArrayTypeAttribute($propertyReflectionMember)?->typeName;
 
-        foreach ($rClass->getProperties() as $property) {
-            $propertyName = SerializerHelper::getSerializedNameAttribute($property)->getSerializedName();
-            $propertyClass = $property->getType()?->/** @scrutinizer ignore-call */ getName();
-            $constraints[$propertyName] = ClassHelper::isNotBuiltinAndExists($propertyClass)
-                ? ConstraintsHelper::createCollection($this->extractConstraints(new \ReflectionClass($propertyClass)))
-                : ConstraintsHelper::fromProperty($property);
+            $constraints[$propertySerializedName] = match (true) {
+                ConstraintsHelper::hasArrayTypeAttribute($propertyReflectionMember) => ArrayList::collect($propertyValue)->map(fn () => new All($this->extract($arrayTypeName, $propertyValue)))->toArray(),
+                ClassHelper::isNotBuiltinAndExists($propertyTypeName) => $this->extract($propertyTypeName),
+                default => $propertyMetadata->getConstraints(),
+            };
         }
 
         return $constraints;
+    }
+
+    /** @noinspection PhpIncompatibleReturnTypeInspection */
+    private function getClassMetadataFor(string $class): ClassMetadata
+    {
+        return $this->metadataFactory->getMetadataFor($class) ?? new ClassMetadataImpl($class);
+    }
+
+    private function getPropertyMetadataFor(ClassMetadata $classMetadata, string $propertyName): PropertyMetadata
+    {
+        return current($classMetadata->getPropertyMetadata($propertyName)) ?: new PropertyMetadataImpl($classMetadata->getClassName(), $propertyName);
+    }
+
+    private function getPropertyReflectionMember(string $class, PropertyMetadata $propertyMetadata): \ReflectionMethod|\ReflectionProperty
+    {
+        return $propertyMetadata->getReflectionMember($class);
     }
 }
