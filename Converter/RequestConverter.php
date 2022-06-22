@@ -48,10 +48,14 @@ class RequestConverter implements ConverterInterface
         }
 
         if ($data->isValidationNeeded()) {
-            $parameters = $this->parametersExtractor->extract($parameterClass, $parameters);
-            $constraints = $this->constraintExtractor->extract($class, $parameters);
+            try {
+                $parameters = $this->parametersExtractor->extract($parameterClass, $parameters);
+                $constraints = $this->constraintExtractor->extract($class, $parameters);
 
-            $this->validate($parameters, $data->getValidationGroups(), $constraints);
+                $this->validate($parameters, $data->getValidationGroups(), $constraints);
+            } catch (\TypeError $e) {
+                throw ValidationException::fromErrors($this->exceptionConverter->convert($e, $parameters));
+            }
         }
 
         try {

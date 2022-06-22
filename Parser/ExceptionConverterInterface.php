@@ -14,5 +14,5 @@ interface ExceptionConverterInterface
      * @throws \TypeError
      * @throws \InvalidArgumentException
      */
-    public function convert(\Throwable $e, array $data): Error;
+    public function convert(\TypeError $e, array $data): Error;
 }

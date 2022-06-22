@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
  */
 final class TypeErrorExceptionConverterTest extends TestCase
 {
-    private const TYPE_ERROR_MESSAGE_TEMPLATE = 'Invalid parameter "%s" type, expected "%s", proposed "%s"';
+    private const TYPE_ERROR_MESSAGE_TEMPLATE = 'Invalid parameter "[%s]" type, expected "%s", proposed "%s"';
     private const ARGUMENT_ERROR_MESSAGE_TEMPLATE = 'Argument with position "%s" not exists';
 
     /** @dataProvider caseProvider */
@@ -40,12 +40,12 @@ final class TypeErrorExceptionConverterTest extends TestCase
         }
 
         $data = [$parameter => 'string'];
-        $exception = new \TypeError(sprintf($template, $class, $expected, $proposed));
+        $exception = new \TypeError(sprintf($template, $class, $parameter, $expected, $proposed));
         $message = sprintf(self::TYPE_ERROR_MESSAGE_TEMPLATE, $parameter, $expected, $proposed);
 
         $error = (new TypeErrorExceptionConverter())->convert($exception, $data);
 
-        self::assertSame($parameter, $error->getField());
+        self::assertSame("[{$parameter}]", $error->getField());
         self::assertSame($message, $error->getMessage());
     }
 
@@ -56,7 +56,7 @@ final class TypeErrorExceptionConverterTest extends TestCase
             'class' => TestRequest::class,
             'expected' => 'string',
             'proposed' => 'array',
-            'template' => 'Argument 1 passed to %s::__construct() must be of the type %s, %s given, called in /some/path/SomeFile.php on line 16 and defined in /some/path/SomeFile.php on line 20',
+            'template' => '%s::__construct(): Argument #1 ($%s) must be of type %s, %s given, called in /some/path/SomeFile.php on line 16 and defined in /some/path/SomeFile.php on line 20',
         ];
 
         yield 'test it with instance of template' => [
@@ -64,7 +64,7 @@ final class TypeErrorExceptionConverterTest extends TestCase
             'class' => TestRequest::class,
             'expected' => 'string',
             'proposed' => 'array',
-            'template' => 'Argument 1 passed to %s::__construct() must be an instance of %s, instance of %s given, called in /some/path/SomeFile.php on line 16 and defined in /some/path/SomeFile.php on line 20',
+            'template' => '%s::__construct(): Argument #1 ($%s) must be of type %s, %s given, called in /some/path/SomeFile.php on line 16 and defined in /some/path/SomeFile.php on line 20',
         ];
 
         yield 'test it with implementation template' => [
@@ -72,7 +72,7 @@ final class TypeErrorExceptionConverterTest extends TestCase
             'class' => TestRequest::class,
             'expected' => 'string',
             'proposed' => 'array',
-            'template' => 'Argument 1 passed to %s::__construct() must implement interface %s, instance of %s given, called in /some/path/SomeFile.php on line 16 and defined in /some/path/SomeFile.php on line 20',
+            'template' => '%s::__construct(): Argument #1 ($%s) must be of type %s, %s given, called in /some/path/SomeFile.php on line 16 and defined in /some/path/SomeFile.php on line 20',
         ];
 
         yield 'test it with bad parameter' => [
@@ -80,7 +80,7 @@ final class TypeErrorExceptionConverterTest extends TestCase
             'class' => TestWithoutParametersRequest::class,
             'expected' => 'string',
             'proposed' => 'array',
-            'template' => 'Argument 1 passed to %s::__construct() must be of the type %s, %s given, called in /some/path/SomeFile.php on line 16 and defined in /some/path/SomeFile.php on line 20',
+            'template' => '%s::__construct(): Argument #1 ($%s) must be of type %s, %s given, called in /some/path/SomeFile.php on line 16 and defined in /some/path/SomeFile.php on line 20',
             'position' => 1,
             'throws' => true,
         ];
