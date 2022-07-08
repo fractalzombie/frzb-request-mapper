@@ -27,7 +27,6 @@ final class ParamConverterHelper
         return [$paramConverter->getParameterName() ?? $paramConverter->getParameterClass() => $paramConverter];
     }
 
-    /** @noinspection PhpIncompatibleReturnTypeInspection */
     public static function fromReflectionAttribute(\ReflectionAttribute $attribute): ParamConverter
     {
         return $attribute->newInstance();

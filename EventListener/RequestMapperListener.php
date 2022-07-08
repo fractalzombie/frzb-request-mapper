@@ -6,9 +6,9 @@ namespace FRZB\Component\RequestMapper\EventListener;
 
 use FRZB\Component\RequestMapper\Attribute\ParamConverter;
 use FRZB\Component\RequestMapper\Converter\ConverterInterface as Converter;
-use FRZB\Component\RequestMapper\Data\ConverterData;
+use FRZB\Component\RequestMapper\Data\Context;
 use FRZB\Component\RequestMapper\Data\HasHeaders;
-use FRZB\Component\RequestMapper\Helper\HeadersHelper;
+use FRZB\Component\RequestMapper\Helper\HeaderHelper;
 use FRZB\Component\RequestMapper\Helper\ParamConverterHelper;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
@@ -38,10 +38,10 @@ final class RequestMapperListener
                 continue;
             }
 
-            $object = $this->converter->convert(new ConverterData($request, $attribute));
+            $object = $this->converter->convert(new Context($request, $attribute));
 
             if ($object instanceof HasHeaders) {
-                $object->setHeaders(HeadersHelper::getHeaders($request));
+                $object->setHeaders(HeaderHelper::getHeaders($request));
             }
 
             $request->attributes->set($attribute->getParameterName() ?? $parameter->getName(), $object);

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FRZB\Component\RequestMapper\Converter;
 
 use FRZB\Component\DependencyInjection\Attribute\AsAlias;
-use FRZB\Component\RequestMapper\Data\ConverterData;
+use FRZB\Component\RequestMapper\Data\Context;
 use FRZB\Component\RequestMapper\Exception\ConverterException;
 use FRZB\Component\RequestMapper\Exception\ValidationException;
 
@@ -18,5 +18,5 @@ interface ConverterInterface
      * @throws ConverterException
      * @throws ValidationException
      */
-    public function convert(ConverterData $data): object;
+    public function convert(Context $context): object;
 }

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FRZB\Component\RequestMapper\Tests\Unit\Data;
 
 use FRZB\Component\RequestMapper\Attribute\ParamConverter;
-use FRZB\Component\RequestMapper\Data\ConverterData;
+use FRZB\Component\RequestMapper\Data\Context;
 use FRZB\Component\RequestMapper\Tests\Helper\RequestHelper;
 use FRZB\Component\RequestMapper\Tests\Helper\TestConstant;
 use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateUserRequest;
@@ -25,7 +25,7 @@ class ConverterDataTest extends TestCase
         $params = ['name' => TestConstant::USER_NAME];
         $request = RequestHelper::makeRequest(Request::METHOD_POST, $params);
         $attribute = new ParamConverter(CreateUserRequest::class, 'request');
-        $data = new ConverterData($request, $attribute);
+        $data = new Context($request, $attribute);
 
         self::assertSame($request, $data->getRequest());
         self::assertSame($params, $data->getRequestParameters());

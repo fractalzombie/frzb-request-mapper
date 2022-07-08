@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 
 #[Immutable]
-final class ConverterData
+final class Context
 {
     private const DEFAULT_CONTEXT = [AbstractObjectNormalizer::DISABLE_TYPE_ENFORCEMENT => true];
 

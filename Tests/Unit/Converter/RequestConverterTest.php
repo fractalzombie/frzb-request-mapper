@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpPrivateFieldCanBeLocalVariableInspection */
 
 declare(strict_types=1);
 
@@ -6,8 +6,9 @@ namespace FRZB\Component\RequestMapper\Tests\Unit\Converter;
 
 use FRZB\Component\RequestMapper\Attribute\ParamConverter;
 use FRZB\Component\RequestMapper\Converter\RequestConverter;
-use FRZB\Component\RequestMapper\Data\ConverterData;
+use FRZB\Component\RequestMapper\Data\Context;
 use FRZB\Component\RequestMapper\Exception\ClassExtractorException;
+use FRZB\Component\RequestMapper\Exception\ConstraintException;
 use FRZB\Component\RequestMapper\Exception\ConverterException;
 use FRZB\Component\RequestMapper\Exception\ValidationException;
 use FRZB\Component\RequestMapper\Extractor\ConstraintExtractor;
@@ -22,6 +23,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Exception\LogicException;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface as Denormalizer;
+use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface as Validator;
 
 /**
@@ -42,21 +44,16 @@ class RequestConverterTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->validator = $this->createMock(Validator::class);
-        $this->denormalizer = $this->createMock(Denormalizer::class);
-        $this->exceptionConverter = $this->createMock(ExceptionConverter::class);
-        $this->classExtractor = $this->createMock(DiscriminatorMapExtractor::class);
-        $this->constraintExtractor = $this->createMock(ConstraintExtractor::class);
-        $this->parametersExtractor = $this->createMock(ParametersExtractor::class);
+        $services = [
+            $this->validator = $this->createMock(Validator::class),
+            $this->denormalizer = $this->createMock(Denormalizer::class),
+            $this->exceptionConverter = $this->createMock(ExceptionConverter::class),
+            $this->classExtractor = $this->createMock(DiscriminatorMapExtractor::class),
+            $this->constraintExtractor = $this->createMock(ConstraintExtractor::class),
+            $this->parametersExtractor = $this->createMock(ParametersExtractor::class),
+        ];
 
-        $this->converter = new RequestConverter(
-            $this->validator,
-            $this->denormalizer,
-            $this->exceptionConverter,
-            $this->classExtractor,
-            $this->constraintExtractor,
-            $this->parametersExtractor,
-        );
+        $this->converter = new RequestConverter(...$services);
     }
 
     /** @dataProvider caseProvider */
@@ -64,7 +61,7 @@ class RequestConverterTest extends TestCase
     {
         $attribute = new ParamConverter(...$parameters);
         $request = RequestHelper::makeRequest(method: Request::METHOD_POST, params: []);
-        $data = new ConverterData($request, $attribute);
+        $data = new Context($request, $attribute);
 
         if ($willServiceThrow) {
             $this->{$service}->expects($expects)->method($method)->willThrowException($exception);
@@ -91,7 +88,7 @@ class RequestConverterTest extends TestCase
             'expects' => self::once(),
             'method' => 'extract',
             'exception' => new \TypeError(TestConstant::EXCEPTION_MESSAGE),
-            'expected_exception_class' => ConverterException::class,
+            'expected_exception_class' => ValidationException::class,
             'parameters' => ['parameterClass' => CreateSettingsRequest::class, 'parameterName' => 'request'],
         ];
 
@@ -111,6 +108,16 @@ class RequestConverterTest extends TestCase
             'exception' => new LogicException(TestConstant::EXCEPTION_MESSAGE),
             'expected_exception_class' => ConverterException::class,
             'parameters' => ['parameterClass' => CreateSettingsRequest::class, 'parameterName' => 'request'],
+        ];
+
+        yield sprintf('%s::%s expects %s, exception %s, expected exception %s', Validator::class, 'validate', 'once', ConstraintException::class, ValidationException::class) => [
+            'service' => 'validator',
+            'expects' => self::once(),
+            'method' => 'validate',
+            'exception' => ConstraintException::fromConstraintViolationList(new ConstraintViolationList()),
+            'expected_exception_class' => ValidationException::class,
+            'parameters' => ['parameterClass' => CreateSettingsRequest::class, 'parameterName' => 'request'],
+            'will_service_throw' => false,
         ];
 
         yield sprintf('%s::%s expects %s, exception %s, expected exception %s', RequestConverter::class, 'convert', 'once', ConverterException::class, ConverterException::class) => [

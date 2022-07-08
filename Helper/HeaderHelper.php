@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * @internal
  */
-final class HeadersHelper
+final class HeaderHelper
 {
     public static function getHeaders(Request $request): array
     {

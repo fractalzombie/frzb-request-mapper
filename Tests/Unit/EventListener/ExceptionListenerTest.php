@@ -7,7 +7,7 @@ namespace FRZB\Component\RequestMapper\Tests\Unit\EventListener;
 use FRZB\Component\RequestMapper\Data\FormattedError;
 use FRZB\Component\RequestMapper\EventListener\ExceptionListener;
 use FRZB\Component\RequestMapper\ExceptionFormatter\ExceptionFormatterInterface as ExceptionFormatter;
-use FRZB\Component\RequestMapper\Helper\HeadersHelper;
+use FRZB\Component\RequestMapper\Helper\HeaderHelper;
 use FRZB\Component\RequestMapper\Tests\Helper\RequestHelper;
 use FRZB\Component\RequestMapper\Tests\Helper\TestConstant;
 use PHPUnit\Framework\MockObject\Rule\InvocationOrder;
@@ -52,7 +52,7 @@ class ExceptionListenerTest extends TestCase
         );
 
         self::assertEmpty($request->request->all());
-        self::assertSame($headers, HeadersHelper::getHeaders($request));
+        self::assertSame($headers, HeaderHelper::getHeaders($request));
     }
 
     public function caseProvider(): iterable

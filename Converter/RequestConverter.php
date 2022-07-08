@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace FRZB\Component\RequestMapper\Converter;
 
 use FRZB\Component\DependencyInjection\Attribute\AsService;
-use FRZB\Component\RequestMapper\Data\ConverterData;
+use FRZB\Component\RequestMapper\Data\Context;
 use FRZB\Component\RequestMapper\Data\ValidationError;
 use FRZB\Component\RequestMapper\Exception\ClassExtractorException;
+use FRZB\Component\RequestMapper\Exception\ConstraintException;
 use FRZB\Component\RequestMapper\Exception\ConverterException;
 use FRZB\Component\RequestMapper\Exception\ValidationException;
 use FRZB\Component\RequestMapper\Extractor\ConstraintExtractor;
@@ -34,46 +35,38 @@ class RequestConverter implements ConverterInterface
     ) {
     }
 
-    public function convert(ConverterData $data): object
+    public function convert(Context $context): object
     {
-        $parameters = $data->getRequestParameters();
-        $parameterClass = $data->getParameterClass() ?? throw ConverterException::nullableParameterClass();
+        $parameters = $context->getRequestParameters();
+        $parameterClass = $context->getParameterClass() ?? throw ConverterException::nullableParameterClass();
 
         try {
-            $class = $this->classExtractor->extract($parameterClass, $parameters);
+            $targetClass = $this->classExtractor->extract($parameterClass, $parameters);
+
+            if ($context->isValidationNeeded()) {
+                $parameters = $this->parametersExtractor->extract($parameterClass, $parameters);
+                $constraints = $this->constraintExtractor->extract($targetClass, $parameters);
+
+                $this->validate($parameters, $context->getValidationGroups(), $constraints);
+            }
+
+            return $this->denormalizer->denormalize($parameters, $targetClass, self::DENORMALIZE_TYPE, $context->getSerializerContext());
         } catch (ClassExtractorException $e) {
             throw ValidationException::fromErrors(ValidationError::fromTypeAndClassExtractorException(DiscriminatorMap::class, $e));
-        } catch (\Throwable $e) {
-            throw ConverterException::fromThrowable($e);
-        }
-
-        if ($data->isValidationNeeded()) {
-            try {
-                $parameters = $this->parametersExtractor->extract($parameterClass, $parameters);
-                $constraints = $this->constraintExtractor->extract($class, $parameters);
-
-                $this->validate($parameters, $data->getValidationGroups(), $constraints);
-            } catch (\TypeError $e) {
-                throw ValidationException::fromErrors($this->exceptionConverter->convert($e, $parameters));
-            }
-        }
-
-        try {
-            $object = $this->denormalizer->denormalize($parameters, $class, self::DENORMALIZE_TYPE, $data->getSerializerContext());
+        } catch (ConstraintException $e) {
+            throw ValidationException::fromConstraintViolationList($e->getViolations());
         } catch (\TypeError $e) {
             throw ValidationException::fromErrors($this->exceptionConverter->convert($e, $parameters));
         } catch (\Throwable $e) {
             throw ConverterException::fromThrowable($e);
         }
-
-        return $object;
     }
 
     /** @throws ValidationException */
     private function validate(mixed $target, array $validationGroups, ?Collection $constraints = null): void
     {
         if (($violations = $this->validator->validate($target, $constraints, $validationGroups))->count()) {
-            throw ValidationException::fromConstraintViolationList($violations);
+            throw ConstraintException::fromConstraintViolationList($violations);
         }
     }
 }

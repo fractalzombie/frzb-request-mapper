@@ -6,7 +6,7 @@ namespace FRZB\Component\RequestMapper\Tests\Func\Converter;
 
 use FRZB\Component\RequestMapper\Attribute\ParamConverter;
 use FRZB\Component\RequestMapper\Converter\RequestConverter;
-use FRZB\Component\RequestMapper\Data\ConverterData;
+use FRZB\Component\RequestMapper\Data\Context;
 use FRZB\Component\RequestMapper\Data\ErrorInterface;
 use FRZB\Component\RequestMapper\Data\ValidationError;
 use FRZB\Component\RequestMapper\Exception\ValidationException;
@@ -40,10 +40,10 @@ final class RequestConverterTest extends KernelTestCase
      *
      * @dataProvider caseProvider
      */
-    public function testConvertMethod(ConverterData $data, ?CreateUserRequest $request = null, array $errors = []): void
+    public function testConvertMethod(Context $context, ?CreateUserRequest $request = null, array $errors = []): void
     {
         try {
-            $object = $this->converter->convert($data);
+            $object = $this->converter->convert($context);
         } catch (ValidationException $e) {
             self::assertSame(ValidationException::DEFAULT_MESSAGE, $e->getMessage());
 
@@ -73,8 +73,8 @@ final class RequestConverterTest extends KernelTestCase
         $userRequest = new CreateUserRequest(...$params);
 
         yield 'Converter data with valid params' => [
-            'converter_data' => new ConverterData($request, $attribute),
-            'user_request' => $userRequest,
+            'context' => new Context($request, $attribute),
+            'request' => $userRequest,
         ];
 
         $attribute = new ParamConverter(parameterClass: CreateUserRequest::class);
@@ -84,8 +84,8 @@ final class RequestConverterTest extends KernelTestCase
         ];
 
         yield 'Converter data with empty params' => [
-            'converter_data' => new ConverterData($request, $attribute),
-            'user_request' => null,
+            'context' => new Context($request, $attribute),
+            'request' => null,
             'errors' => $errors,
         ];
 
@@ -100,8 +100,8 @@ final class RequestConverterTest extends KernelTestCase
         ];
 
         yield 'Converter data with invalid params' => [
-            'converter_data' => new ConverterData($request, $attribute),
-            'user_request' => null,
+            'context' => new Context($request, $attribute),
+            'request' => null,
             'errors' => $errors,
         ];
     }
