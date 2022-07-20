@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\Helper;
 
+use Fp\Collections\ArrayList;
 use FRZB\Component\RequestMapper\Attribute\ParamConverter;
 use JetBrains\PhpStorm\Pure;
 
@@ -35,10 +36,12 @@ final class ParamConverterHelper
     /** @return array<string, ParamConverter> */
     public static function fromReflectionAttributes(\ReflectionAttribute ...$attributes): array
     {
-        $mapReflection = static fn (\ReflectionAttribute $ra): ParamConverter => self::fromReflectionAttribute($ra);
-        $mapAttributes = static fn (ParamConverter $pc): array => self::mapParamConverter($pc);
-
-        return array_merge(...array_map($mapAttributes, array_map($mapReflection, $attributes)));
+        return ArrayList::collect($attributes)
+            ->map(static fn (\ReflectionAttribute $ra): ParamConverter => self::fromReflectionAttribute($ra))
+            ->map(static fn (ParamConverter $pc): array => self::mapParamConverter($pc))
+            ->reduce(static fn (array $prev, array $next) => [...$prev, ...$next])
+            ->getOrElse([])
+        ;
     }
 
     public static function fromReflectionParameter(\ReflectionParameter $parameter): ?ParamConverter
@@ -54,8 +57,9 @@ final class ParamConverterHelper
 
     private static function searchAttribute(\ReflectionParameter $parameter, array $attributes): ?ParamConverter
     {
-        $filteredAttributes = array_filter($attributes, static fn (ParamConverter $pc): bool => $pc->equals($parameter));
-
-        return current($filteredAttributes) ?: self::fromReflectionParameter($parameter);
+        return ArrayList::collect($attributes)
+            ->first(static fn (ParamConverter $pc): bool => $pc->equals($parameter))
+            ->getOrElse(self::fromReflectionParameter($parameter))
+        ;
     }
 }

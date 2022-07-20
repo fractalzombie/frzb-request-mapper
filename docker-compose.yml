@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  php:
+    build: .docker/php
+    env_file:
+      - '.env'
+    volumes:
+      - ./:/var/www/html:cached

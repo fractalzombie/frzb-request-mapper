@@ -70,7 +70,10 @@ class ConstraintExtractor
 
     private function getPropertyMetadataFor(ClassMetadata $classMetadata, string $propertyName): PropertyMetadata
     {
-        return current($classMetadata->getPropertyMetadata($propertyName)) ?: new PropertyMetadataImpl($classMetadata->getClassName(), $propertyName);
+        return ArrayList::collect($classMetadata->getPropertyMetadata($propertyName))
+            ->firstElement()
+            ->getOrElse(new PropertyMetadataImpl($classMetadata->getClassName(), $propertyName))
+        ;
     }
 
     private function getPropertyReflectionMember(string $class, PropertyMetadata $propertyMetadata): \ReflectionMethod|\ReflectionProperty

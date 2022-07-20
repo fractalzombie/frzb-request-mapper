@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\Data;
 
+use Fp\Collections\Entry;
+use Fp\Collections\HashMap;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Immutable;
 
@@ -20,11 +22,11 @@ final class FormattedError implements ErrorContract
 
     public function __toString(): string
     {
-        $errors = array_map(
-            static fn (string $value, string $field) => sprintf('%s: [%s]', $field, $value),
-            array_values($this->errors),
-            array_keys($this->errors)
-        );
+        $errors = HashMap::collect($this->errors)
+            ->map(static fn (Entry $e) => sprintf('%s: [%s]', $e->key, $e->value))
+            ->toAssocArray()
+            ->getOrElse([])
+        ;
 
         return sprintf('message: %s, status: %s, errors: %s', $this->message, $this->status, implode(', ', $errors));
     }

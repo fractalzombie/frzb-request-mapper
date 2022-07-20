@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\Extractor;
 
+use Fp\Collections\ArrayList;
 use FRZB\Component\DependencyInjection\Attribute\AsService;
 use FRZB\Component\RequestMapper\Exception\ClassExtractorException;
+use FRZB\Component\RequestMapper\Helper\AttributeHelper;
 use Symfony\Component\Serializer\Annotation\DiscriminatorMap;
 
 #[AsService]
@@ -27,12 +29,10 @@ class DiscriminatorMapExtractor
     private function getDiscriminatorMapAttribute(string $class): ?DiscriminatorMap
     {
         try {
-            $discriminators = array_map(
-                static fn (\ReflectionAttribute $attribute) => $attribute->newInstance(),
-                (new \ReflectionClass($class))->getAttributes(DiscriminatorMap::class),
-            );
-
-            return current($discriminators) ?: null;
+            return ArrayList::collect(AttributeHelper::getAttributes(new \ReflectionClass($class), DiscriminatorMap::class))
+                ->firstElement()
+                ->getOrElse(null)
+            ;
         } catch (\ReflectionException) {
             return null;
         }

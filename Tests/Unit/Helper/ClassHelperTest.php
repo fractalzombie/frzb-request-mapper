@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FRZB\Component\RequestMapper\Tests\Unit\Helper;
 
 use FRZB\Component\RequestMapper\Helper\ClassHelper;
+use FRZB\Component\RequestMapper\Tests\Stub\Enum\TestEnum;
 use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateNestedUserRequest;
 use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateUserRequest;
 use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateUserWithSerializedNameRequest;
@@ -150,6 +151,25 @@ class ClassHelperTest extends TestCase
             'class_name' => 'NoClass',
             'method' => 'no_method',
             'expected_mapping' => [],
+        ];
+    }
+
+    /** @dataProvider isEnumCaseProvider */
+    public function testIsEnumMethod(string $className, bool $expectedResult): void
+    {
+        self::assertSame(ClassHelper::isEnum($className), $expectedResult);
+    }
+
+    public function isEnumCaseProvider(): iterable
+    {
+        yield sprintf('enum "%s" is valid', TestEnum::class) => [
+            'value' => TestEnum::class,
+            'expected_result' => true,
+        ];
+
+        yield sprintf('class "%s" is invalid', 'NoClass') => [
+            'value' => 'NoClass',
+            'expected_result' => false,
         ];
     }
 }

@@ -18,11 +18,11 @@ final class MergeRequestListener
     {
         $request = $event->getRequest();
 
-        $payload = array_merge(
-            $request->request->all(),
-            $request->query->all(),
-            $request->attributes->get(self::ROUTE_PARAMS_KEY, []),
-        );
+        $payload = [
+            ...$request->request->all(),
+            ...$request->query->all(),
+            ...$request->attributes->get(self::ROUTE_PARAMS_KEY, []),
+        ];
 
         $request->request = new InputBag($payload);
     }

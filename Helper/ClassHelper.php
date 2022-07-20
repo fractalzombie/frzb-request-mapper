@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\Helper;
 
+use Fp\Collections\ArrayList;
+
 /**
  * @internal
  */
@@ -11,7 +13,12 @@ final class ClassHelper
 {
     public static function isNotBuiltinAndExists(string $className): bool
     {
-        return class_exists($className) && !empty((new \ReflectionClass($className))->getNamespaceName());
+        return class_exists($className) && !empty((new \ReflectionClass($className))->getNamespaceName()) && !self::isEnum($className);
+    }
+
+    public static function isEnum(string $className): bool
+    {
+        return enum_exists($className);
     }
 
     public static function getShortName(string $className): string
@@ -25,9 +32,10 @@ final class ClassHelper
 
     public static function isNameContains(string $className, string ...$haystack): bool
     {
-        $filter = static fn (string $value): bool => StringHelper::contains(self::getShortName($className), $value);
-
-        return \count(array_filter($haystack, $filter)) > 0;
+        return ArrayList::collect($haystack)
+            ->filter(static fn (string $value): bool => StringHelper::contains(self::getShortName($className), $value))
+            ->isNonEmpty()
+        ;
     }
 
     public static function getPropertyMapping(string $className): array
@@ -38,12 +46,14 @@ final class ClassHelper
             $properties = [];
         }
 
-        $map = static fn (\ReflectionProperty $p): array => match (true) {
-            ConstraintsHelper::hasArrayTypeAttribute($p) => [SerializerHelper::getSerializedNameAttribute($p)->getSerializedName() => [ConstraintsHelper::getArrayTypeAttribute($p)->typeName]],
-            default => [SerializerHelper::getSerializedNameAttribute($p)->getSerializedName() => $p->getType()?->/** @scrutinizer ignore-call */ getName()],
-        };
-
-        return array_merge(...array_map($map, $properties));
+        return ArrayList::collect($properties)
+            ->map(static fn (\ReflectionProperty $p): array => match (true) {
+                ConstraintsHelper::hasArrayTypeAttribute($p) => [SerializerHelper::getSerializedNameAttribute($p)->getSerializedName() => [ConstraintsHelper::getArrayTypeAttribute($p)->typeName]],
+                default => [SerializerHelper::getSerializedNameAttribute($p)->getSerializedName() => $p->getType()?->/** @scrutinizer ignore-call */ getName()],
+            })
+            ->reduce(static fn (array $prev, array $next) => [...$prev, ...$next])
+            ->getOrElse([])
+        ;
     }
 
     /** @return \ReflectionParameter[] */

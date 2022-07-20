@@ -1339,9 +1339,6 @@ interface Header
     public const X_REQUEST_ID = 'X-Request-ID';
 
     /** @var string */
-    public const X_CBH_CORRELATION_ID = 'X-CBH-CORRELATION-ID';
-
-    /** @var string */
     public const X_REQUESTED_WITH = 'X-Requested-With';
 
     /** @var string */

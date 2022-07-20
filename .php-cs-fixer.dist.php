@@ -6,6 +6,7 @@ $finder = PhpCsFixer\Finder::create()
     ->exclude('var')
     ->exclude('vendor')
     ->exclude('Documentation')
+    ->notPath('#Enum#')
     ->in(__DIR__)
 ;
 

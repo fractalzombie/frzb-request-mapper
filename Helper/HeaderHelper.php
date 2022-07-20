@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\Helper;
 
+use Fp\Collections\Entry;
+use Fp\Collections\HashMap;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -13,6 +15,10 @@ final class HeaderHelper
 {
     public static function getHeaders(Request $request): array
     {
-        return array_map(static fn (array $value) => current($value) ?: null, $request->headers->all());
+        return HashMap::collect($request->headers->all())
+            ->map(static fn (Entry $e) => current($e->value) ?: null)
+            ->toAssocArray()
+            ->getOrElse([])
+        ;
     }
 }

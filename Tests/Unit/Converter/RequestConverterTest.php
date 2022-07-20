@@ -1,4 +1,6 @@
-<?php /** @noinspection PhpPrivateFieldCanBeLocalVariableInspection */
+<?php
+
+/** @noinspection PhpPrivateFieldCanBeLocalVariableInspection */
 
 declare(strict_types=1);
 

@@ -53,7 +53,7 @@ final class RequestMapperListener
     {
         return match (true) {
             \is_array($controller) => new \ReflectionMethod(/** @scrutinizer ignore-type */ ...$controller),
-            \is_object($controller) && \is_callable([$controller, '__invoke']) => new \ReflectionMethod($controller, '__invoke'),
+            \is_object($controller) && \is_callable($controller) => new \ReflectionMethod($controller, '__invoke'),
             default => new \ReflectionFunction($controller),
         };
     }

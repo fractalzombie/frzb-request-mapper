@@ -6,13 +6,13 @@ namespace FRZB\Component\RequestMapper\ExceptionFormatter;
 
 use FRZB\Component\DependencyInjection\Attribute\AsService;
 use FRZB\Component\RequestMapper\Data\ErrorContract as ContractError;
-use FRZB\Component\RequestMapper\Locator\ExceptionFormatterLocatorInterface;
+use FRZB\Component\RequestMapper\Locator\ExceptionFormatterLocatorInterface as ExceptionFormatterLocator;
 
 #[AsService]
 class ExceptionFormatter implements ExceptionFormatterInterface
 {
     public function __construct(
-        private readonly ExceptionFormatterLocatorInterface $formatterLocator,
+        private readonly ExceptionFormatterLocator $formatterLocator,
     ) {
     }
 

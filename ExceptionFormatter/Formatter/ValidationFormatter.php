@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\ExceptionFormatter\Formatter;
 
+use Fp\Collections\ArrayList;
 use FRZB\Component\RequestMapper\Data\ErrorContract;
 use FRZB\Component\RequestMapper\Data\ErrorInterface as Error;
 use FRZB\Component\RequestMapper\Data\FormattedError;
@@ -17,7 +18,12 @@ class ValidationFormatter implements FormatterInterface
 {
     public function __invoke(ValidationException $e): ErrorContract
     {
-        return new FormattedError($e->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY, self::formatErrors(...$e->getErrors()), $e->getTrace());
+        return new FormattedError(
+            $e->getMessage(),
+            Response::HTTP_UNPROCESSABLE_ENTITY,
+            self::formatErrors(...$e->getErrors()),
+            $e->getTrace()
+        );
     }
 
     public static function getExceptionClass(): string
@@ -32,6 +38,9 @@ class ValidationFormatter implements FormatterInterface
 
     private static function formatErrors(Error ...$errors): array
     {
-        return array_merge(...array_map(static fn (Error $error) => [$error->getField() => $error->getMessage()], $errors));
+        return ArrayList::collect($errors)
+            ->map(static fn (Error $error) => [$error->getField() => $error->getMessage()])
+            ->reduce(static fn (array $prev, array $next) => [...$prev, ...$next])->getOrElse([])
+        ;
     }
 }

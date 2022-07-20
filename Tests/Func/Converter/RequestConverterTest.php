@@ -12,7 +12,8 @@ use FRZB\Component\RequestMapper\Data\ValidationError;
 use FRZB\Component\RequestMapper\Exception\ValidationException;
 use FRZB\Component\RequestMapper\Tests\Helper\RequestHelper;
 use FRZB\Component\RequestMapper\Tests\Helper\TestConstant;
-use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateUserRequest;
+use FRZB\Component\RequestMapper\Tests\Stub\Enum\TestEnum;
+use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateUserRequestWithEnum;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -40,7 +41,7 @@ final class RequestConverterTest extends KernelTestCase
      *
      * @dataProvider caseProvider
      */
-    public function testConvertMethod(Context $context, ?CreateUserRequest $request = null, array $errors = []): void
+    public function testConvertMethod(Context $context, ?CreateUserRequestWithEnum $request = null, array $errors = []): void
     {
         try {
             $object = $this->converter->convert($context);
@@ -62,22 +63,23 @@ final class RequestConverterTest extends KernelTestCase
         self::assertSame($request?->getName(), $object->getName());
         self::assertSame($request?->getUserId(), $object->getUserId());
         self::assertSame($request?->getAmount(), $object->getAmount());
+        self::assertSame($request?->getTestEnum(), $object->getTestEnum());
     }
 
     /** @throws \Exception */
     public function caseProvider(): iterable
     {
-        $params = ['name' => TestConstant::USER_NAME, 'userId' => TestConstant::USER_ID, 'amount' => TestConstant::USER_AMOUNT];
-        $attribute = new ParamConverter(parameterClass: CreateUserRequest::class, parameterName: 'request');
+        $params = ['name' => TestConstant::USER_NAME, 'userId' => TestConstant::USER_ID, 'amount' => TestConstant::USER_AMOUNT, 'testEnum' => TestEnum::One->value];
+        $attribute = new ParamConverter(parameterClass: CreateUserRequestWithEnum::class, parameterName: 'request');
         $request = RequestHelper::makeRequest(method: Request::METHOD_POST, params: $params);
-        $userRequest = new CreateUserRequest(...$params);
+        $userRequest = new CreateUserRequestWithEnum(...['name' => TestConstant::USER_NAME, 'userId' => TestConstant::USER_ID, 'amount' => TestConstant::USER_AMOUNT, 'testEnum' => TestEnum::One]);
 
         yield 'Converter data with valid params' => [
             'context' => new Context($request, $attribute),
             'request' => $userRequest,
         ];
 
-        $attribute = new ParamConverter(parameterClass: CreateUserRequest::class);
+        $attribute = new ParamConverter(parameterClass: CreateUserRequestWithEnum::class);
         $request = RequestHelper::makeRequest(method: Request::METHOD_POST);
         $errors = [
             new ValidationError(NotBlank::class, '[name]', 'This value should not be blank.'),
@@ -89,14 +91,15 @@ final class RequestConverterTest extends KernelTestCase
             'errors' => $errors,
         ];
 
-        $params = ['name' => random_int(\PHP_INT_MIN, \PHP_INT_MAX), 'userId' => random_int(\PHP_INT_MIN, \PHP_INT_MAX), 'amount' => 'some amount'];
-        $attribute = new ParamConverter(parameterClass: CreateUserRequest::class);
+        $params = ['name' => random_int(\PHP_INT_MIN, \PHP_INT_MAX), 'userId' => random_int(\PHP_INT_MIN, \PHP_INT_MAX), 'amount' => 'some amount', 'testEnum' => 1];
+        $attribute = new ParamConverter(parameterClass: CreateUserRequestWithEnum::class);
         $request = RequestHelper::makeRequest(method: Request::METHOD_POST, params: $params);
         $errors = [
             new ValidationError(Type::class, '[name]', 'This value should be of type string.'),
             new ValidationError(Uuid::class, '[userId]', 'This is not a valid UUID.'),
             new ValidationError(Type::class, '[userId]', 'This value should be of type string.'),
             new ValidationError(Type::class, '[amount]', 'This value should be of type float.'),
+            new ValidationError(Type::class, '[testEnum]', 'This value should be of type string.'),
         ];
 
         yield 'Converter data with invalid params' => [

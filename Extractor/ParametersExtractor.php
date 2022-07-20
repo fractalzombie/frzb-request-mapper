@@ -26,27 +26,43 @@ class ParametersExtractor
         $props = HashMap::collect($properties);
 
         $complexTypes = $props
-            ->filter(fn (Entry $propEntry) => \is_array($propEntry->value))
+            ->filter(static fn (Entry $propEntry) => \is_array($propEntry->value))
             ->map(fn (Entry $propEntry) => $this->mapPropertiesForArray($propEntry, $params))
             ->toAssocArray()
             ->getOrElse([])
         ;
 
         $classTypes = $props
-            ->filter(fn (Entry $propEntry) => !\is_array($propEntry->value) && ClassHelper::isNotBuiltinAndExists($propEntry->value))
+            ->filter(static fn (Entry $propEntry) => !\is_array($propEntry->value) && ClassHelper::isNotBuiltinAndExists($propEntry->value))
             ->map(fn (Entry $propEntry) => $this->extract($propEntry->value, $params->get($propEntry->key)->getOrElse([])))
             ->toAssocArray()
             ->getOrElse([])
         ;
 
-        $simpleTypes = $props
-            ->filter(fn (Entry $propEntry) => !\is_array($propEntry->value) && !ClassHelper::isNotBuiltinAndExists($propEntry->value))
-            ->map(fn (Entry $propEntry) => $params->get($propEntry->key)->getOrElse(null))
+        $enumTypes = $props
+            ->filter(static fn (Entry $propEntry) => !\is_array($propEntry->value) && ClassHelper::isEnum($propEntry->value))
+            ->map(fn (Entry $propEntry) => $this->mapEnum($propEntry->value, $params->get($propEntry->key)->getOrElse(null)))
             ->toAssocArray()
             ->getOrElse([])
         ;
 
-        return [...$complexTypes, ...$classTypes, ...$simpleTypes];
+        $simpleTypes = $props
+            ->filter(static fn (Entry $propEntry) => !\is_array($propEntry->value) && !ClassHelper::isNotBuiltinAndExists($propEntry->value))
+            ->map(static fn (Entry $propEntry) => $params->get($propEntry->key)->getOrElse(null))
+            ->toAssocArray()
+            ->getOrElse([])
+        ;
+
+        return [...$complexTypes, ...$classTypes, ...$enumTypes, ...$simpleTypes];
+    }
+
+    private function mapEnum(string $enumClassName, mixed $value = null): ?\BackedEnum
+    {
+        return match (true) {
+            is_subclass_of($enumClassName, \IntBackedEnum::class) && \is_int($value) => $enumClassName::tryFrom($value),
+            is_subclass_of($enumClassName, \StringBackedEnum::class) && \is_string($value) => $enumClassName::tryFrom($value),
+            default => null,
+        };
     }
 
     private function mapPropertiesForArray(Entry $propEntry, HashMap $parameters): array
@@ -56,7 +72,7 @@ class ParametersExtractor
             ->map(fn (Entry $paramEntry) => $this->extract($paramEntry->value, $parameters->get($propEntry->key)->get()[$paramEntry->key] ?? []))
             ->toAssocArray()
             ->get()
-            ;
+        ;
     }
 
     private function getPropertyMapping(string $className, mixed $value): array
