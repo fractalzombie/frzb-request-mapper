@@ -85,7 +85,7 @@ class ParametersExtractor
 
         $complexTypes = $properties
             ->filter(fn (\ReflectionProperty $p) => ConstraintsHelper::hasArrayTypeAttribute($p))
-            ->map(fn (\ReflectionProperty $p) => [SerializerHelper::getSerializedNameAttribute($p)->getSerializedName() => ArrayList::range(1, \count($value))->map(fn () => ConstraintsHelper::getArrayTypeAttribute($p)->typeName)->toArray()])
+            ->map(fn (\ReflectionProperty $p) => [SerializerHelper::getSerializedNameAttribute($p)->getSerializedName() => ArrayList::range(0, \count($value))->map(fn () => ConstraintsHelper::getArrayTypeAttribute($p)->typeName)->toArray()])
             ->reduce(fn (array $prev, array $next) => [...$prev, ...$next])
             ->getOrElse([])
         ;
