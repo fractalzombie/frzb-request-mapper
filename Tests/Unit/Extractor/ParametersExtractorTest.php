@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\Tests\Unit\Extractor;
 
+use FRZB\Component\PhpDocReader\Reader\ReaderService;
+use FRZB\Component\PhpDocReader\Resolver\ResolverService;
 use FRZB\Component\RequestMapper\Extractor\ParametersExtractor;
 use FRZB\Component\RequestMapper\Tests\Helper\TestConstant;
 use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateNestedUserRequest;
@@ -22,7 +24,7 @@ class ParametersExtractorTest extends TestCase
     /** @dataProvider caseProvider */
     public function testExtractMethod(string $class, array $parameters): void
     {
-        self::assertSame($parameters, (new ParametersExtractor())->extract($class, $parameters));
+        self::assertSame($parameters, (new ParametersExtractor(new ReaderService(new ResolverService())))->extract($class, $parameters));
     }
 
     public function caseProvider(): iterable

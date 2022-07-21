@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\Helper;
 
+use FRZB\Component\PhpDocReader\Reader\ReaderInterface as PhpDocReader;
 use FRZB\Component\RequestMapper\Attribute\ArrayType;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\Collection;
@@ -32,5 +33,10 @@ final class ConstraintsHelper
     public static function hasArrayTypeAttribute(\ReflectionProperty $rProperty): bool
     {
         return 'array' === $rProperty->getType()?->getName() && null !== AttributeHelper::getAttribute($rProperty, ArrayType::class);
+    }
+
+    public static function hasArrayDocBlock(\ReflectionProperty $rProperty, PhpDocReader $reader): bool
+    {
+        return 'array' === $rProperty->getType()?->getName() && null !== $reader->getPropertyClass($rProperty);
     }
 }

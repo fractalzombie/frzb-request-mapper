@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FRZB\Component\RequestMapper\Tests\Unit\Resources;
 
 use FRZB\Component\DependencyInjection\DependencyInjectionBundle;
+use FRZB\Component\PhpDocReader\PhpDocReaderBundle;
 use FRZB\Component\RequestMapper\RequestMapperBundle;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
@@ -22,6 +23,7 @@ class BundlesTest extends TestCase
         $expectedBundles = [
             FrameworkBundle::class => ['all' => true],
             DependencyInjectionBundle::class => ['all' => true],
+            PhpDocReaderBundle::class => ['all' => true],
             RequestMapperBundle::class => ['all' => true],
         ];
 

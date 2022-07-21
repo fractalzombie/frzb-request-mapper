@@ -8,6 +8,8 @@ use Fp\Collections\ArrayList;
 use Fp\Collections\Entry;
 use Fp\Collections\HashMap;
 use FRZB\Component\DependencyInjection\Attribute\AsService;
+use FRZB\Component\PhpDocReader\Exception\ReaderException;
+use FRZB\Component\PhpDocReader\Reader\ReaderInterface as PhpDocReader;
 use FRZB\Component\RequestMapper\Helper\ClassHelper;
 use FRZB\Component\RequestMapper\Helper\ConstraintsHelper;
 use FRZB\Component\RequestMapper\Helper\SerializerHelper;
@@ -15,6 +17,11 @@ use FRZB\Component\RequestMapper\Helper\SerializerHelper;
 #[AsService]
 class ParametersExtractor
 {
+    public function __construct(
+        private readonly PhpDocReader $reader,
+    ) {
+    }
+
     public function extract(string $class, array $parameters): array
     {
         return [...$parameters, ...$this->mapProperties($this->getPropertyMapping($class, $parameters), $parameters)];
@@ -68,7 +75,7 @@ class ParametersExtractor
     private function mapPropertiesForArray(Entry $propEntry, HashMap $parameters): array
     {
         return HashMap::collect($parameters->get($propEntry->key)->get())
-            ->map(fn (Entry $paramEntry) => $propEntry->value[$paramEntry->key])
+            ->map(static fn (Entry $paramEntry) => $propEntry->value[$paramEntry->key])
             ->map(fn (Entry $paramEntry) => $this->extract($paramEntry->value, $parameters->get($propEntry->key)->get()[$paramEntry->key] ?? []))
             ->toAssocArray()
             ->get()
@@ -84,19 +91,31 @@ class ParametersExtractor
         }
 
         $complexTypes = $properties
-            ->filter(fn (\ReflectionProperty $p) => ConstraintsHelper::hasArrayTypeAttribute($p))
-            ->map(fn (\ReflectionProperty $p) => [SerializerHelper::getSerializedNameAttribute($p)->getSerializedName() => ArrayList::range(0, \count($value))->map(fn () => ConstraintsHelper::getArrayTypeAttribute($p)->typeName)->toArray()])
-            ->reduce(fn (array $prev, array $next) => [...$prev, ...$next])
+            ->map(fn (\ReflectionProperty $p) => match (true) {
+                ConstraintsHelper::hasArrayTypeAttribute($p) => [SerializerHelper::getSerializedNameAttribute($p)->getSerializedName() => ArrayList::range(0, \count($value))->map(fn () => ConstraintsHelper::getArrayTypeAttribute($p)->typeName)->toArray()],
+                ConstraintsHelper::hasArrayDocBlock($p, $this->reader) => [SerializerHelper::getSerializedNameAttribute($p)->getSerializedName() => ArrayList::range(0, \count($value))->map(fn () => $this->getPropertyTypeFromDocBlock($p))->toArray()],
+                default => [SerializerHelper::getSerializedNameAttribute($p)->getSerializedName() => []],
+            })
+            ->reduce(static fn (array $prev, array $next) => [...$prev, ...$next])
             ->getOrElse([])
         ;
 
         $simpleTypes = $properties
-            ->filter(fn (\ReflectionProperty $p) => !ConstraintsHelper::hasArrayTypeAttribute($p))
-            ->map(fn (\ReflectionProperty $p) => [SerializerHelper::getSerializedNameAttribute($p)->getSerializedName() => $p->getType()?->/** @scrutinizer ignore-call */ getName()])
-            ->reduce(fn (array $prev, array $next) => [...$prev, ...$next])
+            ->filter(static fn (\ReflectionProperty $p) => !ConstraintsHelper::hasArrayTypeAttribute($p))
+            ->map(static fn (\ReflectionProperty $p) => [SerializerHelper::getSerializedNameAttribute($p)->getSerializedName() => $p->getType()?->/** @scrutinizer ignore-call */ getName()])
+            ->reduce(static fn (array $prev, array $next) => [...$prev, ...$next])
             ->getOrElse([])
         ;
 
         return [...$complexTypes, ...$simpleTypes];
+    }
+
+    private function getPropertyTypeFromDocBlock(\ReflectionProperty $property): ?string
+    {
+        try {
+            return $this->reader->getPropertyClass($property);
+        } catch (ReaderException) {
+            return null;
+        }
     }
 }
