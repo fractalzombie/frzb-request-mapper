@@ -6,7 +6,7 @@ namespace FRZB\Component\RequestMapper\ExceptionFormatter;
 
 use FRZB\Component\DependencyInjection\Attribute\AsService;
 use FRZB\Component\RequestMapper\Data\ErrorContract as ContractError;
-use FRZB\Component\RequestMapper\Locator\ExceptionFormatterLocatorInterface as ExceptionFormatterLocator;
+use FRZB\Component\RequestMapper\ExceptionFormatter\ExceptionFormatterLocatorInterface as ExceptionFormatterLocator;
 
 #[AsService]
 class ExceptionFormatter implements ExceptionFormatterInterface

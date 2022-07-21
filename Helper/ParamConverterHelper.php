@@ -6,14 +6,18 @@ namespace FRZB\Component\RequestMapper\Helper;
 
 use Fp\Collections\ArrayList;
 use FRZB\Component\RequestMapper\Attribute\ParamConverter;
+use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 
-/**
- * @internal
- */
+/** @internal */
+#[Immutable]
 final class ParamConverterHelper
 {
     private const REQUEST_POSTFIXES = ['Request', 'Dto', 'DTO'];
+
+    private function __construct()
+    {
+    }
 
     public static function getAttribute(\ReflectionParameter $parameter, array $attributes): ?ParamConverter
     {

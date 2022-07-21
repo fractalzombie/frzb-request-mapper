@@ -6,12 +6,11 @@ namespace FRZB\Component\RequestMapper\ExceptionFormatter\Formatter;
 
 use FRZB\Component\RequestMapper\Data\ErrorContract;
 use FRZB\Component\RequestMapper\Data\FormattedError;
-use FRZB\Component\RequestMapper\Locator\ExceptionFormatterLocatorInterface as ExceptionFormatterLocator;
 use JetBrains\PhpStorm\Pure;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-#[AutoconfigureTag(ExceptionFormatterLocator::EXCEPTION_FORMATTERS_TAG)]
+#[AutoconfigureTag(FormatterInterface::class)]
 class HttpExceptionFormatter implements FormatterInterface
 {
     #[Pure]

@@ -4,11 +4,16 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\Helper;
 
-/**
- * @internal
- */
+use JetBrains\PhpStorm\Immutable;
+
+/** @internal */
+#[Immutable]
 final class StringHelper
 {
+    private function __construct()
+    {
+    }
+
     public static function toSnakeCase(string $value): string
     {
         return strtolower(preg_replace('/[A-Z]/', '_\\0', lcfirst($value)));
@@ -49,5 +54,10 @@ final class StringHelper
     public static function removeBrackets(string $value, array $brackets = ['[', ']']): string
     {
         return str_replace($brackets, '', $value);
+    }
+
+    public static function removeNotWordCharacters(string $value): string
+    {
+        return preg_replace('/[\W+]+/', '', $value);
     }
 }

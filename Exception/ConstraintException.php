@@ -9,7 +9,7 @@ use Symfony\Component\Validator\ConstraintViolationListInterface as ConstraintVi
 
 final class ConstraintException extends \LogicException
 {
-    private const DEFAULT_MESSAGE = 'Constraint Exception';
+    private const DEFAULT_MESSAGE = 'ConstraintException';
 
     #[Pure]
     private function __construct(private readonly ConstraintViolationList $violations, ?\Throwable $previous = null)

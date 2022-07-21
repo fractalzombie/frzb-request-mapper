@@ -668,16 +668,16 @@
         },
         {
             "name": "frzb/dependency-injection",
-            "version": "v1.2.1",
+            "version": "v1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fractalzombie/frzb-dependency-injection.git",
-                "reference": "2fb22bad0e323cb18bbe141ea723018f29b73406"
+                "reference": "a22207de1bcfa6e88f086897c0d26becd5c41612"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fractalzombie/frzb-dependency-injection/zipball/2fb22bad0e323cb18bbe141ea723018f29b73406",
-                "reference": "2fb22bad0e323cb18bbe141ea723018f29b73406",
+                "url": "https://api.github.com/repos/fractalzombie/frzb-dependency-injection/zipball/a22207de1bcfa6e88f086897c0d26becd5c41612",
+                "reference": "a22207de1bcfa6e88f086897c0d26becd5c41612",
                 "shasum": ""
             },
             "require": {
@@ -746,9 +746,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fractalzombie/frzb-dependency-injection/issues",
-                "source": "https://github.com/fractalzombie/frzb-dependency-injection/tree/v1.2.1"
+                "source": "https://github.com/fractalzombie/frzb-dependency-injection/tree/v1.3.0"
             },
-            "time": "2022-07-06T11:30:17+00:00"
+            "time": "2022-07-21T18:27:59+00:00"
         },
         {
             "name": "frzb/php-doc-reader",
@@ -817,7 +817,7 @@
         },
         {
             "name": "illuminate/collections",
-            "version": "v9.21.3",
+            "version": "v9.21.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/collections.git",
@@ -872,7 +872,7 @@
         },
         {
             "name": "illuminate/conditionable",
-            "version": "v9.21.3",
+            "version": "v9.21.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/conditionable.git",
@@ -918,7 +918,7 @@
         },
         {
             "name": "illuminate/contracts",
-            "version": "v9.21.3",
+            "version": "v9.21.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
@@ -966,7 +966,7 @@
         },
         {
             "name": "illuminate/macroable",
-            "version": "v9.21.3",
+            "version": "v9.21.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/macroable.git",
@@ -1012,16 +1012,16 @@
         },
         {
             "name": "illuminate/support",
-            "version": "v9.21.3",
+            "version": "v9.21.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
-                "reference": "f0ef83d1dc4e31d9fe4a37e4089113560244a770"
+                "reference": "0ec179658019011bf11c744e1b535cfcd1a4e7a5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/support/zipball/f0ef83d1dc4e31d9fe4a37e4089113560244a770",
-                "reference": "f0ef83d1dc4e31d9fe4a37e4089113560244a770",
+                "url": "https://api.github.com/repos/illuminate/support/zipball/0ec179658019011bf11c744e1b535cfcd1a4e7a5",
+                "reference": "0ec179658019011bf11c744e1b535cfcd1a4e7a5",
                 "shasum": ""
             },
             "require": {
@@ -1077,7 +1077,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2022-07-20T13:13:03+00:00"
+            "time": "2022-07-21T08:53:50+00:00"
         },
         {
             "name": "laravel/helpers",

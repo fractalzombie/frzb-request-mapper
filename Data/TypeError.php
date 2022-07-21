@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FRZB\Component\RequestMapper\Data;
 
 use FRZB\Component\RequestMapper\Exception\TypeErrorInvalidArgumentException;
-use FRZB\Component\RequestMapper\Helper\ObjectHelper;
+use FRZB\Component\RequestMapper\Helper\ClassHelper;
 use JetBrains\PhpStorm\Immutable;
 
 #[Immutable]
@@ -22,7 +22,7 @@ final class TypeError
 
     public static function fromArray(array $params): self
     {
-        if (!ObjectHelper::isArrayHasAllPropertiesFromClass($params, self::class)) {
+        if (!ClassHelper::isArrayHasAllPropertiesFromClass($params, self::class)) {
             throw TypeErrorInvalidArgumentException::fromParams($params);
         }
 

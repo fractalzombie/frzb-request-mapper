@@ -9,11 +9,10 @@ use FRZB\Component\RequestMapper\Data\ErrorContract;
 use FRZB\Component\RequestMapper\Data\ErrorInterface as Error;
 use FRZB\Component\RequestMapper\Data\FormattedError;
 use FRZB\Component\RequestMapper\Exception\ValidationException;
-use FRZB\Component\RequestMapper\Locator\ExceptionFormatterLocatorInterface as ExceptionFormatterLocator;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Component\HttpFoundation\Response;
 
-#[AutoconfigureTag(ExceptionFormatterLocator::EXCEPTION_FORMATTERS_TAG)]
+#[AutoconfigureTag(FormatterInterface::class)]
 class ValidationFormatter implements FormatterInterface
 {
     public function __invoke(ValidationException $e): ErrorContract

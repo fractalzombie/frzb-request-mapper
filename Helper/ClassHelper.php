@@ -5,15 +5,22 @@ declare(strict_types=1);
 namespace FRZB\Component\RequestMapper\Helper;
 
 use Fp\Collections\ArrayList;
+use JetBrains\PhpStorm\Immutable;
 
-/**
- * @internal
- */
+/** @internal */
+#[Immutable]
 final class ClassHelper
 {
+    private function __construct()
+    {
+    }
+
     public static function isNotBuiltinAndExists(string $className): bool
     {
-        return class_exists($className) && !empty((new \ReflectionClass($className))->getNamespaceName()) && !self::isEnum($className);
+        return (class_exists($className) || interface_exists($className))
+            && !empty((new \ReflectionClass($className))->getNamespaceName())
+            && !self::isEnum($className)
+        ;
     }
 
     public static function isEnum(string $className): bool
@@ -38,24 +45,6 @@ final class ClassHelper
         ;
     }
 
-    public static function getPropertyMapping(string $className): array
-    {
-        try {
-            $properties = (new \ReflectionClass($className))->getProperties();
-        } catch (\ReflectionException) {
-            $properties = [];
-        }
-
-        return ArrayList::collect($properties)
-            ->map(static fn (\ReflectionProperty $p): array => match (true) {
-                ConstraintsHelper::hasArrayTypeAttribute($p) => [SerializerHelper::getSerializedNameAttribute($p)->getSerializedName() => [ConstraintsHelper::getArrayTypeAttribute($p)->typeName]],
-                default => [SerializerHelper::getSerializedNameAttribute($p)->getSerializedName() => $p->getType()?->/** @scrutinizer ignore-call */ getName()],
-            })
-            ->reduce(static fn (array $prev, array $next) => [...$prev, ...$next])
-            ->getOrElse([])
-        ;
-    }
-
     /** @return \ReflectionParameter[] */
     public static function getMethodParameters(string $className, string $classMethod): array
     {
@@ -64,5 +53,24 @@ final class ClassHelper
         } catch (\ReflectionException) {
             return [];
         }
+    }
+
+    public static function isArrayHasAllPropertiesFromClass(array $array, string $class): bool
+    {
+        try {
+            $rClass = new \ReflectionClass($class);
+        } catch (\ReflectionException) {
+            return false;
+        }
+
+        foreach ($rClass->getProperties() as $property) {
+            $propertyValue = $array[$property->getName()] ?? $array[StringHelper::toSnakeCase($property->getName())] ?? null;
+
+            if (!$propertyValue) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

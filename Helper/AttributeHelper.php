@@ -5,9 +5,16 @@ declare(strict_types=1);
 namespace FRZB\Component\RequestMapper\Helper;
 
 use Fp\Collections\ArrayList;
+use JetBrains\PhpStorm\Immutable;
 
+/** @internal */
+#[Immutable]
 final class AttributeHelper
 {
+    private function __construct()
+    {
+    }
+
     public static function hasAttribute(\ReflectionProperty|\ReflectionClass|\ReflectionMethod|\ReflectionFunction|\ReflectionParameter $target, string $attributeClass): bool
     {
         return null !== self::getAttribute($target, $attributeClass);
