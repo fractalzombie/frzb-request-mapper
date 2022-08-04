@@ -668,16 +668,16 @@
         },
         {
             "name": "frzb/dependency-injection",
-            "version": "v1.5.5",
+            "version": "v1.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fractalzombie/frzb-dependency-injection.git",
-                "reference": "3c194758070c8c7e4b42e057b4c5319073335e3d"
+                "reference": "ad264d41dbb6cb2485005bd11bcc38491ce82104"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fractalzombie/frzb-dependency-injection/zipball/3c194758070c8c7e4b42e057b4c5319073335e3d",
-                "reference": "3c194758070c8c7e4b42e057b4c5319073335e3d",
+                "url": "https://api.github.com/repos/fractalzombie/frzb-dependency-injection/zipball/ad264d41dbb6cb2485005bd11bcc38491ce82104",
+                "reference": "ad264d41dbb6cb2485005bd11bcc38491ce82104",
                 "shasum": ""
             },
             "require": {
@@ -730,9 +730,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fractalzombie/frzb-dependency-injection/issues",
-                "source": "https://github.com/fractalzombie/frzb-dependency-injection/tree/v1.5.5"
+                "source": "https://github.com/fractalzombie/frzb-dependency-injection/tree/v1.6.0"
             },
-            "time": "2022-08-03T16:39:07+00:00"
+            "time": "2022-08-04T10:57:10+00:00"
         },
         {
             "name": "frzb/php-doc-reader",
