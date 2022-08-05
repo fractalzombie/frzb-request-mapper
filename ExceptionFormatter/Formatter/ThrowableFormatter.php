@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\ExceptionFormatter\Formatter;
 
+use FRZB\Component\DependencyInjection\Attribute\AsService;
+use FRZB\Component\DependencyInjection\Attribute\AsTagged;
 use FRZB\Component\RequestMapper\Data\ErrorContract;
 use FRZB\Component\RequestMapper\Data\FormattedError;
-use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Component\HttpFoundation\Response;
 
-#[AutoconfigureTag(FormatterInterface::class)]
+#[AsService, AsTagged(FormatterInterface::class)]
 class ThrowableFormatter implements FormatterInterface
 {
     public function __invoke(\Throwable $e): ErrorContract

@@ -11,13 +11,11 @@ use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateCardSettingsRequest;
 use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateSettingsRequest;
 use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateUserRequest;
 use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateUserSettingsRequest;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @group request-mapper
- *
- * @internal
- */
+#[Group('request-mapper')]
 class DiscriminatorMapExtractorTest extends TestCase
 {
     private DiscriminatorMapExtractor $extractor;
@@ -27,7 +25,7 @@ class DiscriminatorMapExtractorTest extends TestCase
         $this->extractor = new DiscriminatorMapExtractor();
     }
 
-    /** @dataProvider caseProvider */
+    #[DataProvider('caseProvider')]
     public function testExtractMethod(string $givenClass, string $expectedClass, array $parameters, bool $throws = false): void
     {
         if ($throws) {

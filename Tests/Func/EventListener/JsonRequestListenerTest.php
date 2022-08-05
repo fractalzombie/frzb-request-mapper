@@ -10,15 +10,16 @@ use FRZB\Component\RequestMapper\EventListener\JsonRequestListener;
 use FRZB\Component\RequestMapper\Helper\Header;
 use FRZB\Component\RequestMapper\Tests\Helper\RequestHelper;
 use FRZB\Component\RequestMapper\Tests\Helper\TestConstant;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface as HttpKernel;
 
+#[Group('request-mapper')]
 /**
- * @group request-mapper
- *
  * @internal
  */
 final class JsonRequestListenerTest extends KernelTestCase
@@ -34,7 +35,7 @@ final class JsonRequestListenerTest extends KernelTestCase
         $this->listener = self::getContainer()->get(JsonRequestListener::class);
     }
 
-    /** @dataProvider caseProvider */
+    #[DataProvider('caseProvider')]
     public function testOnKernelRequestMethod(
         string $method,
         string $requestContent,

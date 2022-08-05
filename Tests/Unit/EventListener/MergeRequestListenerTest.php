@@ -7,16 +7,13 @@ namespace FRZB\Component\RequestMapper\Tests\Unit\EventListener;
 use FRZB\Component\RequestMapper\EventListener\MergeRequestListener;
 use FRZB\Component\RequestMapper\Tests\Helper\RequestHelper;
 use FRZB\Component\RequestMapper\Tests\Helper\TestConstant;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
-/**
- * @group request-mapper
- *
- * @internal
- */
+#[Group('request-mapper')]
 class MergeRequestListenerTest extends TestCase
 {
     private MergeRequestListener $listener;

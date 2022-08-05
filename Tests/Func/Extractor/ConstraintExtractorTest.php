@@ -8,15 +8,15 @@ use FRZB\Component\RequestMapper\Extractor\ConstraintExtractor;
 use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateNestedUserRequest;
 use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateUserRequest;
 use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateUserSettingsRequest;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Required;
 use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Validator\Constraints\Uuid;
 
+#[Group('request-mapper')]
 /**
- * @group request-mapper
- *
  * @internal
  */
 class ConstraintExtractorTest extends KernelTestCase

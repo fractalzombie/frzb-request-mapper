@@ -7,7 +7,7 @@ build:
     coverage:
       tests:
         override:
-          - command: php -n -dzend_extension=xdebug -dxdebug.mode=coverage vendor/bin/phpunit --colors=always --verbose --configuration phpunit.xml.dist --log-junit var/tests/.phpunit.output.xml --coverage-clover var/tests/coverage/coverage.xml
+          - command: mkdir -p var/tests/coverage && php -n -dzend_extension=xdebug -dxdebug.mode=coverage vendor/bin/phpunit --colors=always --configuration phpunit.xml.dist --log-junit var/tests/.phpunit.output.xml --coverage-clover var/tests/coverage/coverage.xml
             coverage:
               file: var/tests/coverage/coverage.xml
               format: clover

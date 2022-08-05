@@ -7,20 +7,18 @@ namespace FRZB\Component\RequestMapper\Tests\Unit\Helper;
 use FRZB\Component\RequestMapper\Helper\ConstraintsHelper;
 use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateUserRequest;
 use FRZB\Component\RequestMapper\Tests\Stub\Request\TestRequest;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Validator\Constraints\Uuid;
 
-/**
- * @group request-mapper
- *
- * @internal
- */
+#[Group('request-mapper')]
 class ConstraintHelperTest extends TestCase
 {
-    /** @dataProvider fromPropertyCaseProvider */
+    #[DataProvider('fromPropertyCaseProvider')]
     public function testFromPropertyMethod(array $properties, array $expectedConstraintClasses): void
     {
         foreach ($properties as $property) {

@@ -16,31 +16,20 @@ use FRZB\Component\RequestMapper\Tests\Stub\Controller\TestController;
 use FRZB\Component\RequestMapper\Tests\Stub\Controller\TestWithoutParameterNameAndParameterClassController;
 use FRZB\Component\RequestMapper\Tests\Stub\Controller\TestWithoutParameterNameController;
 use FRZB\Component\RequestMapper\Tests\Stub\Request\TestRequest;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface as HttpKernel;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as EventDispatcher;
 
-/**
- * @group request-mapper
- *
- * @internal
- */
+#[Group('request-mapper')]
 final class RequestMapperListenerTest extends TestCase
 {
-    /**
-     * @dataProvider dataProvider
-     *
-     * @throws \Throwable
-     */
-    public function testOnKernelController(
-        array $params,
-        string $httpMethod,
-        string $targetClass,
-        string $parameterName,
-        callable|object|array $controller
-    ): void {
+    #[DataProvider('dataProvider')]
+    public function testOnKernelController(array $params, string $httpMethod, string $targetClass, string $parameterName, callable|object|array $controller): void
+    {
         $request = RequestHelper::makeRequest(method: $httpMethod, params: $params, generator: Factory::create());
         $converter = $this->makeConverter($targetClass, $params);
         $eventDispatcher = $this->makeEventDispatcherMock();

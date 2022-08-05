@@ -10,6 +10,9 @@ use FRZB\Component\RequestMapper\ExceptionFormatter\ExceptionFormatterInterface 
 use FRZB\Component\RequestMapper\Helper\HeaderHelper;
 use FRZB\Component\RequestMapper\Tests\Helper\RequestHelper;
 use FRZB\Component\RequestMapper\Tests\Helper\TestConstant;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunClassInSeparateProcess;
 use PHPUnit\Framework\MockObject\Rule\InvocationOrder;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,11 +21,8 @@ use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as EventDispatcher;
 
-/**
- * @group request-mapper
- *
- * @internal
- */
+#[RunClassInSeparateProcess]
+#[Group('request-mapper')]
 class ExceptionListenerTest extends TestCase
 {
     private ExceptionListener $listener;
@@ -36,7 +36,7 @@ class ExceptionListenerTest extends TestCase
         $this->listener = new ExceptionListener($this->exceptionFormatter, $this->eventDispatcher);
     }
 
-    /** @dataProvider caseProvider */
+    #[DataProvider('caseProvider')]
     public function testOnKernelRequestMethod(array $headers, InvocationOrder $expectFormatter, InvocationOrder $expectsDispatcher): void
     {
         $request = RequestHelper::makeRequest(Request::METHOD_POST, [], $headers);
@@ -47,9 +47,11 @@ class ExceptionListenerTest extends TestCase
         $this->exceptionFormatter->expects($expectFormatter)->method('format')->willReturn($contractError);
         $this->eventDispatcher->expects($expectsDispatcher)->method('dispatch');
 
-        $this->listener->onKernelException(
-            new ExceptionEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST, $exception)
-        );
+        try {
+            $this->listener->onKernelException(new ExceptionEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST, $exception));
+        } catch (\Throwable $e) {
+            dd($e);
+        }
 
         self::assertEmpty($request->request->all());
         self::assertSame($headers, HeaderHelper::getHeaders($request));

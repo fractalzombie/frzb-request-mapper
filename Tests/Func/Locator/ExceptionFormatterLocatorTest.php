@@ -11,14 +11,15 @@ use FRZB\Component\RequestMapper\ExceptionFormatter\Formatter\HttpExceptionForma
 use FRZB\Component\RequestMapper\ExceptionFormatter\Formatter\ThrowableFormatter;
 use FRZB\Component\RequestMapper\ExceptionFormatter\Formatter\ValidationFormatter;
 use FRZB\Component\RequestMapper\Tests\Helper\TestConstant;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Validator\Constraints\NotNull;
 
+#[Group('request-mapper')]
 /**
- * @group request-mapper
- *
  * @internal
  */
 class ExceptionFormatterLocatorTest extends KernelTestCase
@@ -32,7 +33,7 @@ class ExceptionFormatterLocatorTest extends KernelTestCase
         $this->locator = self::getContainer()->get(ExceptionFormatterLocator::class);
     }
 
-    /** @dataProvider caseProvider */
+    #[DataProvider('caseProvider')]
     public function testGetAndHasMethods(\Throwable $e, string $formatterClass, bool $existsInLocator): void
     {
         $formatter = $this->locator->get($e);

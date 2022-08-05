@@ -19,26 +19,17 @@ RUN apk add --no-cache \
     icu-dev \
     libpq-dev \
     libxml2-dev \
-    unixodbc-dev \
-    librdkafka-dev
+    unixodbc-dev
 
 # Install PHP
 RUN install-php-extensions \
     bz2 \
     pcntl \
     intl \
-    mbstring \
     zip \
     sockets \
-    xdebug
-
-# Install Composer.
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
- && ln -s $(composer config --global home) $HOME/.composer
-
-# Install symfony cli
-RUN curl -LsS https://get.symfony.com/cli/installer -o /usr/local/bin/symfony \
- && chmod a+x /usr/local/bin/symfony
+    xdebug-stable \
+    @composer
 
 # Configure PHP
 COPY conf/conf.d/docker-php-ext-xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini

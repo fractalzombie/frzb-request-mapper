@@ -10,14 +10,15 @@ use FRZB\Component\RequestMapper\Data\ValidationError;
 use FRZB\Component\RequestMapper\Exception\ValidationException;
 use FRZB\Component\RequestMapper\ExceptionFormatter\ExceptionFormatterInterface as ExceptionFormatter;
 use FRZB\Component\RequestMapper\Tests\Helper\TestConstant;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Validator\Constraints\NotNull;
 
+#[Group('request-mapper')]
 /**
- * @group request-mapper
- *
  * @internal
  */
 final class ExceptionFormatterTest extends KernelTestCase
@@ -31,11 +32,7 @@ final class ExceptionFormatterTest extends KernelTestCase
         $this->formatter = self::getContainer()->get(ExceptionFormatter::class);
     }
 
-    /**
-     * @dataProvider caseProvider
-     *
-     * @throws \JsonException
-     */
+    #[DataProvider('caseProvider')]
     public function test(\Throwable $e, ErrorContract $errorContract): void
     {
         $formattedErrorContract = $this->formatter->format($e);
@@ -46,10 +43,7 @@ final class ExceptionFormatterTest extends KernelTestCase
         self::assertIsArray($formattedErrorContract->getTrace());
         self::assertNotNull($formattedErrorContract->getTrace());
         self::assertSame((string) $errorContract, (string) $formattedErrorContract);
-        self::assertSame(
-            json_encode($errorContract, \JSON_THROW_ON_ERROR),
-            json_encode($formattedErrorContract, \JSON_THROW_ON_ERROR)
-        );
+        self::assertJsonStringEqualsJsonString(json_encode($errorContract), json_encode($formattedErrorContract));
     }
 
     public function caseProvider(): iterable

@@ -50,7 +50,6 @@
         "php-coveralls/php-coveralls": "^2.5",
         "symfony/phpunit-bridge": "^5.4|^6",
         "friendsofphp/php-cs-fixer": "^3.9",
-        "dg/bypass-finals": "^1.3.1",
         "symfony/test-pack": "^1.0.10",
         "fakerphp/faker": "^1.20.0"
     },
@@ -64,10 +63,12 @@
     },
     "scripts": {
         "test": [
-            "php vendor/bin/phpunit --colors=always --verbose --configuration phpunit.xml.dist --log-junit var/tests/.phpunit.output.xml"
+            "@php -r \"file_exists('var/tests') || mkdir('var/tests', recursive: true);\"",
+            "php vendor/bin/phpunit --colors=always --configuration phpunit.xml.dist --log-junit var/tests/.phpunit.output.xml"
         ],
         "test-coverage": [
-            "php -n -dzend_extension=xdebug -dxdebug.mode=coverage vendor/bin/phpunit --colors=always --verbose --configuration phpunit.xml.dist --log-junit var/tests/.phpunit.output.xml --coverage-html var/tests/coverage --coverage-clover var/tests/coverage/coverage.xml"
+            "@php -r \"file_exists('var/tests') || mkdir('var/tests', recursive: true);\"",
+            "php -n -dzend_extension=xdebug -dxdebug.mode=coverage vendor/bin/phpunit --colors=always --configuration phpunit.xml.dist --log-junit var/tests/.phpunit.output.xml --coverage-html var/tests/coverage --coverage-clover var/tests/coverage/coverage.xml"
         ]
     },
     "extra": {

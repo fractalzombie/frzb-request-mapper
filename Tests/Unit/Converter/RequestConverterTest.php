@@ -1,7 +1,5 @@
 <?php
 
-/** @noinspection PhpPrivateFieldCanBeLocalVariableInspection */
-
 declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\Tests\Unit\Converter;
@@ -20,6 +18,8 @@ use FRZB\Component\RequestMapper\Parser\ExceptionConverterInterface as Exception
 use FRZB\Component\RequestMapper\Tests\Helper\RequestHelper;
 use FRZB\Component\RequestMapper\Tests\Helper\TestConstant;
 use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateSettingsRequest;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\MockObject\Rule\InvokedCount as InvokedCountMatcher;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,11 +28,7 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface as Denormalize
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface as Validator;
 
-/**
- * @group request-mapper
- *
- * @internal
- */
+#[Group('request-mapper')]
 class RequestConverterTest extends TestCase
 {
     private RequestConverter $converter;
@@ -58,7 +54,7 @@ class RequestConverterTest extends TestCase
         $this->converter = new RequestConverter(...$services);
     }
 
-    /** @dataProvider caseProvider */
+    #[DataProvider('caseProvider')]
     public function testConvertMethod(string $service, InvokedCountMatcher $expects, string $method, \Throwable $exception, string $expectedExceptionClass, array $parameters, bool $willServiceThrow = true): void
     {
         $attribute = new ParamConverter(...$parameters);

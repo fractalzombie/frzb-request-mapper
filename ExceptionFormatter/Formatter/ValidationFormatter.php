@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace FRZB\Component\RequestMapper\ExceptionFormatter\Formatter;
 
 use Fp\Collections\ArrayList;
+use FRZB\Component\DependencyInjection\Attribute\AsService;
+use FRZB\Component\DependencyInjection\Attribute\AsTagged;
 use FRZB\Component\RequestMapper\Data\ErrorContract;
 use FRZB\Component\RequestMapper\Data\ErrorInterface as Error;
 use FRZB\Component\RequestMapper\Data\FormattedError;
 use FRZB\Component\RequestMapper\Exception\ValidationException;
-use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Component\HttpFoundation\Response;
 
-#[AutoconfigureTag(FormatterInterface::class)]
+#[AsService, AsTagged(FormatterInterface::class)]
 class ValidationFormatter implements FormatterInterface
 {
     public function __invoke(ValidationException $e): ErrorContract

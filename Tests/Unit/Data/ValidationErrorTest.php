@@ -6,13 +6,10 @@ namespace FRZB\Component\RequestMapper\Tests\Unit\Data;
 
 use FRZB\Component\RequestMapper\Data\ValidationError;
 use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateUserRequest;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @group request-mapper
- *
- * @internal
- */
+#[Group('request-mapper')]
 class ValidationErrorTest extends TestCase
 {
     public function testToStringMethod(): void

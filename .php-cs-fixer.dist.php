@@ -26,6 +26,7 @@ $rules = [
     'nullable_type_declaration_for_default_null_value' => ['use_nullable_type_declaration' => true],
     'php_unit_test_case_static_method_calls' => false,
     'php_unit_test_class_requires_covers' => false,
+    'php_unit_internal_class' => false,
 ];
 
 return (new PhpCsFixer\Config())

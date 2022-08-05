@@ -7,14 +7,11 @@ namespace FRZB\Component\RequestMapper\Tests\Unit\Resources;
 use FRZB\Component\DependencyInjection\DependencyInjectionBundle;
 use FRZB\Component\PhpDocReader\PhpDocReaderBundle;
 use FRZB\Component\RequestMapper\RequestMapperBundle;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 
-/**
- * @group request-mapper
- *
- * @internal
- */
+#[Group('request-mapper')]
 class BundlesTest extends TestCase
 {
     public function testConfiguredBundles(): void

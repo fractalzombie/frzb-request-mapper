@@ -10,7 +10,7 @@ install:
 
 script:
   - mkdir -p build/logs
-  - php -n -dzend_extension=xdebug -dxdebug.mode=coverage vendor/bin/phpunit --colors=always --verbose --configuration phpunit.xml.dist --log-junit build/logs/.phpunit.output.xml --coverage-clover build/logs/clover.xml
+  - php -n -dzend_extension=xdebug -dxdebug.mode=coverage vendor/bin/phpunit --colors=always --configuration phpunit.xml.dist --log-junit build/logs/.phpunit.output.xml --coverage-clover build/logs/clover.xml
 
 after_success:
   - vendor/bin/php-coveralls -v

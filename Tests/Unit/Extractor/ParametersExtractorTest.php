@@ -12,16 +12,14 @@ use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateNestedUserRequest;
 use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateUserRequest;
 use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateUserWithSerializedNameRequest;
 use FRZB\Component\RequestMapper\Tests\Stub\Request\TestRequest;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @group request-mapper
- *
- * @internal
- */
+#[Group('request-mapper')]
 class ParametersExtractorTest extends TestCase
 {
-    /** @dataProvider caseProvider */
+    #[DataProvider('caseProvider')]
     public function testExtractMethod(string $class, array $parameters): void
     {
         self::assertSame($parameters, (new ParametersExtractor(new ReaderService(new ResolverService())))->extract($class, $parameters));

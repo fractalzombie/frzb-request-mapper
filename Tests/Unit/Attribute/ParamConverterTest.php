@@ -8,13 +8,11 @@ use FRZB\Component\RequestMapper\Attribute\ParamConverter;
 use FRZB\Component\RequestMapper\Tests\Stub\Controller\TestController;
 use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateUserRequest;
 use FRZB\Component\RequestMapper\Tests\Stub\Request\TestRequest;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @group request-mapper
- *
- * @internal
- */
+#[Group('request-mapper')]
 class ParamConverterTest extends TestCase
 {
     public function testGetValidationGroupsMethod(): void
@@ -23,11 +21,11 @@ class ParamConverterTest extends TestCase
         $converterWithoutDefaultGroup = new ParamConverter(validationGroups: [CreateUserRequest::class], useDefaultValidationGroup: false);
 
         self::assertNotSame($converterWithDefaultGroup->getValidationGroups(), $converterWithoutDefaultGroup->getValidationGroups());
-        self::assertSame($converterWithDefaultGroup->getValidationGroups(), [CreateUserRequest::class, ParamConverter::DEFAULT_VALIDATION_GROUP]);
-        self::assertSame($converterWithoutDefaultGroup->getValidationGroups(), [CreateUserRequest::class]);
+        self::assertSame([CreateUserRequest::class, ParamConverter::DEFAULT_VALIDATION_GROUP], $converterWithDefaultGroup->getValidationGroups());
+        self::assertSame([CreateUserRequest::class], $converterWithoutDefaultGroup->getValidationGroups());
     }
 
-    /** @dataProvider equalsCaseProvider */
+    #[DataProvider('equalsCaseProvider')]
     public function testEqualsMethod(ParamConverter $first, object $second, bool $expected): void
     {
         self::assertSame($expected, $first->equals($second));

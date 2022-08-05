@@ -7,16 +7,14 @@ namespace FRZB\Component\RequestMapper\Tests\Unit\Helper;
 use FRZB\Component\RequestMapper\Helper\SerializerHelper;
 use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateUserRequest;
 use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateUserWithSerializedNameRequest;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @group request-mapper
- *
- * @internal
- */
+#[Group('request-mapper')]
 class SerializerHelperTest extends TestCase
 {
-    /** @dataProvider caseProvider */
+    #[DataProvider('caseProvider')]
     public function testGetSerializedNameAttributeMethod(array $properties, array $expectedPropertyNames): void
     {
         foreach ($properties as $index => $property) {

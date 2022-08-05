@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b9b0685639ae224322989b8dd3d421e0",
+    "content-hash": "3635058b93ab40e04b3aa1ae5be3ca7c",
     "packages": [
         {
             "name": "composer/pcre",
@@ -668,16 +668,16 @@
         },
         {
             "name": "frzb/dependency-injection",
-            "version": "v1.5.5",
+            "version": "v1.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fractalzombie/frzb-dependency-injection.git",
-                "reference": "3c194758070c8c7e4b42e057b4c5319073335e3d"
+                "reference": "ad264d41dbb6cb2485005bd11bcc38491ce82104"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fractalzombie/frzb-dependency-injection/zipball/3c194758070c8c7e4b42e057b4c5319073335e3d",
-                "reference": "3c194758070c8c7e4b42e057b4c5319073335e3d",
+                "url": "https://api.github.com/repos/fractalzombie/frzb-dependency-injection/zipball/ad264d41dbb6cb2485005bd11bcc38491ce82104",
+                "reference": "ad264d41dbb6cb2485005bd11bcc38491ce82104",
                 "shasum": ""
             },
             "require": {
@@ -730,9 +730,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fractalzombie/frzb-dependency-injection/issues",
-                "source": "https://github.com/fractalzombie/frzb-dependency-injection/tree/v1.5.5"
+                "source": "https://github.com/fractalzombie/frzb-dependency-injection/tree/v1.6.0"
             },
-            "time": "2022-08-03T16:39:07+00:00"
+            "time": "2022-08-04T10:57:10+00:00"
         },
         {
             "name": "frzb/php-doc-reader",
@@ -5029,59 +5029,6 @@
     ],
     "packages-dev": [
         {
-            "name": "dg/bypass-finals",
-            "version": "v1.3.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/dg/bypass-finals.git",
-                "reference": "495f5bc762e7bf30a13ed8253f44bb3a701767bb"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/dg/bypass-finals/zipball/495f5bc762e7bf30a13ed8253f44bb3a701767bb",
-                "reference": "495f5bc762e7bf30a13ed8253f44bb3a701767bb",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1"
-            },
-            "require-dev": {
-                "nette/tester": "^2.3",
-                "phpstan/phpstan": "^0.12"
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "src/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause",
-                "GPL-2.0",
-                "GPL-3.0"
-            ],
-            "authors": [
-                {
-                    "name": "David Grudl",
-                    "homepage": "https://davidgrudl.com"
-                }
-            ],
-            "description": "Removes final keyword from source code on-the-fly and allows mocking of final methods and classes",
-            "keywords": [
-                "finals",
-                "mocking",
-                "phpunit",
-                "testing",
-                "unit"
-            ],
-            "support": {
-                "issues": "https://github.com/dg/bypass-finals/issues",
-                "source": "https://github.com/dg/bypass-finals/tree/v1.3.1"
-            },
-            "time": "2021-04-09T10:42:55+00:00"
-        },
-        {
             "name": "doctrine/instantiator",
             "version": "1.4.1",
             "source": {
@@ -6248,12 +6195,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "94b062cbf26ee24c7688cf18744a348395e1bc2c"
+                "reference": "152eba51bcf40f6814d529135d03c3d33e962e8e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/94b062cbf26ee24c7688cf18744a348395e1bc2c",
-                "reference": "94b062cbf26ee24c7688cf18744a348395e1bc2c",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/152eba51bcf40f6814d529135d03c3d33e962e8e",
+                "reference": "152eba51bcf40f6814d529135d03c3d33e962e8e",
                 "shasum": ""
             },
             "require": {
@@ -6337,7 +6284,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-08-03T06:20:23+00:00"
+            "time": "2022-08-05T06:31:49+00:00"
         },
         {
             "name": "psr/http-client",

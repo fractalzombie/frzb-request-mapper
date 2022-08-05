@@ -7,19 +7,17 @@ namespace FRZB\Component\RequestMapper\Tests\Unit\Parser;
 use FRZB\Component\RequestMapper\Parser\TypeErrorExceptionConverter;
 use FRZB\Component\RequestMapper\Tests\Stub\Request\TestRequest;
 use FRZB\Component\RequestMapper\Tests\Stub\Request\TestWithoutParametersRequest;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @group request-mapper
- *
- * @internal
- */
+#[Group('request-mapper')]
 final class TypeErrorExceptionConverterTest extends TestCase
 {
     private const TYPE_ERROR_MESSAGE_TEMPLATE = 'Invalid parameter "[%s]" type, expected "%s", proposed "%s"';
     private const ARGUMENT_ERROR_MESSAGE_TEMPLATE = 'Argument with position "%s" not exists';
 
-    /** @dataProvider caseProvider */
+    #[DataProvider('caseProvider')]
     public function testConvert(
         string $parameter,
         string $class,

@@ -17,14 +17,15 @@ use FRZB\Component\RequestMapper\Tests\Stub\Controller\TestWithoutParameterNameA
 use FRZB\Component\RequestMapper\Tests\Stub\Controller\TestWithoutParameterNameController;
 use FRZB\Component\RequestMapper\Tests\Stub\Request\TestRequest;
 use FRZB\Component\RequestMapper\Tests\Stub\Request\TestWithHeadersRequest;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface as HttpKernel;
 
+#[Group('request-mapper')]
 /**
- * @group request-mapper
- *
  * @internal
  */
 final class RequestMapperListenerTest extends KernelTestCase
@@ -40,11 +41,7 @@ final class RequestMapperListenerTest extends KernelTestCase
         $this->listener = self::getContainer()->get(RequestMapperListener::class);
     }
 
-    /**
-     * @dataProvider dataProvider
-     *
-     * @throws \Throwable
-     */
+    #[DataProvider('dataProvider')]
     public function testOnKernelController(
         array $params,
         string $httpMethod,

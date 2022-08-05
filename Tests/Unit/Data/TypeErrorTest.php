@@ -7,16 +7,14 @@ namespace FRZB\Component\RequestMapper\Tests\Unit\Data;
 use FRZB\Component\RequestMapper\Data\TypeError;
 use FRZB\Component\RequestMapper\Exception\TypeErrorInvalidArgumentException;
 use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateUserRequest;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @group request-mapper
- *
- * @internal
- */
+#[Group('request-mapper')]
 final class TypeErrorTest extends TestCase
 {
-    /** @dataProvider caseProvider */
+    #[DataProvider('caseProvider')]
     public function testCreation(array $params, bool $throws = false): void
     {
         if ($throws) {

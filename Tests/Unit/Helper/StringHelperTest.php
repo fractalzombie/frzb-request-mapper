@@ -5,20 +5,14 @@ declare(strict_types=1);
 namespace FRZB\Component\RequestMapper\Tests\Unit\Helper;
 
 use FRZB\Component\RequestMapper\Helper\StringHelper;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @group request-mapper
- *
- * @internal
- */
+#[Group('request-mapper')]
 class StringHelperTest extends TestCase
 {
-    /**
-     * Correctly is /[^a-zA-Z\\d_-]/.
-     *
-     * @dataProvider normalizeProvider
-     */
+    #[DataProvider('normalizeProvider')]
     public function testNormalizePrefix(string $prefix, string $expectedValue): void
     {
         self::assertSame($expectedValue, StringHelper::normalize($prefix));
@@ -34,11 +28,7 @@ class StringHelperTest extends TestCase
         ];
     }
 
-    /**
-     * Correctly is /[^a-zA-Z\\d_-]/.
-     *
-     * @dataProvider prefixProvider
-     */
+    #[DataProvider('prefixProvider')]
     public function testMakePrefixMethod(string $prefix, string $expectedValue, ?string $value = null, ?string $delimiter = null): void
     {
         self::assertSame($expectedValue, StringHelper::makePrefix($prefix, $value, $delimiter));
@@ -56,7 +46,7 @@ class StringHelperTest extends TestCase
         ];
     }
 
-    /** @dataProvider snakeCaseProvider */
+    #[DataProvider('snakeCaseProvider')]
     public function testToSnakeCaseMethod(string $sourceValue, string $expectedValue): void
     {
         self::assertSame($expectedValue, StringHelper::toSnakeCase($sourceValue));
@@ -71,7 +61,7 @@ class StringHelperTest extends TestCase
         ];
     }
 
-    /** @dataProvider snakeCaseToCamelCaseProvider */
+    #[DataProvider('snakeCaseToCamelCaseProvider')]
     public function testToCamelCaseMethod(string $sourceValue, string $expectedValue): void
     {
         self::assertSame($expectedValue, StringHelper::toCamelCase($sourceValue));
@@ -88,7 +78,7 @@ class StringHelperTest extends TestCase
         ];
     }
 
-    /** @dataProvider snakeCaseToLowerCamelCaseProvider */
+    #[DataProvider('snakeCaseToLowerCamelCaseProvider')]
     public function testToLowerCamelCaseMethod(string $sourceValue, string $expectedValue): void
     {
         self::assertSame($expectedValue, StringHelper::toLowerCamelCase($sourceValue));
@@ -105,7 +95,7 @@ class StringHelperTest extends TestCase
         ];
     }
 
-    /** @dataProvider kebabCaseProvider */
+    #[DataProvider('kebabCaseProvider')]
     public function testToKebabCaseMethod(string $sourceValue, string $expectedValue): void
     {
         self::assertSame($expectedValue, StringHelper::toKebabCase($sourceValue));
@@ -120,7 +110,7 @@ class StringHelperTest extends TestCase
         ];
     }
 
-    /** @dataProvider successSubValuesProvider */
+    #[DataProvider('successSubValuesProvider')]
     public function testContainsMethod(string $sourceValue, string $subValue, bool $expected): void
     {
         self::assertSame($expected, StringHelper::contains($sourceValue, $subValue));
@@ -138,7 +128,7 @@ class StringHelperTest extends TestCase
         ];
     }
 
-    /** @dataProvider bracketsProvider */
+    #[DataProvider('bracketsProvider')]
     public function testRemoveBracketsMethod(string $inputValue, string $expectedValue, array $brackets): void
     {
         self::assertEquals($expectedValue, StringHelper::removeBrackets($inputValue, $brackets));

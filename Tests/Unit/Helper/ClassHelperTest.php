@@ -8,16 +8,14 @@ use FRZB\Component\RequestMapper\Helper\ClassHelper;
 use FRZB\Component\RequestMapper\Tests\Helper\TestConstant;
 use FRZB\Component\RequestMapper\Tests\Stub\Enum\TestEnum;
 use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateUserRequest;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @group request-mapper
- *
- * @internal
- */
+#[Group('request-mapper')]
 class ClassHelperTest extends TestCase
 {
-    /** @dataProvider isNotBuiltinCaseProvider */
+    #[DataProvider('isNotBuiltinCaseProvider')]
     public function testIsNotBuiltinAndExistsMethod(string $class, bool $isNotBuiltinAndExists): void
     {
         self::assertSame($isNotBuiltinAndExists, ClassHelper::isNotBuiltinAndExists($class));
@@ -41,7 +39,7 @@ class ClassHelperTest extends TestCase
         ];
     }
 
-    /** @dataProvider getShortNameCaseProvider */
+    #[DataProvider('getShortNameCaseProvider')]
     public function testGetShortNameMethod(string $className, string $expectedName): void
     {
         self::assertSame($expectedName, ClassHelper::getShortName($className));
@@ -65,7 +63,7 @@ class ClassHelperTest extends TestCase
         ];
     }
 
-    /** @dataProvider nameContainsCaseProvider */
+    #[DataProvider('nameContainsCaseProvider')]
     public function testIsNameContainsMethod(string $className, array $haystack, bool $contains): void
     {
         self::assertSame($contains, ClassHelper::isNameContains($className, ...$haystack));
@@ -98,7 +96,7 @@ class ClassHelperTest extends TestCase
         ];
     }
 
-    /** @dataProvider getMethodParametersCaseProvider */
+    #[DataProvider('getMethodParametersCaseProvider')]
     public function testGetMethodParametersMethod(string $className, string $method, array $expectedMapping): void
     {
         $mapping = array_map(
@@ -124,7 +122,7 @@ class ClassHelperTest extends TestCase
         ];
     }
 
-    /** @dataProvider isEnumCaseProvider */
+    #[DataProvider('isEnumCaseProvider')]
     public function testIsEnumMethod(string $className, bool $expectedResult): void
     {
         self::assertSame(ClassHelper::isEnum($className), $expectedResult);
@@ -143,7 +141,7 @@ class ClassHelperTest extends TestCase
         ];
     }
 
-    /** @dataProvider isArrayHasAllPropertiesFromClassCaseProvider */
+    #[DataProvider('isArrayHasAllPropertiesFromClassCaseProvider')]
     public function testIsArrayHasAllPropertiesFromClass(array $properties, string $class, bool $expected): void
     {
         self::assertSame($expected, ClassHelper::isArrayHasAllPropertiesFromClass($properties, $class));

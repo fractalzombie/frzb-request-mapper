@@ -14,15 +14,16 @@ use FRZB\Component\RequestMapper\Tests\Helper\RequestHelper;
 use FRZB\Component\RequestMapper\Tests\Helper\TestConstant;
 use FRZB\Component\RequestMapper\Tests\Stub\Enum\TestEnum;
 use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateUserRequestWithEnum;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Validator\Constraints\Uuid;
 
+#[Group('request-mapper')]
 /**
- * @group request-mapper
- *
  * @internal
  */
 final class RequestConverterTest extends KernelTestCase
@@ -36,11 +37,8 @@ final class RequestConverterTest extends KernelTestCase
         $this->converter = self::getContainer()->get(RequestConverter::class);
     }
 
-    /**
-     * @param ErrorInterface[] $errors
-     *
-     * @dataProvider caseProvider
-     */
+    /** @param ErrorInterface[] $errors */
+    #[DataProvider('caseProvider')]
     public function testConvertMethod(Context $context, ?CreateUserRequestWithEnum $request = null, array $errors = []): void
     {
         try {
