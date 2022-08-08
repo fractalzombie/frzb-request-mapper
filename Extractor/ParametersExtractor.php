@@ -10,6 +10,7 @@ use FRZB\Component\DependencyInjection\Attribute\AsService;
 use FRZB\Component\PhpDocReader\Reader\ReaderInterface as PhpDocReader;
 use FRZB\Component\RequestMapper\Helper\ClassHelper;
 use FRZB\Component\RequestMapper\Helper\PropertyHelper;
+use JetBrains\PhpStorm\Pure;
 
 #[AsService]
 class ParametersExtractor
@@ -39,11 +40,12 @@ class ParametersExtractor
         ;
     }
 
+    #[Pure]
     private function mapEnum(string $enumClassName, mixed $value = null): ?\BackedEnum
     {
         return match (true) {
-            is_subclass_of($enumClassName, \IntBackedEnum::class) && \is_int($value) => $enumClassName::tryFrom($value),
-            is_subclass_of($enumClassName, \StringBackedEnum::class) && \is_string($value) => $enumClassName::tryFrom($value),
+            is_subclass_of($enumClassName, \IntBackedEnum::class) && \is_int($value) && !empty($value) => $enumClassName::tryFrom($value),
+            is_subclass_of($enumClassName, \StringBackedEnum::class) && \is_string($value) && !empty($value) => $enumClassName::tryFrom($value),
             default => null,
         };
     }
