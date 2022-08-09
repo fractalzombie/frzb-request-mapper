@@ -58,6 +58,6 @@ final class StringHelper
 
     public static function removeNotWordCharacters(string $value): string
     {
-        return preg_replace('/[\W+]+/', '', $value);
+        return preg_replace('/[^a-zA-Z0-9\\\\]/', '', $value);
     }
 }

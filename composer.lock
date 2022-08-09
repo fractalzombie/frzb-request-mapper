@@ -1121,16 +1121,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "2.60.0",
+            "version": "2.61.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "00a259ae02b003c563158b54fb6743252b638ea6"
+                "reference": "bdf4f4fe3a3eac4de84dbec0738082a862c68ba6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/00a259ae02b003c563158b54fb6743252b638ea6",
-                "reference": "00a259ae02b003c563158b54fb6743252b638ea6",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/bdf4f4fe3a3eac4de84dbec0738082a862c68ba6",
+                "reference": "bdf4f4fe3a3eac4de84dbec0738082a862c68ba6",
                 "shasum": ""
             },
             "require": {
@@ -1219,7 +1219,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-07-27T15:57:48+00:00"
+            "time": "2022-08-06T12:41:24+00:00"
         },
         {
             "name": "php-cs-fixer/diff",
@@ -6195,12 +6195,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "152eba51bcf40f6814d529135d03c3d33e962e8e"
+                "reference": "3f9396ed8474bbd2c4186d77ee8f650a8b920f8d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/152eba51bcf40f6814d529135d03c3d33e962e8e",
-                "reference": "152eba51bcf40f6814d529135d03c3d33e962e8e",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/3f9396ed8474bbd2c4186d77ee8f650a8b920f8d",
+                "reference": "3f9396ed8474bbd2c4186d77ee8f650a8b920f8d",
                 "shasum": ""
             },
             "require": {
@@ -6284,7 +6284,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-08-05T06:31:49+00:00"
+            "time": "2022-08-09T09:10:35+00:00"
         },
         {
             "name": "psr/http-client",
