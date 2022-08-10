@@ -1,8 +1,15 @@
-services:
-  _defaults:
+services: &services
+  _defaults: &defaults
     autowire: true
     autoconfigure: true
-
+  
   FRZB\Component\RequestMapper\:
-    resource: '../../{Converter,EventListener,ExceptionFormatter,Extractor,Parser}/**'
+    resource: '../../{Converter,EventListener,ExceptionFormatter,Extractor,Parser,PropertyMapper,ClassMapper}/**'
     exclude: '../../{Attribute,Utils,Request,Data,Exception,Tests}/**'
+
+when@test:
+  services:
+    <<: *services
+    _defaults:
+      <<: *defaults
+      public: true

@@ -8,6 +8,7 @@ use Fp\Collections\ArrayList;
 use FRZB\Component\DependencyInjection\Attribute\AsService;
 use FRZB\Component\RequestMapper\Helper\ClassHelper;
 use FRZB\Component\RequestMapper\Helper\ConstraintsHelper;
+use FRZB\Component\RequestMapper\Helper\PropertyHelper;
 use FRZB\Component\RequestMapper\Helper\SerializerHelper;
 use Symfony\Component\Validator\Constraints\All;
 use Symfony\Component\Validator\Constraints\Collection;
@@ -40,22 +41,33 @@ class ConstraintExtractor
     public function extractConstraints(string $class, array $parameters = []): array
     {
         $constraints = [];
-        $classMetadata = $this->getClassMetadataFor($class);
+//        $classMetadata = $this->getClassMetadataFor($class);
         $reflectionClass = new \ReflectionClass($class);
+
+        if ($parentClass = $reflectionClass->getParentClass()) {
+            $constraints = $this->extractConstraints($parentClass->getName());
+        }
 
         foreach ($reflectionClass->getProperties() as $property) {
             $propertyName = $property->getName();
-            $propertyMetadata = $this->getPropertyMetadataFor($classMetadata, $propertyName);
-            $propertyReflectionMember = $this->getPropertyReflectionMember($class, $propertyMetadata);
-            $propertySerializedName = SerializerHelper::getSerializedNameAttribute($propertyReflectionMember)?->getSerializedName();
-            $propertyTypeName = $propertyReflectionMember->getType()?->getName();
+//            $propertyMetadata = $this->getPropertyMetadataFor($classMetadata, $propertyName);
+//            $propertyReflectionMember = $this->getPropertyReflectionMember($class, $propertyMetadata);
+            $propertySerializedName = SerializerHelper::getSerializedNameAttribute($property)?->getSerializedName();
+            $propertyTypeName = PropertyHelper::getTypeName($property);
             $propertyValue = $parameters[$propertySerializedName] ?? $parameters[$propertyName] ?? [];
-            $arrayTypeName = ConstraintsHelper::getArrayTypeAttribute($propertyReflectionMember)?->typeName;
+//            dump($propertyValue, $propertyTypeName, $parameters);
+            $arrayTypeName = ConstraintsHelper::getArrayTypeAttribute($property)?->typeName;
+
+//            $constraints[$propertySerializedName] = match (true) {
+//                ConstraintsHelper::hasArrayTypeAttribute($propertyReflectionMember) => ArrayList::collect($propertyValue)->map(fn () => new All($this->extract($arrayTypeName, $propertyValue)))->toArray(),
+//                ClassHelper::isNotBuiltinAndExists($propertyTypeName) => $this->extractConstraints($propertyTypeName),
+//                default => $propertyMetadata->getConstraints(),
+//            };
 
             $constraints[$propertySerializedName] = match (true) {
-                ConstraintsHelper::hasArrayTypeAttribute($propertyReflectionMember) => ArrayList::collect($propertyValue)->map(fn () => new All($this->extract($arrayTypeName, $propertyValue)))->toArray(),
+                ConstraintsHelper::hasArrayTypeAttribute($property) => ArrayList::collect($propertyValue)->map(fn () => new All($this->extract($arrayTypeName, $propertyValue)))->toArray(),
                 ClassHelper::isNotBuiltinAndExists($propertyTypeName) => $this->extract($propertyTypeName),
-                default => $propertyMetadata->getConstraints(),
+                default => ConstraintsHelper::fromProperty($property),
             };
         }
 

@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
+/** @internal */
 #[Group('request-mapper')]
 class ListenerExceptionEventTest extends TestCase
 {

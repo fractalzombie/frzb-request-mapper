@@ -11,6 +11,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
+/** @internal */
 #[Group('request-mapper')]
 class SerializerHelperTest extends TestCase
 {

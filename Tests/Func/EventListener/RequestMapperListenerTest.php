@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\Tests\Func\EventListener;
 
-use Faker\Factory;
-use Faker\Generator;
-use FRZB\Component\RequestMapper\Attribute\ParamConverter;
+use FRZB\Component\RequestMapper\Attribute\RequestBody;
 use FRZB\Component\RequestMapper\EventListener\RequestMapperListener;
 use FRZB\Component\RequestMapper\Tests\Helper\RequestHelper;
 use FRZB\Component\RequestMapper\Tests\Stub\Controller\TestCallableController;
@@ -24,20 +22,16 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface as HttpKernel;
 
+/** @internal */
 #[Group('request-mapper')]
-/**
- * @internal
- */
 final class RequestMapperListenerTest extends KernelTestCase
 {
-    private Generator $generator;
     private RequestMapperListener $listener;
 
     protected function setUp(): void
     {
         self::bootKernel();
 
-        $this->generator = Factory::create();
         $this->listener = self::getContainer()->get(RequestMapperListener::class);
     }
 
@@ -50,7 +44,7 @@ final class RequestMapperListenerTest extends KernelTestCase
         callable|object|array $controller
     ): void {
         $headers = ['content-type' => 'application/json'];
-        $request = RequestHelper::makeRequest(method: $httpMethod, params: $params, headers: $headers, generator: $this->generator);
+        $request = RequestHelper::makeRequest(method: $httpMethod, params: $params, headers: $headers);
         $controllerEvent = $this->makeControllerEvent($request, $controller);
 
         $this->listener->onKernelController($controllerEvent);
@@ -123,7 +117,7 @@ final class RequestMapperListenerTest extends KernelTestCase
             'http_method' => Request::METHOD_POST,
             'target_class' => TestRequest::class,
             'parameter_name' => 'dto',
-            'controller' => #[ParamConverter(parameterClass: TestRequest::class, parameterName: 'dto')] static fn (TestRequest $dto) => null,
+            'controller' => #[RequestBody(requestClass: TestRequest::class, argumentName: 'dto')] static fn (TestRequest $dto) => null,
         ];
 
         yield 'Test function controller without parameter name' => [
@@ -131,7 +125,7 @@ final class RequestMapperListenerTest extends KernelTestCase
             'http_method' => Request::METHOD_POST,
             'target_class' => TestRequest::class,
             'parameter_name' => 'dto',
-            'controller' => #[ParamConverter(parameterClass: TestRequest::class)] static fn (TestRequest $dto) => null,
+            'controller' => #[RequestBody(requestClass: TestRequest::class)] static fn (TestRequest $dto) => null,
         ];
 
         yield 'Test function controller without parameter name and parameter class' => [
@@ -139,7 +133,7 @@ final class RequestMapperListenerTest extends KernelTestCase
             'http_method' => Request::METHOD_POST,
             'target_class' => TestRequest::class,
             'parameter_name' => 'dto',
-            'controller' => #[ParamConverter] static fn (TestRequest $dto) => null,
+            'controller' => #[RequestBody] static fn (TestRequest $dto) => null,
         ];
 
         yield 'Test function controller with headers request' => [
@@ -147,7 +141,7 @@ final class RequestMapperListenerTest extends KernelTestCase
             'http_method' => Request::METHOD_POST,
             'target_class' => TestWithHeadersRequest::class,
             'parameter_name' => 'dto',
-            'controller' => #[ParamConverter(parameterClass: TestWithHeadersRequest::class, parameterName: 'dto')] static fn (TestWithHeadersRequest $dto) => null,
+            'controller' => #[RequestBody(requestClass: TestWithHeadersRequest::class, argumentName: 'dto')] static fn (TestWithHeadersRequest $dto) => null,
         ];
 
         yield 'Test function controller native request' => [
@@ -155,7 +149,7 @@ final class RequestMapperListenerTest extends KernelTestCase
             'http_method' => Request::METHOD_POST,
             'target_class' => TestRequest::class,
             'parameter_name' => 'dto',
-            'controller' => #[ParamConverter(parameterClass: TestRequest::class, parameterName: 'dto')] static fn (TestRequest $dto, Request $request) => null,
+            'controller' => #[RequestBody(requestClass: TestRequest::class, argumentName: 'dto')] static fn (TestRequest $dto, Request $request) => null,
         ];
     }
 

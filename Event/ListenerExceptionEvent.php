@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\Event;
 
-use FRZB\Component\RequestMapper\Data\ErrorContract;
+use FRZB\Component\RequestMapper\ValueObject\ErrorContract;
 use Symfony\Contracts\EventDispatcher\Event;
 
 final class ListenerExceptionEvent extends Event

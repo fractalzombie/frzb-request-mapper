@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\Exception;
 
+use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Serializer\Annotation\DiscriminatorMap;
 use Throwable;
 
+#[Immutable]
 final class ClassExtractorException extends \RuntimeException
 {
     #[Pure]

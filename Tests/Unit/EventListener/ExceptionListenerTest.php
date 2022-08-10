@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\Tests\Unit\EventListener;
 
-use FRZB\Component\RequestMapper\Data\FormattedError;
 use FRZB\Component\RequestMapper\EventListener\ExceptionListener;
 use FRZB\Component\RequestMapper\ExceptionFormatter\ExceptionFormatterInterface as ExceptionFormatter;
 use FRZB\Component\RequestMapper\Helper\HeaderHelper;
 use FRZB\Component\RequestMapper\Tests\Helper\RequestHelper;
 use FRZB\Component\RequestMapper\Tests\Helper\TestConstant;
+use FRZB\Component\RequestMapper\ValueObject\FormattedError;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunClassInSeparateProcess;
@@ -21,8 +21,9 @@ use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as EventDispatcher;
 
-#[RunClassInSeparateProcess]
+/** @internal */
 #[Group('request-mapper')]
+#[RunClassInSeparateProcess]
 class ExceptionListenerTest extends TestCase
 {
     private ExceptionListener $listener;

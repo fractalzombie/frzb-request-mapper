@@ -7,22 +7,21 @@ namespace FRZB\Component\RequestMapper\Extractor;
 use Fp\Collections\Entry;
 use Fp\Collections\HashMap;
 use FRZB\Component\DependencyInjection\Attribute\AsService;
-use FRZB\Component\PhpDocReader\Reader\ReaderInterface as PhpDocReader;
+use FRZB\Component\RequestMapper\ClassMapper\ClassMapperInterface as ClassMapper;
 use FRZB\Component\RequestMapper\Helper\ClassHelper;
-use FRZB\Component\RequestMapper\Helper\PropertyHelper;
 use JetBrains\PhpStorm\Pure;
 
 #[AsService]
 class ParametersExtractor
 {
     public function __construct(
-        private readonly PhpDocReader $reader,
+        private readonly ClassMapper $classMapper,
     ) {
     }
 
     public function extract(string $class, array $parameters): array
     {
-        return [...$parameters, ...$this->mapProperties(PropertyHelper::getMapping($class, $parameters, $this->reader), $parameters)];
+        return [...$parameters, ...$this->mapProperties($this->classMapper->map($class, $parameters), $parameters)];
     }
 
     private function mapProperties(array $properties, array $parameters): array
@@ -31,9 +30,9 @@ class ParametersExtractor
             ->map(fn (Entry $e) => match (true) {
                 \is_array($e->value) => $this->mapPropertiesForArray($e->key, $e->value, $parameters),
                 ClassHelper::isNotBuiltinAndExists($e->value) => $this->extract($e->value, $parameters[$e->key] ?? []),
-                ClassHelper::isEnum($e->value) => $this->mapEnum($e->value, $parameters[$e->key] ?? null),
+                ClassHelper::isEnum($e->value) => $this->mapEnum($e->value, $parameters[$e->key] ?? null) ?? $parameters[$e->key] ?? null,
                 !ClassHelper::isNotBuiltinAndExists($e->value) => $parameters[$e->key] ?? null,
-                default => null,
+                default => $parameters[$e->key] ?? null,
             })
             ->toAssocArray()
             ->getOrElse([])
@@ -53,7 +52,7 @@ class ParametersExtractor
     private function mapPropertiesForArray(string $key, array $value, array $parameters): array
     {
         return HashMap::collect($parameters[$key] ?? [])
-            ->map(static fn (Entry $e) => $e->value[$key])
+            ->map(static fn (Entry $e) => $e->value[$key] ?? null)
             ->map(fn (Entry $e) => $this->extract($e->value, $parameters[$key][$e->key] ?? []))
             ->toAssocArray()
             ->get()

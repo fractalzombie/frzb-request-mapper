@@ -11,6 +11,7 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 
+/** @internal */
 #[Group('request-mapper')]
 class BundlesTest extends TestCase
 {

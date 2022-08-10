@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\Exception;
 
+use JetBrains\PhpStorm\Immutable;
+use PHPUnit\Framework\Attributes\CodeCoverageIgnore;
 use Symfony\Component\Validator\ConstraintViolationInterface as ConstraintViolation;
 
-/**
- * @codeCoverageIgnore This error should never be thrown.
- */
+#[Immutable]
+#[CodeCoverageIgnore('This error should never be thrown')]
 final class ErrorInvalidArgumentException extends \InvalidArgumentException
 {
     public static function fromConstraintValidation(ConstraintViolation $violation, ?\Throwable $previous = null): self

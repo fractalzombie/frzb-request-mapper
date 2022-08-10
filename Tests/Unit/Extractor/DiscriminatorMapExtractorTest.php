@@ -15,6 +15,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
+/** @internal */
 #[Group('request-mapper')]
 class DiscriminatorMapExtractorTest extends TestCase
 {
@@ -64,7 +65,7 @@ class DiscriminatorMapExtractorTest extends TestCase
             'throws' => true,
         ];
 
-        yield sprintf('Class "%s" with discriminator type "%s" and expected class "%s" and null parameter', CreateSettingsRequest::class, null, CreateCardSettingsRequest::class) => [
+        yield sprintf('Class "%s" with discriminator type "%s" and expected class "%s" and null parameter', CreateSettingsRequest::class, 'null', CreateCardSettingsRequest::class) => [
             'given_class' => CreateSettingsRequest::class,
             'expected_class' => CreateCardSettingsRequest::class,
             'parameters' => [],

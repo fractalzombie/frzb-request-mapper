@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FRZB\Component\RequestMapper\Data;
+namespace FRZB\Component\RequestMapper\ValueObject;
 
 use Symfony\Component\Validator\ConstraintViolationInterface as ConstraintViolation;
 

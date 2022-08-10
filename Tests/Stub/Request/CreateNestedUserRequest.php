@@ -9,9 +9,7 @@ use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Validator\Constraints\Valid;
 use Symfony\Contracts\Service\Attribute\Required;
 
-/**
- * @internal
- */
+/** @internal */
 class CreateNestedUserRequest
 {
     #[Required]

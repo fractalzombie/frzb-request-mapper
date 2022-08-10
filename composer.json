@@ -40,7 +40,8 @@
         "symfony/form": "^5.4|^6",
         "laravel/helpers": "^1.5",
         "frzb/php-doc-reader": "^1.0",
-        "symfony/property-access": "^6.1"
+        "symfony/property-access": "^6.1",
+        "symfony/uid": "^6.1"
     },
     "require-dev": {
         "symfony/config": "^5.4|^6",
@@ -50,8 +51,7 @@
         "php-coveralls/php-coveralls": "^2.5",
         "symfony/phpunit-bridge": "^5.4|^6",
         "friendsofphp/php-cs-fixer": "^3.9",
-        "symfony/test-pack": "^1.0.10",
-        "fakerphp/faker": "^1.20.0"
+        "symfony/test-pack": "^1.0.10"
     },
     "autoload": {
         "psr-4": {

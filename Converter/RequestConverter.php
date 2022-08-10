@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace FRZB\Component\RequestMapper\Converter;
 
 use FRZB\Component\DependencyInjection\Attribute\AsService;
-use FRZB\Component\RequestMapper\Data\Context;
-use FRZB\Component\RequestMapper\Data\ValidationError;
+use FRZB\Component\RequestMapper\Attribute\RequestBody;
 use FRZB\Component\RequestMapper\Exception\ClassExtractorException;
 use FRZB\Component\RequestMapper\Exception\ConstraintException;
 use FRZB\Component\RequestMapper\Exception\ConverterException;
@@ -15,6 +14,8 @@ use FRZB\Component\RequestMapper\Extractor\ConstraintExtractor;
 use FRZB\Component\RequestMapper\Extractor\DiscriminatorMapExtractor;
 use FRZB\Component\RequestMapper\Extractor\ParametersExtractor;
 use FRZB\Component\RequestMapper\Parser\ExceptionConverterInterface as ExceptionConverter;
+use FRZB\Component\RequestMapper\ValueObject\ValidationError;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Annotation\DiscriminatorMap;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface as Denormalizer;
 use Symfony\Component\Validator\Constraints\Collection;
@@ -35,28 +36,28 @@ class RequestConverter implements ConverterInterface
     ) {
     }
 
-    public function convert(Context $context): object
+    public function convert(Request $request, RequestBody $attribute): object
     {
-        $parameters = $context->getRequestParameters();
-        $parameterClass = $context->getParameterClass() ?? throw ConverterException::nullableParameterClass();
+        $requestPayload = $request->request->all();
+        $requestClass = $attribute->requestClass ?? throw ConverterException::nullableRequestClass();
 
         try {
-            $targetClass = $this->classExtractor->extract($parameterClass, $parameters);
+            $discriminatorRequestClass = $this->classExtractor->extract($requestClass, $requestPayload);
 
-            if ($context->isValidationNeeded()) {
-                $parameters = $this->parametersExtractor->extract($parameterClass, $parameters);
-                $constraints = $this->constraintExtractor->extract($targetClass, $parameters);
+            if ($attribute->isValidationNeeded) {
+                $requestPayload = $this->parametersExtractor->extract($requestClass, $requestPayload);
+                $requestConstraints = $this->constraintExtractor->extract($discriminatorRequestClass, $requestPayload);
 
-                $this->validate($parameters, $context->getValidationGroups(), $constraints);
+                $this->validate($requestPayload, $attribute->validationGroups, $requestConstraints);
             }
 
-            return $this->denormalizer->denormalize($parameters, $targetClass, self::DENORMALIZE_TYPE, $context->getSerializerContext());
+            return $this->denormalizer->denormalize($requestPayload, $discriminatorRequestClass, self::DENORMALIZE_TYPE, $attribute->serializerContext);
         } catch (ClassExtractorException $e) {
             throw ValidationException::fromErrors(ValidationError::fromTypeAndClassExtractorException(DiscriminatorMap::class, $e));
         } catch (ConstraintException $e) {
             throw ValidationException::fromConstraintViolationList($e->getViolations());
         } catch (\TypeError $e) {
-            throw ValidationException::fromErrors($this->exceptionConverter->convert($e, $parameters));
+            throw ValidationException::fromErrors($this->exceptionConverter->convert($e, $requestPayload));
         } catch (\Throwable $e) {
             throw ConverterException::fromThrowable($e);
         }

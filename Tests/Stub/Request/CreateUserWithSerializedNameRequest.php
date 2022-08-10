@@ -10,9 +10,7 @@ use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Validator\Constraints\Uuid;
 use Symfony\Contracts\Service\Attribute\Required;
 
-/**
- * @internal
- */
+/** @internal */
 class CreateUserWithSerializedNameRequest
 {
     #[Required]

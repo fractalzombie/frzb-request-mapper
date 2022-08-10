@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\Exception;
 
-use FRZB\Component\RequestMapper\Data\ErrorInterface as Error;
-use FRZB\Component\RequestMapper\Data\ValidationError;
+use FRZB\Component\RequestMapper\ValueObject\ErrorInterface as Error;
+use FRZB\Component\RequestMapper\ValueObject\ValidationError;
+use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Validator\ConstraintViolationInterface as ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationListInterface as ConstraintViolationList;
 
+#[Immutable]
 final class ValidationException extends \LogicException
 {
     public const DEFAULT_MESSAGE = 'Validation error';

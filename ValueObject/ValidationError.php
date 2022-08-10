@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FRZB\Component\RequestMapper\Data;
+namespace FRZB\Component\RequestMapper\ValueObject;
 
 use FRZB\Component\RequestMapper\Exception\ClassExtractorException;
 use JetBrains\PhpStorm\Immutable;

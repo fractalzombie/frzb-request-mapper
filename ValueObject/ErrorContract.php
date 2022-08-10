@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FRZB\Component\RequestMapper\Data;
+namespace FRZB\Component\RequestMapper\ValueObject;
 
 interface ErrorContract extends \Stringable, \JsonSerializable
 {

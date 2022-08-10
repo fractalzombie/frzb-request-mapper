@@ -15,6 +15,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Validator\Constraints\Uuid;
 
+/** @internal */
 #[Group('request-mapper')]
 class ConstraintHelperTest extends TestCase
 {

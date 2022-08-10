@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\Tests\Unit\Converter;
 
-use FRZB\Component\RequestMapper\Attribute\ParamConverter;
+use FRZB\Component\RequestMapper\Attribute\RequestBody;
 use FRZB\Component\RequestMapper\Converter\RequestConverter;
-use FRZB\Component\RequestMapper\Data\Context;
 use FRZB\Component\RequestMapper\Exception\ClassExtractorException;
 use FRZB\Component\RequestMapper\Exception\ConstraintException;
 use FRZB\Component\RequestMapper\Exception\ConverterException;
@@ -57,9 +56,8 @@ class RequestConverterTest extends TestCase
     #[DataProvider('caseProvider')]
     public function testConvertMethod(string $service, InvokedCountMatcher $expects, string $method, \Throwable $exception, string $expectedExceptionClass, array $parameters, bool $willServiceThrow = true): void
     {
-        $attribute = new ParamConverter(...$parameters);
+        $attribute = new RequestBody(...$parameters);
         $request = RequestHelper::makeRequest(method: Request::METHOD_POST, params: []);
-        $data = new Context($request, $attribute);
 
         if ($willServiceThrow) {
             $this->{$service}->expects($expects)->method($method)->willThrowException($exception);
@@ -67,7 +65,7 @@ class RequestConverterTest extends TestCase
 
         $this->expectException($expectedExceptionClass);
 
-        $this->converter->convert($data);
+        $this->converter->convert($request, $attribute);
     }
 
     public function caseProvider(): iterable
@@ -78,7 +76,7 @@ class RequestConverterTest extends TestCase
             'method' => 'extract',
             'exception' => new ClassExtractorException('request', TestConstant::EXCEPTION_MESSAGE),
             'expected_exception_class' => ValidationException::class,
-            'parameters' => ['parameterClass' => CreateSettingsRequest::class, 'parameterName' => 'request'],
+            'parameters' => ['requestClass' => CreateSettingsRequest::class, 'argumentName' => 'request'],
         ];
 
         yield sprintf('%s::%s expects %s, exception %s, expected exception %s', DiscriminatorMapExtractor::class, 'extract', 'once', \TypeError::class, ConverterException::class) => [
@@ -87,7 +85,7 @@ class RequestConverterTest extends TestCase
             'method' => 'extract',
             'exception' => new \TypeError(TestConstant::EXCEPTION_MESSAGE),
             'expected_exception_class' => ValidationException::class,
-            'parameters' => ['parameterClass' => CreateSettingsRequest::class, 'parameterName' => 'request'],
+            'parameters' => ['requestClass' => CreateSettingsRequest::class, 'argumentName' => 'request'],
         ];
 
         yield sprintf('%s::%s expects %s, exception %s, expected exception %s', Denormalizer::class, 'denormalize', 'once', \TypeError::class, ValidationException::class) => [
@@ -96,7 +94,7 @@ class RequestConverterTest extends TestCase
             'method' => 'denormalize',
             'exception' => new \TypeError(TestConstant::EXCEPTION_MESSAGE),
             'expected_exception_class' => ValidationException::class,
-            'parameters' => ['parameterClass' => CreateSettingsRequest::class, 'parameterName' => 'request'],
+            'parameters' => ['requestClass' => CreateSettingsRequest::class, 'argumentName' => 'request'],
         ];
 
         yield sprintf('%s::%s expects %s, exception %s, expected exception %s', Denormalizer::class, 'denormalize', 'once', LogicException::class, ConverterException::class) => [
@@ -105,7 +103,7 @@ class RequestConverterTest extends TestCase
             'method' => 'denormalize',
             'exception' => new LogicException(TestConstant::EXCEPTION_MESSAGE),
             'expected_exception_class' => ConverterException::class,
-            'parameters' => ['parameterClass' => CreateSettingsRequest::class, 'parameterName' => 'request'],
+            'parameters' => ['requestClass' => CreateSettingsRequest::class, 'argumentName' => 'request'],
         ];
 
         yield sprintf('%s::%s expects %s, exception %s, expected exception %s', Validator::class, 'validate', 'once', ConstraintException::class, ValidationException::class) => [
@@ -114,7 +112,7 @@ class RequestConverterTest extends TestCase
             'method' => 'validate',
             'exception' => ConstraintException::fromConstraintViolationList(new ConstraintViolationList()),
             'expected_exception_class' => ValidationException::class,
-            'parameters' => ['parameterClass' => CreateSettingsRequest::class, 'parameterName' => 'request'],
+            'parameters' => ['requestClass' => CreateSettingsRequest::class, 'argumentName' => 'request'],
             'will_service_throw' => false,
         ];
 
@@ -122,7 +120,7 @@ class RequestConverterTest extends TestCase
             'service' => 'converter',
             'expects' => self::once(),
             'method' => 'convert',
-            'exception' => ConverterException::nullableParameterClass(),
+            'exception' => ConverterException::nullableRequestClass(),
             'expected_exception_class' => ConverterException::class,
             'parameters' => [],
             'will_service_throw' => false,

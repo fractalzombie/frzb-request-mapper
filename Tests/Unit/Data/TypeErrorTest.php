@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\Tests\Unit\Data;
 
-use FRZB\Component\RequestMapper\Data\TypeError;
 use FRZB\Component\RequestMapper\Exception\TypeErrorInvalidArgumentException;
 use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateUserRequest;
+use FRZB\Component\RequestMapper\ValueObject\TypeError;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
+/** @internal */
 #[Group('request-mapper')]
 final class TypeErrorTest extends TestCase
 {

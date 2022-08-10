@@ -7,6 +7,7 @@ namespace FRZB\Component\RequestMapper\ExceptionFormatter;
 use Fp\Collections\HashMap;
 use FRZB\Component\DependencyInjection\Attribute\AsService;
 use FRZB\Component\RequestMapper\ExceptionFormatter\Formatter\FormatterInterface as Formatter;
+use FRZB\Component\RequestMapper\ExceptionFormatter\Formatter\ThrowableFormatter;
 use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
 
 #[AsService]
@@ -16,8 +17,7 @@ class ExceptionFormatterLocator implements ExceptionFormatterLocatorInterface
     private readonly HashMap $formatters;
 
     public function __construct(
-        #[TaggedIterator(Formatter::class, defaultIndexMethod: 'getExceptionClass', defaultPriorityMethod: 'getPriority')]
-        iterable $formatters,
+        #[TaggedIterator(Formatter::class, defaultIndexMethod: 'getType')] iterable $formatters,
     ) {
         $this->formatters = HashMap::collect($formatters);
     }
@@ -26,7 +26,7 @@ class ExceptionFormatterLocator implements ExceptionFormatterLocatorInterface
     {
         return $this->formatters
             ->get($e::class)
-            ->getOrElse($this->formatters->get(\Throwable::class)->get())
+            ->getOrElse(new ThrowableFormatter())
         ;
     }
 

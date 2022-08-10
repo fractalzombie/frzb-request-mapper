@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\Tests\Func\ExceptionFormatter;
 
-use FRZB\Component\RequestMapper\Data\ErrorContract;
-use FRZB\Component\RequestMapper\Data\FormattedError;
-use FRZB\Component\RequestMapper\Data\ValidationError;
 use FRZB\Component\RequestMapper\Exception\ValidationException;
 use FRZB\Component\RequestMapper\ExceptionFormatter\ExceptionFormatterInterface as ExceptionFormatter;
 use FRZB\Component\RequestMapper\Tests\Helper\TestConstant;
+use FRZB\Component\RequestMapper\ValueObject\ErrorContract;
+use FRZB\Component\RequestMapper\ValueObject\FormattedError;
+use FRZB\Component\RequestMapper\ValueObject\ValidationError;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -17,10 +17,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Validator\Constraints\NotNull;
 
+/** @internal */
 #[Group('request-mapper')]
-/**
- * @internal
- */
 final class ExceptionFormatterTest extends KernelTestCase
 {
     private ExceptionFormatter $formatter;

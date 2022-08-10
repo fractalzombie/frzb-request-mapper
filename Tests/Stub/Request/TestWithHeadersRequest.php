@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\Tests\Stub\Request;
 
-use FRZB\Component\RequestMapper\Data\HasHeaders;
+use FRZB\Component\RequestMapper\ValueObject\HasHeaders;
 
-/**
- * @internal
- */
+/** @internal */
 class TestWithHeadersRequest implements HasHeaders
 {
     public function __construct(

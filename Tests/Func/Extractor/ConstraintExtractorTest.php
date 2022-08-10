@@ -15,10 +15,8 @@ use Symfony\Component\Validator\Constraints\Required;
 use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Validator\Constraints\Uuid;
 
+/** @internal */
 #[Group('request-mapper')]
-/**
- * @internal
- */
 class ConstraintExtractorTest extends KernelTestCase
 {
     private ConstraintExtractor $extractor;

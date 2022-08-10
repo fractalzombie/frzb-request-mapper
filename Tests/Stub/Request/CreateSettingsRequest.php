@@ -6,9 +6,7 @@ namespace FRZB\Component\RequestMapper\Tests\Stub\Request;
 
 use Symfony\Component\Serializer\Annotation\DiscriminatorMap;
 
-/**
- * @internal
- */
+/** @internal */
 #[DiscriminatorMap('type', [
     CreateUserSettingsRequest::TYPE => CreateUserSettingsRequest::class,
     CreateCardSettingsRequest::TYPE => CreateCardSettingsRequest::class,

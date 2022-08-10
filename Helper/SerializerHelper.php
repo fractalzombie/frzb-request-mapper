@@ -16,7 +16,7 @@ final class SerializerHelper
     {
     }
 
-    public static function getSerializedNameAttribute(\ReflectionProperty $rProperty): SerializedName
+    public static function getSerializedNameAttribute(\ReflectionProperty|\ReflectionParameter $rProperty): SerializedName
     {
         return ArrayList::collect(AttributeHelper::getAttributes($rProperty, SerializedName::class))
             ->firstElement()

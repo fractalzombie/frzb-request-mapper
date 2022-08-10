@@ -6,7 +6,13 @@ namespace FRZB\Component\RequestMapper\Tests\Unit\Extractor;
 
 use FRZB\Component\PhpDocReader\Reader\ReaderService;
 use FRZB\Component\PhpDocReader\Resolver\ResolverService;
+use FRZB\Component\RequestMapper\ClassMapper\ClassMapper;
 use FRZB\Component\RequestMapper\Extractor\ParametersExtractor;
+use FRZB\Component\RequestMapper\PropertyMapper\Mapper\AttributeArrayTypeMapper;
+use FRZB\Component\RequestMapper\PropertyMapper\Mapper\DefaultTypeMapper;
+use FRZB\Component\RequestMapper\PropertyMapper\Mapper\DocBlockArrayTypeMapper;
+use FRZB\Component\RequestMapper\PropertyMapper\Mapper\SimpleTypeMapper;
+use FRZB\Component\RequestMapper\PropertyMapper\PropertyMapperLocator;
 use FRZB\Component\RequestMapper\Tests\Helper\TestConstant;
 use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateNestedUserRequest;
 use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateUserRequest;
@@ -16,13 +22,18 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
+/** @internal */
 #[Group('request-mapper')]
 class ParametersExtractorTest extends TestCase
 {
     #[DataProvider('caseProvider')]
     public function testExtractMethod(string $class, array $parameters): void
     {
-        self::assertSame($parameters, (new ParametersExtractor(new ReaderService(new ResolverService())))->extract($class, $parameters));
+        $readerService = new ReaderService(new ResolverService());
+        $mappers = [new AttributeArrayTypeMapper(), new DocBlockArrayTypeMapper($readerService), new SimpleTypeMapper($readerService), new DefaultTypeMapper()];
+        $mapperLocator = new PropertyMapperLocator($mappers);
+        $classMapper = new ClassMapper($mapperLocator);
+        self::assertSame($parameters, (new ParametersExtractor($classMapper))->extract($class, $parameters));
     }
 
     public function caseProvider(): iterable
@@ -44,7 +55,7 @@ class ParametersExtractorTest extends TestCase
 
         yield sprintf('"%s" with parameters: "%s"', CreateUserRequest::class, implode(', ', array_keys($parameters))) => [
             'class' => CreateUserRequest::class,
-            'parameters' => array_merge($parameters, ['userId' => null, 'amount' => null]),
+            'parameters' => [...$parameters, ...['userId' => null, 'amount' => null]],
         ];
 
         $parameters = [
@@ -65,7 +76,7 @@ class ParametersExtractorTest extends TestCase
 
         yield sprintf('"%s" with parameters: "%s"', CreateUserWithSerializedNameRequest::class, implode(', ', array_keys($parameters))) => [
             'class' => CreateUserRequest::class,
-            'parameters' => array_merge($parameters, ['userId' => TestConstant::USER_ID, 'amount' => TestConstant::USER_AMOUNT]),
+            'parameters' => [...$parameters, ...['userId' => TestConstant::USER_ID, 'amount' => TestConstant::USER_AMOUNT]],
         ];
 
         $parameters = [

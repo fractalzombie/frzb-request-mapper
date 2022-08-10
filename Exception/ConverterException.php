@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\Exception;
 
+use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 
+#[Immutable]
 final class ConverterException extends \LogicException
 {
     public static function fromThrowable(\Throwable $e): self
@@ -14,8 +16,8 @@ final class ConverterException extends \LogicException
     }
 
     #[Pure]
-    public static function nullableParameterClass(): self
+    public static function nullableRequestClass(): self
     {
-        return new self('Property "parameterClass" can not be null');
+        return new self('Property "requestClass" can not be null');
     }
 }

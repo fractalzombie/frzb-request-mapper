@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\Tests\Func\Locator;
 
-use FRZB\Component\RequestMapper\Data\ValidationError;
 use FRZB\Component\RequestMapper\Exception\ValidationException;
 use FRZB\Component\RequestMapper\ExceptionFormatter\ExceptionFormatterLocatorInterface as ExceptionFormatterLocator;
 use FRZB\Component\RequestMapper\ExceptionFormatter\Formatter\HttpExceptionFormatter;
 use FRZB\Component\RequestMapper\ExceptionFormatter\Formatter\ThrowableFormatter;
 use FRZB\Component\RequestMapper\ExceptionFormatter\Formatter\ValidationFormatter;
 use FRZB\Component\RequestMapper\Tests\Helper\TestConstant;
+use FRZB\Component\RequestMapper\ValueObject\ValidationError;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -18,10 +18,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Validator\Constraints\NotNull;
 
+/** @internal */
 #[Group('request-mapper')]
-/**
- * @internal
- */
 class ExceptionFormatterLocatorTest extends KernelTestCase
 {
     private ExceptionFormatterLocator $locator;

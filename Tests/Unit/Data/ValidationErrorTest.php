@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\Tests\Unit\Data;
 
-use FRZB\Component\RequestMapper\Data\ValidationError;
 use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateUserRequest;
+use FRZB\Component\RequestMapper\ValueObject\ValidationError;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
+/** @internal */
 #[Group('request-mapper')]
 class ValidationErrorTest extends TestCase
 {

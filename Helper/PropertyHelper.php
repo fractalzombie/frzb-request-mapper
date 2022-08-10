@@ -31,14 +31,14 @@ final class PropertyHelper
                 ConstraintsHelper::hasArrayDocBlock($p, $reader) => [self::getName($p) => ArrayList::range(0, \count($value))->map(fn () => self::getTypeFromDocBlock($p, $reader))->toArray()],
                 !ConstraintsHelper::hasArrayTypeAttribute($p) => [self::getName($p) => self::getTypeName($p)],
                 !ConstraintsHelper::hasArrayDocBlock($p, $reader) => [self::getName($p) => self::getTypeName($p)],
-                default => [SerializerHelper::getSerializedNameAttribute($p)->getSerializedName() => []],
+                default => [self::getName($p) => []],
             })
             ->reduce(static fn (array $prev, array $next) => [...$prev, ...$next])
             ->getOrElse([])
         ;
     }
 
-    public static function getTypeFromDocBlock(\ReflectionProperty $property, PhpDocReader $reader): ?string
+    public static function getTypeFromDocBlock(\ReflectionProperty|\ReflectionParameter $property, PhpDocReader $reader): ?string
     {
         try {
             return StringHelper::removeNotWordCharacters($reader->getPropertyClass($property));
@@ -47,18 +47,27 @@ final class PropertyHelper
         }
     }
 
-    public static function getTypeFromAttribute(\ReflectionProperty $property): ?string
+    public static function getTypeFromAttribute(\ReflectionProperty|\ReflectionParameter $property): ?string
     {
         return StringHelper::removeNotWordCharacters(ConstraintsHelper::getArrayTypeAttribute($property)?->typeName ?? '');
     }
 
-    public static function getName(\ReflectionProperty $property): string
+    public static function getName(\ReflectionProperty|\ReflectionParameter $property): string
     {
         return SerializerHelper::getSerializedNameAttribute($property)->getSerializedName();
     }
 
-    public static function getTypeName(\ReflectionProperty $property): ?string
+    public static function getTypeName(\ReflectionProperty|\ReflectionParameter $property): ?string
     {
-        return StringHelper::removeNotWordCharacters($property->getType()?->getName() ?? '');
+        $type = $property->getType();
+
+        $typeName = match (true) {
+            $type instanceof \ReflectionIntersectionType => throw new \LogicException('ReflectionIntersectionType is not supported'),
+            $type instanceof \ReflectionUnionType => throw new \LogicException('ReflectionUnionType is not supported'),
+            $type instanceof \ReflectionNamedType => $type->getName(),
+            default => null,
+        };
+
+        return StringHelper::removeNotWordCharacters($typeName ?? '');
     }
 }

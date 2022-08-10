@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace FRZB\Component\RequestMapper\Parser;
 
 use FRZB\Component\DependencyInjection\Attribute\AsService;
-use FRZB\Component\RequestMapper\Data\ErrorInterface as Error;
-use FRZB\Component\RequestMapper\Data\TypeError;
-use FRZB\Component\RequestMapper\Data\ValidationError;
 use FRZB\Component\RequestMapper\Helper\ClassHelper;
+use FRZB\Component\RequestMapper\ValueObject\ErrorInterface as Error;
+use FRZB\Component\RequestMapper\ValueObject\TypeError;
+use FRZB\Component\RequestMapper\ValueObject\ValidationError;
 use Symfony\Component\Validator\Constraints\Type;
 
 #[AsService]
