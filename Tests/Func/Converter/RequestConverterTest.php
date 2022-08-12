@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\Tests\Func\Converter;
 
-use FRZB\Component\RequestMapper\Attribute\ParamConverter;
+use FRZB\Component\RequestMapper\Attribute\RequestBody;
 use FRZB\Component\RequestMapper\Converter\RequestConverter;
-use FRZB\Component\RequestMapper\Data\Context;
 use FRZB\Component\RequestMapper\Data\ErrorInterface;
 use FRZB\Component\RequestMapper\Data\ValidationError;
 use FRZB\Component\RequestMapper\Exception\ValidationException;
@@ -39,10 +38,10 @@ final class RequestConverterTest extends KernelTestCase
 
     /** @param ErrorInterface[] $errors */
     #[DataProvider('caseProvider')]
-    public function testConvertMethod(Context $context, ?CreateUserRequestWithEnum $request = null, array $errors = []): void
+    public function testConvertMethod(Request $nativeRequest, RequestBody $requestBody, ?CreateUserRequestWithEnum $typedRequest = null, array $errors = []): void
     {
         try {
-            $object = $this->converter->convert($context);
+            $object = $this->converter->convert($nativeRequest, $requestBody);
         } catch (ValidationException $e) {
             self::assertSame(ValidationException::DEFAULT_MESSAGE, $e->getMessage());
 
@@ -57,40 +56,42 @@ final class RequestConverterTest extends KernelTestCase
             return;
         }
 
-        self::assertSame($request::class, $object::class);
-        self::assertSame($request?->getName(), $object->getName());
-        self::assertSame($request?->getUserId(), $object->getUserId());
-        self::assertSame($request?->getAmount(), $object->getAmount());
-        self::assertSame($request?->getTestEnum(), $object->getTestEnum());
+        self::assertSame($typedRequest::class, $object::class);
+        self::assertSame($typedRequest?->getName(), $object->getName());
+        self::assertSame($typedRequest?->getUserId(), $object->getUserId());
+        self::assertSame($typedRequest?->getAmount(), $object->getAmount());
+        self::assertSame($typedRequest?->getTestEnum(), $object->getTestEnum());
     }
 
     /** @throws \Exception */
     public function caseProvider(): iterable
     {
         $params = ['name' => TestConstant::USER_NAME, 'userId' => TestConstant::USER_ID, 'amount' => TestConstant::USER_AMOUNT, 'testEnum' => TestEnum::One->value];
-        $attribute = new ParamConverter(parameterClass: CreateUserRequestWithEnum::class, parameterName: 'request');
+        $attribute = new RequestBody(requestClass: CreateUserRequestWithEnum::class, argumentName: 'typed_request');
         $request = RequestHelper::makeRequest(method: Request::METHOD_POST, params: $params);
         $userRequest = new CreateUserRequestWithEnum(...['name' => TestConstant::USER_NAME, 'userId' => TestConstant::USER_ID, 'amount' => TestConstant::USER_AMOUNT, 'testEnum' => TestEnum::One]);
 
         yield 'Converter data with valid params' => [
-            'context' => new Context($request, $attribute),
-            'request' => $userRequest,
+            'native_request' => $request,
+            'request_body' => $attribute,
+            'typed_request' => $userRequest,
         ];
 
-        $attribute = new ParamConverter(parameterClass: CreateUserRequestWithEnum::class);
+        $attribute = new RequestBody(requestClass: CreateUserRequestWithEnum::class);
         $request = RequestHelper::makeRequest(method: Request::METHOD_POST);
         $errors = [
             new ValidationError(NotBlank::class, '[name]', 'This value should not be blank.'),
         ];
 
         yield 'Converter data with empty params' => [
-            'context' => new Context($request, $attribute),
-            'request' => null,
+            'native_request' => $request,
+            'request_body' => $attribute,
+            'typed_request' => null,
             'errors' => $errors,
         ];
 
         $params = ['name' => random_int(\PHP_INT_MIN, \PHP_INT_MAX), 'userId' => random_int(\PHP_INT_MIN, \PHP_INT_MAX), 'amount' => 'some amount', 'testEnum' => 1];
-        $attribute = new ParamConverter(parameterClass: CreateUserRequestWithEnum::class);
+        $attribute = new RequestBody(requestClass: CreateUserRequestWithEnum::class);
         $request = RequestHelper::makeRequest(method: Request::METHOD_POST, params: $params);
         $errors = [
             new ValidationError(Type::class, '[name]', 'This value should be of type string.'),
@@ -101,8 +102,9 @@ final class RequestConverterTest extends KernelTestCase
         ];
 
         yield 'Converter data with invalid params' => [
-            'context' => new Context($request, $attribute),
-            'request' => null,
+            'native_request' => $request,
+            'request_body' => $attribute,
+            'typed_request' => null,
             'errors' => $errors,
         ];
     }

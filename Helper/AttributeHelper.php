@@ -29,7 +29,10 @@ final class AttributeHelper
      */
     public static function getAttribute(\ReflectionProperty|\ReflectionClass|\ReflectionMethod|\ReflectionFunction|\ReflectionParameter $target, string $attributeClass): ?object
     {
-        return ArrayList::collect(self::getAttributes($target, $attributeClass))->firstElement()->get();
+        return ArrayList::collect(self::getAttributes($target, $attributeClass))
+            ->firstElement()
+            ->get()
+        ;
     }
 
     /**

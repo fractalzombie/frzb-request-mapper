@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\EventListener;
 
-use FRZB\Component\RequestMapper\Attribute\ParamConverter;
+use FRZB\Component\RequestMapper\Attribute\RequestBody;
 use FRZB\Component\RequestMapper\Converter\ConverterInterface as Converter;
-use FRZB\Component\RequestMapper\Data\Context;
 use FRZB\Component\RequestMapper\Data\HasHeaders;
 use FRZB\Component\RequestMapper\Helper\HeaderHelper;
 use FRZB\Component\RequestMapper\Helper\ParamConverterHelper;
@@ -38,13 +37,13 @@ final class RequestMapperListener
                 continue;
             }
 
-            $object = $this->converter->convert(new Context($request, $attribute));
+            $object = $this->converter->convert($request, $attribute);
 
             if ($object instanceof HasHeaders) {
                 $object->setHeaders(HeaderHelper::getHeaders($request));
             }
 
-            $request->attributes->set($attribute->getParameterName() ?? $parameter->getName(), $object);
+            $request->attributes->set($attribute->argumentName ?? $parameter->getName(), $object);
         }
     }
 
@@ -58,11 +57,11 @@ final class RequestMapperListener
         };
     }
 
-    /** @return array<ParamConverter> */
+    /** @return array<RequestBody> */
     private function getAttributes(\ReflectionMethod|\ReflectionFunction $method): array
     {
         return ParamConverterHelper::fromReflectionAttributes(
-            ...$method->getAttributes(ParamConverter::class, \ReflectionAttribute::IS_INSTANCEOF)
+            ...$method->getAttributes(RequestBody::class, \ReflectionAttribute::IS_INSTANCEOF)
         );
     }
 }

@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace FRZB\Component\RequestMapper\Converter;
 
 use FRZB\Component\DependencyInjection\Attribute\AsAlias;
-use FRZB\Component\RequestMapper\Data\Context;
+use FRZB\Component\RequestMapper\Attribute\RequestBody;
 use FRZB\Component\RequestMapper\Exception\ConverterException;
 use FRZB\Component\RequestMapper\Exception\ValidationException;
+use Symfony\Component\HttpFoundation\Request;
 
 #[AsAlias(RequestConverter::class)]
 interface ConverterInterface
@@ -18,5 +19,5 @@ interface ConverterInterface
      * @throws ConverterException
      * @throws ValidationException
      */
-    public function convert(Context $context): object;
+    public function convert(Request $request, RequestBody $attribute): object;
 }

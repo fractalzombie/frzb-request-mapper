@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\Tests\Func\EventListener;
 
-use Faker\Factory;
-use Faker\Generator;
 use FRZB\Component\RequestMapper\EventListener\JsonRequestListener;
 use FRZB\Component\RequestMapper\Helper\Header;
 use FRZB\Component\RequestMapper\Tests\Helper\RequestHelper;
@@ -24,14 +22,12 @@ use Symfony\Component\HttpKernel\HttpKernelInterface as HttpKernel;
  */
 final class JsonRequestListenerTest extends KernelTestCase
 {
-    private Generator $generator;
     private JsonRequestListener $listener;
 
     protected function setUp(): void
     {
         self::bootKernel();
 
-        $this->generator = Factory::create();
         $this->listener = self::getContainer()->get(JsonRequestListener::class);
     }
 
@@ -43,7 +39,7 @@ final class JsonRequestListenerTest extends KernelTestCase
         array $headers = [],
         bool $throws = false
     ): void {
-        $request = RequestHelper::makeRequest(method: $method, headers: $headers, content: $requestContent, generator: $this->generator);
+        $request = RequestHelper::makeRequest(method: $method, headers: $headers, content: $requestContent);
 
         if ($throws) {
             $this->expectException(BadRequestHttpException::class);

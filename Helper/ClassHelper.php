@@ -73,4 +73,40 @@ final class ClassHelper
 
         return true;
     }
+
+    /**
+     * @template T
+     *
+     * @param class-string<T> $attributeClass
+     *
+     * @return null|T
+     */
+    public static function getAttribute(string|object $target, string $attributeClass): ?object
+    {
+        return ArrayList::collect(self::getAttributes($target, $attributeClass))
+            ->firstElement()
+            ->get()
+        ;
+    }
+
+    /**
+     * @template T
+     *
+     * @param class-string<T> $attributeClass
+     *
+     * @return array<T>
+     */
+    public static function getAttributes(string|object $target, string $attributeClass): array
+    {
+        try {
+            $attributes = (new \ReflectionClass($target))->getAttributes($attributeClass);
+        } catch (\ReflectionException) {
+            $attributes = [];
+        }
+
+        return ArrayList::collect($attributes)
+            ->map(static fn (\ReflectionAttribute $a) => $a->newInstance())
+            ->toArray()
+        ;
+    }
 }

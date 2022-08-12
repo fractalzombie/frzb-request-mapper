@@ -22,7 +22,7 @@ class ValidationFormatter implements FormatterInterface
             $e->getMessage(),
             Response::HTTP_UNPROCESSABLE_ENTITY,
             self::formatErrors(...$e->getErrors()),
-            $e->getTrace()
+            $e->getTrace(),
         );
     }
 
@@ -40,7 +40,8 @@ class ValidationFormatter implements FormatterInterface
     {
         return ArrayList::collect($errors)
             ->map(static fn (Error $error) => [$error->getField() => $error->getMessage()])
-            ->reduce(static fn (array $prev, array $next) => [...$prev, ...$next])->getOrElse([])
+            ->reduce(array_merge(...))
+            ->getOrElse([])
         ;
     }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\Tests\Stub\Controller;
 
-use FRZB\Component\RequestMapper\Attribute\ParamConverter;
+use FRZB\Component\RequestMapper\Attribute\RequestBody;
 use FRZB\Component\RequestMapper\Tests\Stub\Request\TestRequest;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  */
 class TestWithoutParameterNameController
 {
-    #[ParamConverter(parameterClass: TestRequest::class)]
+    #[RequestBody(TestRequest::class)]
     public function method(TestRequest $dto): JsonResponse
     {
         try {

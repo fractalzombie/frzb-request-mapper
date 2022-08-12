@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FRZB\Component\RequestMapper\Helper;
 
 use Fp\Collections\ArrayList;
-use FRZB\Component\RequestMapper\Attribute\ParamConverter;
+use FRZB\Component\RequestMapper\Attribute\RequestBody;
 use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 
@@ -19,50 +19,45 @@ final class ParamConverterHelper
     {
     }
 
-    public static function getAttribute(\ReflectionParameter $parameter, array $attributes): ?ParamConverter
+    public static function getAttribute(\ReflectionParameter $parameter, array $attributes): ?RequestBody
     {
-        return $attributes[$parameter->getName()]
-            ?? $attributes[$parameter->getType()?->/** @scrutinizer ignore-call */ getName()]
+        return $attributes[PropertyHelper::getName($parameter)]
+            ?? $attributes[PropertyHelper::getTypeName($parameter)]
             ?? self::searchAttribute($parameter, $attributes);
     }
 
     #[Pure]
-    public static function mapParamConverter(ParamConverter $paramConverter): array
+    public static function mapParamConverter(RequestBody $paramConverter): array
     {
-        return [$paramConverter->getParameterName() ?? $paramConverter->getParameterClass() => $paramConverter];
+        return [$paramConverter->argumentName ?? $paramConverter->requestClass => $paramConverter];
     }
 
-    public static function fromReflectionAttribute(\ReflectionAttribute $attribute): ParamConverter
-    {
-        return $attribute->newInstance();
-    }
-
-    /** @return array<string, ParamConverter> */
+    /** @return array<string, RequestBody> */
     public static function fromReflectionAttributes(\ReflectionAttribute ...$attributes): array
     {
         return ArrayList::collect($attributes)
-            ->map(static fn (\ReflectionAttribute $ra): ParamConverter => self::fromReflectionAttribute($ra))
-            ->map(static fn (ParamConverter $pc): array => self::mapParamConverter($pc))
-            ->reduce(static fn (array $prev, array $next) => [...$prev, ...$next])
+            ->map(static fn (\ReflectionAttribute $ra): RequestBody => $ra->newInstance())
+            ->map(static fn (RequestBody $rb): array => self::mapParamConverter($rb))
+            ->reduce(array_merge(...))
             ->getOrElse([])
         ;
     }
 
-    public static function fromReflectionParameter(\ReflectionParameter $parameter): ?ParamConverter
+    public static function fromReflectionParameter(\ReflectionParameter $parameter): ?RequestBody
     {
         $parameterName = $parameter->getName();
-        $parameterType = $parameter->getType()?->/** @scrutinizer ignore-call */ getName();
+        $parameterType = PropertyHelper::getTypeName($parameter);
 
         return match (true) {
             !$parameterType, !ClassHelper::isNameContains($parameterType, ...self::REQUEST_POSTFIXES) => null,
-            default => new ParamConverter(parameterClass: $parameterType, parameterName: $parameterName),
+            default => new RequestBody(requestClass: $parameterType, argumentName: $parameterName),
         };
     }
 
-    private static function searchAttribute(\ReflectionParameter $parameter, array $attributes): ?ParamConverter
+    private static function searchAttribute(\ReflectionParameter $parameter, array $attributes): ?RequestBody
     {
         return ArrayList::collect($attributes)
-            ->first(static fn (ParamConverter $pc): bool => $pc->equals($parameter))
+            ->first(static fn (RequestBody $pc): bool => $pc->equals($parameter))
             ->getOrElse(self::fromReflectionParameter($parameter))
         ;
     }
