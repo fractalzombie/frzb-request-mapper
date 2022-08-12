@@ -31,23 +31,12 @@ class ParametersExtractor
             $propertyValue = $parameters[$propertyName] ?? null;
 
             $mapping[$propertyName] = match (true) {
-                \is_array($propertyType) => $this->mapPropertiesForArray($propertyValue, current($propertyType)),
+                \is_array($propertyType) => array_map(fn (array $parameters) => $this->extract(current($propertyType), $parameters), $propertyValue ?? []),
                 ClassHelper::isNotBuiltinAndExists($propertyType) => $this->extract($propertyType, $propertyValue ?? []),
                 ClassHelper::isEnum($propertyType) => $this->mapEnum($propertyType, $propertyValue) ?? $propertyValue,
                 !ClassHelper::isNotBuiltinAndExists($propertyType) => $propertyValue,
                 default => $propertyValue,
             };
-        }
-
-        return $mapping;
-    }
-
-    private function mapPropertiesForArray(array $parameters, string $propertyType): array
-    {
-        $mapping = [];
-
-        foreach ($parameters as $index => $params) {
-            $mapping[$index] = $this->extract($propertyType, $params ?? []);
         }
 
         return $mapping;
