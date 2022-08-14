@@ -5,22 +5,21 @@ declare(strict_types=1);
 namespace FRZB\Component\RequestMapper\Extractor;
 
 use FRZB\Component\DependencyInjection\Attribute\AsService;
-use FRZB\Component\PhpDocReader\Reader\ReaderInterface as PhpDocReader;
+use FRZB\Component\RequestMapper\ClassMapper\ClassMapperInterface as ClassMapper;
 use FRZB\Component\RequestMapper\Helper\ClassHelper;
-use FRZB\Component\RequestMapper\Helper\PropertyHelper;
 use JetBrains\PhpStorm\Pure;
 
 #[AsService]
 class ParametersExtractor
 {
     public function __construct(
-        private readonly PhpDocReader $reader,
+        private readonly ClassMapper $classMapper,
     ) {
     }
 
     public function extract(string $class, array $parameters): array
     {
-        return [...$parameters, ...$this->mapProperties(PropertyHelper::getMapping($class, $parameters, $this->reader), $parameters)];
+        return [...$parameters, ...$this->mapProperties($this->classMapper->map($class, $parameters), $parameters)];
     }
 
     private function mapProperties(array $properties, array $parameters): array

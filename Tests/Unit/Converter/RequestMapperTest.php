@@ -5,15 +5,18 @@ declare(strict_types=1);
 namespace FRZB\Component\RequestMapper\Tests\Unit\Converter;
 
 use FRZB\Component\RequestMapper\Attribute\RequestBody;
-use FRZB\Component\RequestMapper\Converter\RequestConverter;
 use FRZB\Component\RequestMapper\Exception\ClassExtractorException;
 use FRZB\Component\RequestMapper\Exception\ConstraintException;
 use FRZB\Component\RequestMapper\Exception\ConverterException;
 use FRZB\Component\RequestMapper\Exception\ValidationException;
+use FRZB\Component\RequestMapper\ExceptionMapper\ExceptionMapperLocator as ExceptionMapperLocatorImpl;
+use FRZB\Component\RequestMapper\ExceptionMapper\ExceptionMapperLocatorInterface as ExceptionMapperLocator;
+use FRZB\Component\RequestMapper\ExceptionMapper\Mapper\MissingConstructorArgumentsExceptionMapper;
+use FRZB\Component\RequestMapper\ExceptionMapper\Mapper\TypeErrorExceptionMapper;
 use FRZB\Component\RequestMapper\Extractor\ConstraintExtractor;
 use FRZB\Component\RequestMapper\Extractor\DiscriminatorMapExtractor;
 use FRZB\Component\RequestMapper\Extractor\ParametersExtractor;
-use FRZB\Component\RequestMapper\Parser\ExceptionConverterInterface as ExceptionConverter;
+use FRZB\Component\RequestMapper\RequestMapper\RequestMapper;
 use FRZB\Component\RequestMapper\Tests\Helper\RequestHelper;
 use FRZB\Component\RequestMapper\Tests\Helper\TestConstant;
 use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateSettingsRequest;
@@ -27,30 +30,35 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface as Denormalize
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface as Validator;
 
-#[Group('request-mappera')]
-class RequestConverterTest extends TestCase
+#[Group('request-mapper')]
+class RequestMapperTest extends TestCase
 {
-    private RequestConverter $converter;
+    private RequestMapper $converter;
 
     private Validator $validator;
     private Denormalizer $denormalizer;
-    private ExceptionConverter $exceptionConverter;
+    private ExceptionMapperLocator $exceptionMapperLocator;
     private DiscriminatorMapExtractor $classExtractor;
     private ConstraintExtractor $constraintExtractor;
     private ParametersExtractor $parametersExtractor;
 
     protected function setUp(): void
     {
+        $exceptionMappers = [
+            MissingConstructorArgumentsExceptionMapper::getType() => new MissingConstructorArgumentsExceptionMapper(),
+            TypeErrorExceptionMapper::getType() => new TypeErrorExceptionMapper(),
+        ];
+
         $services = [
             $this->validator = $this->createMock(Validator::class),
             $this->denormalizer = $this->createMock(Denormalizer::class),
-            $this->exceptionConverter = $this->createMock(ExceptionConverter::class),
+            $this->exceptionMapperLocator = new ExceptionMapperLocatorImpl($exceptionMappers),
             $this->classExtractor = $this->createMock(DiscriminatorMapExtractor::class),
             $this->constraintExtractor = $this->createMock(ConstraintExtractor::class),
             $this->parametersExtractor = $this->createMock(ParametersExtractor::class),
         ];
 
-        $this->converter = new RequestConverter(...$services);
+        $this->converter = new RequestMapper(...$services);
     }
 
     #[DataProvider('caseProvider')]
@@ -58,6 +66,7 @@ class RequestConverterTest extends TestCase
     {
         $attribute = new RequestBody(...$parameters);
         $request = RequestHelper::makeRequest(method: Request::METHOD_POST, params: []);
+        $this->denormalizer->method('denormalize')->willReturn(new \stdClass());
 
         if ($willServiceThrow) {
             $this->{$service}->expects($expects)->method($method)->willThrowException($exception);
@@ -83,7 +92,7 @@ class RequestConverterTest extends TestCase
             'service' => 'classExtractor',
             'expects' => self::once(),
             'method' => 'extract',
-            'exception' => new \TypeError(TestConstant::EXCEPTION_MESSAGE),
+            'exception' => new \TypeError(TestConstant::TYPE_ERROR_EXCEPTION_MESSAGE),
             'expected_exception_class' => ValidationException::class,
             'parameters' => ['requestClass' => CreateSettingsRequest::class, 'argumentName' => 'request'],
         ];
@@ -92,7 +101,7 @@ class RequestConverterTest extends TestCase
             'service' => 'denormalizer',
             'expects' => self::once(),
             'method' => 'denormalize',
-            'exception' => new \TypeError(TestConstant::EXCEPTION_MESSAGE),
+            'exception' => new \TypeError(TestConstant::TYPE_ERROR_EXCEPTION_MESSAGE),
             'expected_exception_class' => ValidationException::class,
             'parameters' => ['requestClass' => CreateSettingsRequest::class, 'argumentName' => 'request'],
         ];
@@ -113,10 +122,9 @@ class RequestConverterTest extends TestCase
             'exception' => ConstraintException::fromConstraintViolationList(new ConstraintViolationList()),
             'expected_exception_class' => ValidationException::class,
             'parameters' => ['requestClass' => CreateSettingsRequest::class, 'argumentName' => 'request'],
-            'will_service_throw' => false,
         ];
 
-        yield sprintf('%s::%s expects %s, exception %s, expected exception %s', RequestConverter::class, 'convert', 'once', ConverterException::class, ConverterException::class) => [
+        yield sprintf('%s::%s expects %s, exception %s, expected exception %s', RequestMapper::class, 'convert', 'once', ConverterException::class, ConverterException::class) => [
             'service' => 'converter',
             'expects' => self::once(),
             'method' => 'convert',

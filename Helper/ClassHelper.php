@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FRZB\Component\RequestMapper\Helper;
 
 use Fp\Collections\ArrayList;
+use FRZB\Component\RequestMapper\Exception\HelperException;
 use JetBrains\PhpStorm\Immutable;
 
 /** @internal */
@@ -53,6 +54,32 @@ final class ClassHelper
         } catch (\ReflectionException) {
             return [];
         }
+    }
+
+    public static function getMethodParameter(string $className, string $classMethod, string $parameterName): \ReflectionParameter
+    {
+        return ArrayList::collect(self::getMethodParameters($className, $classMethod))
+            ->first(static fn (\ReflectionParameter $property) => $property->getName() === $parameterName)
+            ->getOrThrow(HelperException::noMethodParameter($className, $classMethod, $parameterName))
+        ;
+    }
+
+    /** @return \ReflectionProperty[] */
+    public static function getProperties(string $className): array
+    {
+        try {
+            return (new \ReflectionClass($className))->getProperties();
+        } catch (\ReflectionException) {
+            return [];
+        }
+    }
+
+    public static function getProperty(string $className, string $propertyName): \ReflectionProperty
+    {
+        return ArrayList::collect(self::getProperties($className))
+            ->first(static fn (\ReflectionProperty $property) => $property->getName() === $propertyName)
+            ->getOrThrow(HelperException::noClassProperty($className, $propertyName))
+        ;
     }
 
     public static function isArrayHasAllPropertiesFromClass(array $array, string $class): bool

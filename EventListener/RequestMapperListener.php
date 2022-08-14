@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace FRZB\Component\RequestMapper\EventListener;
 
 use FRZB\Component\RequestMapper\Attribute\RequestBody;
-use FRZB\Component\RequestMapper\Converter\ConverterInterface as Converter;
 use FRZB\Component\RequestMapper\Data\HasHeaders;
 use FRZB\Component\RequestMapper\Helper\HeaderHelper;
 use FRZB\Component\RequestMapper\Helper\ParamConverterHelper;
+use FRZB\Component\RequestMapper\RequestMapper\RequestMapperInterface as Converter;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\KernelEvents;

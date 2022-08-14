@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FRZB\Component\RequestMapper\Converter;
+namespace FRZB\Component\RequestMapper\RequestMapper;
 
 use FRZB\Component\DependencyInjection\Attribute\AsService;
 use FRZB\Component\RequestMapper\Attribute\RequestBody;
@@ -11,25 +11,27 @@ use FRZB\Component\RequestMapper\Exception\ClassExtractorException;
 use FRZB\Component\RequestMapper\Exception\ConstraintException;
 use FRZB\Component\RequestMapper\Exception\ConverterException;
 use FRZB\Component\RequestMapper\Exception\ValidationException;
+use FRZB\Component\RequestMapper\ExceptionMapper\ExceptionMapperLocatorInterface as ExceptionMapperLocator;
 use FRZB\Component\RequestMapper\Extractor\ConstraintExtractor;
 use FRZB\Component\RequestMapper\Extractor\DiscriminatorMapExtractor;
 use FRZB\Component\RequestMapper\Extractor\ParametersExtractor;
-use FRZB\Component\RequestMapper\Parser\ExceptionConverterInterface as ExceptionConverter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Annotation\DiscriminatorMap;
+use Symfony\Component\Serializer\Exception\MissingConstructorArgumentsException;
+use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface as Denormalizer;
 use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Validator\ValidatorInterface as Validator;
 
 #[AsService]
-class RequestConverter implements ConverterInterface
+class RequestMapper implements RequestMapperInterface
 {
     private const DENORMALIZE_TYPE = 'array';
 
     public function __construct(
         private readonly Validator $validator,
         private readonly Denormalizer $denormalizer,
-        private readonly ExceptionConverter $exceptionConverter,
+        private readonly ExceptionMapperLocator $exceptionMapperLocator,
         private readonly DiscriminatorMapExtractor $classExtractor,
         private readonly ConstraintExtractor $constraintExtractor,
         private readonly ParametersExtractor $parametersExtractor,
@@ -56,8 +58,8 @@ class RequestConverter implements ConverterInterface
             throw ValidationException::fromErrors(ValidationError::fromTypeAndClassExtractorException(DiscriminatorMap::class, $e));
         } catch (ConstraintException $e) {
             throw ValidationException::fromConstraintViolationList($e->getViolations());
-        } catch (\TypeError $e) {
-            throw ValidationException::fromErrors($this->exceptionConverter->convert($e, $requestPayload));
+        } catch (MissingConstructorArgumentsException|NotNormalizableValueException|\TypeError $e) {
+            throw ValidationException::fromErrors($this->exceptionMapperLocator->get($e)($e, $requestPayload));
         } catch (\Throwable $e) {
             throw ConverterException::fromThrowable($e);
         }

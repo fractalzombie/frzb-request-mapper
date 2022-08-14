@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace FRZB\Component\RequestMapper\Tests\Unit\Parser;
+namespace FRZB\Component\RequestMapper\Tests\Unit\ExceptionMapper\Mapper;
 
-use FRZB\Component\RequestMapper\Parser\TypeErrorExceptionConverter;
+use FRZB\Component\RequestMapper\ExceptionMapper\Mapper\TypeErrorExceptionMapper;
 use FRZB\Component\RequestMapper\Tests\Stub\Request\TestRequest;
 use FRZB\Component\RequestMapper\Tests\Stub\Request\TestWithoutParametersRequest;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -12,13 +12,13 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 #[Group('request-mapper')]
-final class TypeErrorExceptionConverterTest extends TestCase
+final class TypeErrorExceptionMapperTest extends TestCase
 {
     private const TYPE_ERROR_MESSAGE_TEMPLATE = 'Invalid parameter "[%s]" type, expected "%s", proposed "%s"';
     private const ARGUMENT_ERROR_MESSAGE_TEMPLATE = 'Argument with position "%s" not exists';
 
     #[DataProvider('caseProvider')]
-    public function testConvert(
+    public function testMapping(
         string $parameter,
         string $class,
         string $expected,
@@ -41,7 +41,7 @@ final class TypeErrorExceptionConverterTest extends TestCase
         $exception = new \TypeError(sprintf($template, $class, $parameter, $expected, $proposed));
         $message = sprintf(self::TYPE_ERROR_MESSAGE_TEMPLATE, $parameter, $expected, $proposed);
 
-        $error = (new TypeErrorExceptionConverter())->convert($exception, $data);
+        $error = (new TypeErrorExceptionMapper())($exception, $data);
 
         self::assertSame("[{$parameter}]", $error->getField());
         self::assertSame($message, $error->getMessage());

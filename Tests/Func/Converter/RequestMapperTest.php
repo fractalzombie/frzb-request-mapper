@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace FRZB\Component\RequestMapper\Tests\Func\Converter;
 
 use FRZB\Component\RequestMapper\Attribute\RequestBody;
-use FRZB\Component\RequestMapper\Converter\RequestConverter;
 use FRZB\Component\RequestMapper\Data\ErrorInterface;
 use FRZB\Component\RequestMapper\Data\ValidationError;
 use FRZB\Component\RequestMapper\Exception\ValidationException;
+use FRZB\Component\RequestMapper\RequestMapper\RequestMapper;
 use FRZB\Component\RequestMapper\Tests\Helper\RequestHelper;
 use FRZB\Component\RequestMapper\Tests\Helper\TestConstant;
 use FRZB\Component\RequestMapper\Tests\Stub\Enum\TestEnum;
@@ -25,15 +25,15 @@ use Symfony\Component\Validator\Constraints\Uuid;
 /**
  * @internal
  */
-final class RequestConverterTest extends KernelTestCase
+final class RequestMapperTest extends KernelTestCase
 {
-    private RequestConverter $converter;
+    private RequestMapper $converter;
 
     protected function setUp(): void
     {
         self::bootKernel();
 
-        $this->converter = self::getContainer()->get(RequestConverter::class);
+        $this->converter = self::getContainer()->get(RequestMapper::class);
     }
 
     /** @param ErrorInterface[] $errors */
@@ -46,7 +46,7 @@ final class RequestConverterTest extends KernelTestCase
             self::assertSame(ValidationException::DEFAULT_MESSAGE, $e->getMessage());
 
             foreach ($errors as $index => $error) {
-                $veError = $e->getErrors()[$index];
+                $veError = $e->errors[$index];
 
                 self::assertSame($error->getMessage(), $veError->getMessage());
                 self::assertSame($error->getField(), $veError->getField());

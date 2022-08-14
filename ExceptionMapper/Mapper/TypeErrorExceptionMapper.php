@@ -2,17 +2,18 @@
 
 declare(strict_types=1);
 
-namespace FRZB\Component\RequestMapper\Parser;
+namespace FRZB\Component\RequestMapper\ExceptionMapper\Mapper;
 
 use FRZB\Component\DependencyInjection\Attribute\AsService;
-use FRZB\Component\RequestMapper\Data\ErrorInterface as Error;
+use FRZB\Component\DependencyInjection\Attribute\AsTagged;
+use FRZB\Component\RequestMapper\Data\ErrorInterface;
 use FRZB\Component\RequestMapper\Data\TypeError;
 use FRZB\Component\RequestMapper\Data\ValidationError;
 use FRZB\Component\RequestMapper\Helper\ClassHelper;
 use Symfony\Component\Validator\Constraints\Type;
 
-#[AsService]
-class TypeErrorExceptionConverter implements ExceptionConverterInterface
+#[AsService, AsTagged(ExceptionMapperInterface::class)]
+class TypeErrorExceptionMapper implements ExceptionMapperInterface
 {
     public const TYPE_ERROR_MESSAGE_TEMPLATE = 'Invalid parameter "%s" type, expected "%s", proposed "%s"';
     public const ARGUMENT_ERROR_MESSAGE_TEMPLATE = 'Argument with position "%s" not exists';
@@ -22,20 +23,25 @@ class TypeErrorExceptionConverter implements ExceptionConverterInterface
      * @throws \TypeError
      * @throws \InvalidArgumentException
      */
-    public function convert(\TypeError $e, array $data): Error
+    public function __invoke(\TypeError $exception, array $payload): ErrorInterface
     {
-        if (!preg_match(self::TYPE_ERROR_REGEX, $e->getMessage(), $matches)) {
-            throw new \TypeError($e->getMessage(), (int) $e->getCode(), $e);
+        if (!preg_match(self::TYPE_ERROR_REGEX, $exception->getMessage(), $matches)) {
+            throw new \TypeError($exception->getMessage(), (int) $exception->getCode(), $exception);
         }
 
         $error = TypeError::fromArray($matches);
-        $parameters = ClassHelper::getMethodParameters($error->getClass(), $error->getMethod());
-        $parameter = $parameters[$error->getPosition() - 1] ?? throw new \InvalidArgumentException(sprintf(self::ARGUMENT_ERROR_MESSAGE_TEMPLATE, $error->getPosition()));
-        $parameterName = "[{$parameter->getName()}]";
+        $parameters = ClassHelper::getMethodParameters($error->class, $error->method);
+        $parameter = $parameters[$error->position - 1] ?? throw new \InvalidArgumentException(sprintf(self::ARGUMENT_ERROR_MESSAGE_TEMPLATE, $error->position));
+        $parameterName = "[{$parameter->name}]";
 
-        $expectedClass = ClassHelper::getShortName($error->getExpected());
-        $proposedClass = ClassHelper::getShortName($error->getProposed());
+        $expectedClass = ClassHelper::getShortName($error->expected);
+        $proposedClass = ClassHelper::getShortName($error->proposed);
 
         return new ValidationError(Type::class, $parameterName, sprintf(self::TYPE_ERROR_MESSAGE_TEMPLATE, $parameterName, $expectedClass, $proposedClass));
+    }
+
+    public static function getType(): string
+    {
+        return \TypeError::class;
     }
 }

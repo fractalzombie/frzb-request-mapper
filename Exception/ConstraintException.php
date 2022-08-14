@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\Exception;
 
+use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Validator\ConstraintViolationListInterface as ConstraintViolationList;
 
+#[Immutable]
 final class ConstraintException extends \LogicException
 {
-    private const DEFAULT_MESSAGE = 'ConstraintException';
+    private const DEFAULT_MESSAGE = 'Constraint Exception';
 
     #[Pure]
     private function __construct(private readonly ConstraintViolationList $violations, ?\Throwable $previous = null)

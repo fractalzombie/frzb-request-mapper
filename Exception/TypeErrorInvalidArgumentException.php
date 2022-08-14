@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace FRZB\Component\RequestMapper\Exception;
 
+use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 use Throwable;
 
+#[Immutable]
 final class TypeErrorInvalidArgumentException extends \InvalidArgumentException
 {
     private const MESSAGE_TEMPLATE = 'Params have not needed values "%s"';

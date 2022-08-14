@@ -25,11 +25,11 @@ final class TypeErrorTest extends TestCase
 
         $error = TypeError::fromArray($params);
 
-        self::assertSame($params['class'], $error->getClass());
-        self::assertSame($params['method'], $error->getMethod());
-        self::assertSame($params['position'], $error->getPosition());
-        self::assertSame($params['expected'], $error->getExpected());
-        self::assertSame($params['proposed'], $error->getProposed());
+        self::assertSame($params['class'], $error->class);
+        self::assertSame($params['method'], $error->method);
+        self::assertSame($params['position'], $error->position);
+        self::assertSame($params['expected'], $error->expected);
+        self::assertSame($params['proposed'], $error->proposed);
     }
 
     public function caseProvider(): iterable

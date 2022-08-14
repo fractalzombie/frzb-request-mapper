@@ -21,7 +21,7 @@ class ValidationFormatter implements FormatterInterface
         return new FormattedError(
             $e->getMessage(),
             Response::HTTP_UNPROCESSABLE_ENTITY,
-            self::formatErrors(...$e->getErrors()),
+            self::formatErrors(...$e->errors),
             $e->getTrace(),
         );
     }

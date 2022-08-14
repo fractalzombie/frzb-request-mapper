@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FRZB\Component\RequestMapper\Converter;
+namespace FRZB\Component\RequestMapper\RequestMapper;
 
 use FRZB\Component\DependencyInjection\Attribute\AsAlias;
 use FRZB\Component\RequestMapper\Attribute\RequestBody;
@@ -10,8 +10,8 @@ use FRZB\Component\RequestMapper\Exception\ConverterException;
 use FRZB\Component\RequestMapper\Exception\ValidationException;
 use Symfony\Component\HttpFoundation\Request;
 
-#[AsAlias(RequestConverter::class)]
-interface ConverterInterface
+#[AsAlias(RequestMapper::class)]
+interface RequestMapperInterface
 {
     /**
      * Converts request data to object.

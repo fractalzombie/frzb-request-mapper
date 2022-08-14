@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace FRZB\Component\RequestMapper\Tests\Unit\EventListener;
 
 use FRZB\Component\RequestMapper\Attribute\RequestBody;
-use FRZB\Component\RequestMapper\Converter\ConverterInterface as Converter;
 use FRZB\Component\RequestMapper\EventListener\RequestMapperListener;
+use FRZB\Component\RequestMapper\RequestMapper\RequestMapperInterface as Converter;
 use FRZB\Component\RequestMapper\Tests\Helper\RequestHelper;
 use FRZB\Component\RequestMapper\Tests\Stub\Controller\TestCallableController;
 use FRZB\Component\RequestMapper\Tests\Stub\Controller\TestCallableWithoutParameterNameAndParameterClassController;
