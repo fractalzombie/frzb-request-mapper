@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FRZB\Component\RequestMapper\Tests\Func\Converter;
+namespace FRZB\Component\RequestMapper\Tests\Func\RequestMapper;
 
 use FRZB\Component\RequestMapper\Attribute\RequestBody;
 use FRZB\Component\RequestMapper\Data\ErrorInterface;
@@ -27,13 +27,13 @@ use Symfony\Component\Validator\Constraints\Uuid;
  */
 final class RequestMapperTest extends KernelTestCase
 {
-    private RequestMapper $converter;
+    private RequestMapper $mapper;
 
     protected function setUp(): void
     {
         self::bootKernel();
 
-        $this->converter = self::getContainer()->get(RequestMapper::class);
+        $this->mapper = self::getContainer()->get(RequestMapper::class);
     }
 
     /** @param ErrorInterface[] $errors */
@@ -41,7 +41,7 @@ final class RequestMapperTest extends KernelTestCase
     public function testConvertMethod(Request $nativeRequest, RequestBody $requestBody, ?CreateUserRequestWithEnum $typedRequest = null, array $errors = []): void
     {
         try {
-            $object = $this->converter->convert($nativeRequest, $requestBody);
+            $object = $this->mapper->map($nativeRequest, $requestBody);
         } catch (ValidationException $e) {
             self::assertSame(ValidationException::DEFAULT_MESSAGE, $e->getMessage());
 

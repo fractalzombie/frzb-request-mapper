@@ -47,11 +47,7 @@ class ExceptionListenerTest extends TestCase
         $this->exceptionFormatter->expects($expectFormatter)->method('format')->willReturn($contractError);
         $this->eventDispatcher->expects($expectsDispatcher)->method('dispatch');
 
-        try {
-            $this->listener->onKernelException(new ExceptionEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST, $exception));
-        } catch (\Throwable $e) {
-            dd($e);
-        }
+        $this->listener->onKernelException(new ExceptionEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST, $exception));
 
         self::assertEmpty($request->request->all());
         self::assertSame($headers, HeaderHelper::getHeaders($request));

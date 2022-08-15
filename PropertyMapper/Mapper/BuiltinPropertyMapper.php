@@ -6,15 +6,14 @@ namespace FRZB\Component\RequestMapper\PropertyMapper\Mapper;
 
 use FRZB\Component\DependencyInjection\Attribute\AsService;
 use FRZB\Component\DependencyInjection\Attribute\AsTagged;
-use FRZB\Component\PhpDocReader\Reader\ReaderInterface as PhpDocReader;
-use FRZB\Component\RequestMapper\Helper\ConstraintsHelper;
 use FRZB\Component\RequestMapper\Helper\PropertyHelper;
+use FRZB\Component\RequestMapper\TypeExtractor\TypeExtractorLocatorInterface;
 
 #[AsService, AsTagged(PropertyMapperInterface::class, priority: 1)]
-final class BuiltinPropertyMapper implements PropertyMapperInterface
+class BuiltinPropertyMapper implements PropertyMapperInterface
 {
     public function __construct(
-        private readonly PhpDocReader $reader,
+        private readonly TypeExtractorLocatorInterface $extractorLocator,
     ) {
     }
 
@@ -25,6 +24,6 @@ final class BuiltinPropertyMapper implements PropertyMapperInterface
 
     public function canMap(\ReflectionProperty $property): bool
     {
-        return !ConstraintsHelper::hasArrayTypeAttribute($property) && !ConstraintsHelper::hasArrayDocBlock($property, $this->reader);
+        return !$this->extractorLocator->has($property);
     }
 }

@@ -4,7 +4,7 @@ services: &services
     autoconfigure: true
   
   FRZB\Component\RequestMapper\:
-    resource: '../../{EventListener,ExceptionFormatter,ExceptionMapper,Extractor,RequestMapper,PropertyMapper,ClassMapper}/**'
+    resource: '../../{EventListener,ExceptionFormatter,ExceptionMapper,TypeExtractor,Extractor,RequestMapper,PropertyMapper,ClassMapper}/**'
     exclude: '../../{Helper,ValueObject,Attribute,Request,Data,Exception,Tests}/**'
 
 when@test:

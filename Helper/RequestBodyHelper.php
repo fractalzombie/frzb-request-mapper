@@ -11,7 +11,7 @@ use JetBrains\PhpStorm\Pure;
 
 /** @internal */
 #[Immutable]
-final class ParamConverterHelper
+final class RequestBodyHelper
 {
     private const REQUEST_POSTFIXES = ['Request', 'Dto', 'DTO'];
 
@@ -27,7 +27,7 @@ final class ParamConverterHelper
     }
 
     #[Pure]
-    public static function mapParamConverter(RequestBody $paramConverter): array
+    public static function mapAttribute(RequestBody $paramConverter): array
     {
         return [$paramConverter->argumentName ?? $paramConverter->requestClass => $paramConverter];
     }
@@ -37,7 +37,7 @@ final class ParamConverterHelper
     {
         return ArrayList::collect($attributes)
             ->map(static fn (\ReflectionAttribute $ra): RequestBody => $ra->newInstance())
-            ->map(static fn (RequestBody $rb): array => self::mapParamConverter($rb))
+            ->map(self::mapAttribute(...))
             ->reduce(array_merge(...))
             ->getOrElse([])
         ;

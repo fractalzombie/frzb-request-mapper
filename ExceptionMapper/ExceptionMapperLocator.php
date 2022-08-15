@@ -25,7 +25,7 @@ final class ExceptionMapperLocator implements ExceptionMapperLocatorInterface
     {
         return $this->mappers
             ->get($exception::class)
-            ->getOrThrow(ExceptionMapperLocatorException::noMapperFound($exception))
+            ->getOrThrow(ExceptionMapperLocatorException::notFound($exception))
         ;
     }
 }

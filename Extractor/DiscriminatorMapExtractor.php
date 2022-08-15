@@ -13,12 +13,12 @@ use Symfony\Component\Serializer\Annotation\DiscriminatorMap;
 class DiscriminatorMapExtractor
 {
     /** @throws ClassExtractorException */
-    public function extract(string $className, array $parameters): string
+    public function extract(string $className, array $payload): string
     {
         if ($discriminatorMap = ClassHelper::getAttribute($className, DiscriminatorMap::class)) {
             $property = $discriminatorMap->getTypeProperty();
             $mapping = $discriminatorMap->getMapping();
-            $parameter = $parameters[$property] ?? throw ClassExtractorException::fromDiscriminatorMapWhenParameterIsNull($discriminatorMap);
+            $parameter = $payload[$property] ?? throw ClassExtractorException::fromDiscriminatorMapWhenParameterIsNull($discriminatorMap);
             $className = $mapping[$parameter] ?? throw ClassExtractorException::fromDiscriminatorMapWhenParameterInvalid($discriminatorMap);
         }
 

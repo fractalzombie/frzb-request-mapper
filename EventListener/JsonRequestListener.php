@@ -16,7 +16,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as EventDispatcher;
 
 #[AsEventListener(event: KernelEvents::REQUEST, method: 'onKernelRequest', priority: 20)]
-final class JsonRequestListener
+class JsonRequestListener
 {
     private const ALLOWED_CONTENT_TYPES = ['application/json'];
 

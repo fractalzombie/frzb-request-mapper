@@ -11,7 +11,7 @@ use FRZB\Component\RequestMapper\PropertyMapper\Mapper\PropertyMapperInterface a
 use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
 
 #[AsService]
-final class PropertyMapperLocator implements PropertyMapperLocatorInterface
+class PropertyMapperLocator implements PropertyMapperLocatorInterface
 {
     /** @var ArrayList<PropertyMapper> */
     private readonly ArrayList $mappers;
@@ -26,7 +26,7 @@ final class PropertyMapperLocator implements PropertyMapperLocatorInterface
     {
         return $this->mappers
             ->first(fn (PropertyMapper $pm) => $pm->canMap($property))
-            ->getOrThrow(PropertyMapperLocatorException::throwMapperNotFound($property))
+            ->getOrThrow(PropertyMapperLocatorException::notFound($property))
         ;
     }
 }

@@ -18,7 +18,6 @@ use FRZB\Component\RequestMapper\Extractor\ParametersExtractor;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Annotation\DiscriminatorMap;
 use Symfony\Component\Serializer\Exception\MissingConstructorArgumentsException;
-use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface as Denormalizer;
 use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Validator\ValidatorInterface as Validator;
@@ -38,7 +37,7 @@ class RequestMapper implements RequestMapperInterface
     ) {
     }
 
-    public function convert(Request $request, RequestBody $attribute): object
+    public function map(Request $request, RequestBody $attribute): object
     {
         $requestPayload = $request->request->all();
         $requestClass = $attribute->requestClass ?? throw ConverterException::nullableParameterClass();
@@ -58,7 +57,7 @@ class RequestMapper implements RequestMapperInterface
             throw ValidationException::fromErrors(ValidationError::fromTypeAndClassExtractorException(DiscriminatorMap::class, $e));
         } catch (ConstraintException $e) {
             throw ValidationException::fromConstraintViolationList($e->getViolations());
-        } catch (MissingConstructorArgumentsException|NotNormalizableValueException|\TypeError $e) {
+        } catch (MissingConstructorArgumentsException|\TypeError $e) {
             throw ValidationException::fromErrors($this->exceptionMapperLocator->get($e)($e, $requestPayload));
         } catch (\Throwable $e) {
             throw ConverterException::fromThrowable($e);

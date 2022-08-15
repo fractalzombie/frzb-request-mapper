@@ -128,7 +128,7 @@ final class RequestMapperListenerTest extends TestCase
     {
         $converter = $this->createMock(Converter::class);
 
-        $converter->method('convert')->willReturn(new $class(...$params));
+        $converter->method('map')->willReturn(new $class(...$params));
 
         return $converter;
     }

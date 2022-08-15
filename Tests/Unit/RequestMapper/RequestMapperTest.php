@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FRZB\Component\RequestMapper\Tests\Unit\Converter;
+namespace FRZB\Component\RequestMapper\Tests\Unit\RequestMapper;
 
 use FRZB\Component\RequestMapper\Attribute\RequestBody;
 use FRZB\Component\RequestMapper\Exception\ClassExtractorException;
@@ -74,7 +74,7 @@ class RequestMapperTest extends TestCase
 
         $this->expectException($expectedExceptionClass);
 
-        $this->converter->convert($request, $attribute);
+        $this->converter->map($request, $attribute);
     }
 
     public function caseProvider(): iterable

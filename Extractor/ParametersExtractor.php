@@ -17,9 +17,9 @@ class ParametersExtractor
     ) {
     }
 
-    public function extract(string $class, array $parameters): array
+    public function extract(string $className, array $payload): array
     {
-        return [...$parameters, ...$this->mapProperties($this->classMapper->map($class, $parameters), $parameters)];
+        return [...$payload, ...$this->mapProperties($this->classMapper->map($className, $payload), $payload)];
     }
 
     private function mapProperties(array $properties, array $parameters): array
@@ -33,7 +33,6 @@ class ParametersExtractor
                 \is_array($propertyType) => array_map(fn (array $parameters) => $this->extract(current($propertyType), $parameters), $propertyValue ?? []),
                 ClassHelper::isNotBuiltinAndExists($propertyType) => $this->extract($propertyType, $propertyValue ?? []),
                 ClassHelper::isEnum($propertyType) => $this->mapEnum($propertyType, $propertyValue) ?? $propertyValue,
-                !ClassHelper::isNotBuiltinAndExists($propertyType) => $propertyValue,
                 default => $propertyValue,
             };
         }
@@ -45,8 +44,8 @@ class ParametersExtractor
     private function mapEnum(string $enumClassName, mixed $value = null): ?\BackedEnum
     {
         return match (true) {
-            is_subclass_of($enumClassName, \IntBackedEnum::class) && \is_int($value) && !empty($value) => $enumClassName::tryFrom($value),
-            is_subclass_of($enumClassName, \StringBackedEnum::class) && \is_string($value) && !empty($value) => $enumClassName::tryFrom($value),
+            is_subclass_of($enumClassName, \IntBackedEnum::class) && \is_int($value) => $enumClassName::tryFrom($value),
+            is_subclass_of($enumClassName, \StringBackedEnum::class) && \is_string($value) => $enumClassName::tryFrom($value),
             default => null,
         };
     }

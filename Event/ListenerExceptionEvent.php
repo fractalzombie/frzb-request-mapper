@@ -7,7 +7,7 @@ namespace FRZB\Component\RequestMapper\Event;
 use FRZB\Component\RequestMapper\Data\ErrorContract;
 use Symfony\Contracts\EventDispatcher\Event;
 
-final class ListenerExceptionEvent extends Event
+class ListenerExceptionEvent extends Event
 {
     public function __construct(
         private readonly Event $event,

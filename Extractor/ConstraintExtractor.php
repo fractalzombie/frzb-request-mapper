@@ -9,16 +9,22 @@ use FRZB\Component\DependencyInjection\Attribute\AsService;
 use FRZB\Component\RequestMapper\Helper\ClassHelper;
 use FRZB\Component\RequestMapper\Helper\ConstraintsHelper;
 use FRZB\Component\RequestMapper\Helper\PropertyHelper;
+use FRZB\Component\RequestMapper\TypeExtractor\TypeExtractorLocatorInterface as TypeExtractorLocator;
 use Symfony\Component\Validator\Constraints\All;
 use Symfony\Component\Validator\Constraints\Collection;
 
 #[AsService]
 class ConstraintExtractor
 {
-    public function extract(string $className, array $parameters = []): ?Collection
+    public function __construct(
+        private readonly TypeExtractorLocator $extractorLocator,
+    ) {
+    }
+
+    public function extract(string $className, array $payload = []): ?Collection
     {
         try {
-            return ConstraintsHelper::createCollection($this->extractConstraints($className, $parameters));
+            return ConstraintsHelper::createCollection($this->extractConstraints($className, $payload));
         } catch (\ReflectionException) {
             return null;
         }
@@ -38,10 +44,9 @@ class ConstraintExtractor
             $propertyName = PropertyHelper::getName($property);
             $propertyValue = $parameters[$propertyName] ?? [];
             $propertyTypeName = PropertyHelper::getTypeName($property);
-            $arrayTypeName = ConstraintsHelper::getArrayTypeAttribute($property)?->typeName;
 
             $constraints[$propertyName] = match (true) {
-                ConstraintsHelper::hasArrayTypeAttribute($property) => ArrayList::collect($propertyValue)->map(fn () => new All($this->extract($arrayTypeName, $propertyValue)))->toArray(),
+                $this->extractorLocator->has($property) => ArrayList::collect($propertyValue)->map(fn () => new All($this->extract($this->extractorLocator->get($property)->extract($property), $propertyValue)))->toArray(),
                 ClassHelper::isNotBuiltinAndExists($propertyTypeName) => $this->extract($propertyTypeName, $propertyValue),
                 default => ConstraintsHelper::fromProperty($property),
             };

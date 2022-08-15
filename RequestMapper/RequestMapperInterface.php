@@ -19,5 +19,5 @@ interface RequestMapperInterface
      * @throws ConverterException
      * @throws ValidationException
      */
-    public function convert(Request $request, RequestBody $attribute): object;
+    public function map(Request $request, RequestBody $attribute): object;
 }

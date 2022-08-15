@@ -10,7 +10,7 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 #[AsEventListener(event: KernelEvents::REQUEST, method: 'onKernelRequest', priority: 10)]
-final class MergeRequestListener
+class MergeRequestListener
 {
     private const ROUTE_PARAMS_KEY = '_route_params';
 

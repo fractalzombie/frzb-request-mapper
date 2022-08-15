@@ -9,7 +9,7 @@ use FRZB\Component\DependencyInjection\Attribute\AsTagged;
 use FRZB\Component\RequestMapper\Helper\PropertyHelper;
 
 #[AsService, AsTagged(PropertyMapperInterface::class, priority: 0)]
-final class DefaultPropertyMapper implements PropertyMapperInterface
+class DefaultPropertyMapper implements PropertyMapperInterface
 {
     public function map(\ReflectionProperty $property, mixed $value): array
     {

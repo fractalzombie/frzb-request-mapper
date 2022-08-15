@@ -5,7 +5,8 @@
          colors="true"
          failOnRisky="true"
          failOnWarning="true"
-         cacheDirectory=".phpunit.cache"
+         cacheDirectory="var/tests/.cache"
+         cacheResultFile="var/tests/.cache/result.txt"
 >
     <php>
         <ini name="error_reporting" value="-1"/>
@@ -40,5 +41,14 @@
             <file>./RequestMapperBundle.php</file>
             <file>./RequestMapperExtension.php</file>
         </exclude>
+        <report>
+            <clover outputFile="var/tests/clover.xml" />
+            <cobertura outputFile="var/tests/cobertura.xml"/>
+            <html outputDirectory="var/tests/html" />
+            <xml outputDirectory="var/tests/xml"/>
+        </report>
     </coverage>
+    <logging>
+        <junit outputFile="var/tests/phpunit.xml"/>
+    </logging>
 </phpunit>

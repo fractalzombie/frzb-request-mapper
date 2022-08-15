@@ -61,4 +61,4 @@ jobs:
         run: mkdir -p var/tests
 
       - name: Unit Tests
-        run: ./vendor/bin/phpunit --colors=always --configuration phpunit.xml.dist --log-junit var/tests/.phpunit.output.xml
+        run: ./vendor/bin/phpunit --colors=always --configuration phpunit.xml.dist

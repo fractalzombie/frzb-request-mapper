@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b315b7d7779c8232811a54069e1ab7a1",
+    "content-hash": "ef47bbac4f31934097fd851eadd98ec5",
     "packages": [
         {
             "name": "composer/pcre",
@@ -668,16 +668,16 @@
         },
         {
             "name": "frzb/dependency-injection",
-            "version": "v1.6.0",
+            "version": "v1.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fractalzombie/frzb-dependency-injection.git",
-                "reference": "ad264d41dbb6cb2485005bd11bcc38491ce82104"
+                "reference": "399d6cb9bb81178e8ec32b633b07355b3b36dc81"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fractalzombie/frzb-dependency-injection/zipball/ad264d41dbb6cb2485005bd11bcc38491ce82104",
-                "reference": "ad264d41dbb6cb2485005bd11bcc38491ce82104",
+                "url": "https://api.github.com/repos/fractalzombie/frzb-dependency-injection/zipball/399d6cb9bb81178e8ec32b633b07355b3b36dc81",
+                "reference": "399d6cb9bb81178e8ec32b633b07355b3b36dc81",
                 "shasum": ""
             },
             "require": {
@@ -730,9 +730,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fractalzombie/frzb-dependency-injection/issues",
-                "source": "https://github.com/fractalzombie/frzb-dependency-injection/tree/v1.6.0"
+                "source": "https://github.com/fractalzombie/frzb-dependency-injection/tree/v1.6.1"
             },
-            "time": "2022-08-04T10:57:10+00:00"
+            "time": "2022-08-15T09:55:18+00:00"
         },
         {
             "name": "frzb/php-doc-reader",
@@ -6351,12 +6351,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "fd8068faf67898424e718152045879e222f38c6c"
+                "reference": "0a2be61b43c0eac5815d35b3703968a60bcbc951"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/fd8068faf67898424e718152045879e222f38c6c",
-                "reference": "fd8068faf67898424e718152045879e222f38c6c",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/0a2be61b43c0eac5815d35b3703968a60bcbc951",
+                "reference": "0a2be61b43c0eac5815d35b3703968a60bcbc951",
                 "shasum": ""
             },
             "require": {
@@ -6440,7 +6440,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-08-11T13:27:25+00:00"
+            "time": "2022-08-15T06:42:40+00:00"
         },
         {
             "name": "psr/http-client",

@@ -28,20 +28,20 @@
         "php": "^8.1",
         "psr/container": "^1.1.1|^2.0",
         "symfony/dependency-injection": "^5.4|^6",
-        "symfony/deprecation-contracts": "^2.4",
+        "symfony/deprecation-contracts": "^2.5",
         "symfony/http-kernel": "^5.4|^6",
-        "symfony/framework-bundle": "^v5.4|^6.0",
+        "symfony/framework-bundle": "^v5.4|^6",
         "symfony/service-contracts": "^1.1.6|^2|^3",
-        "symfony/serializer-pack": "^1.0.4",
+        "symfony/serializer-pack": "^1.1",
         "symfony/validator": "^5.4|^6",
         "symfony/event-dispatcher": "^5.4|^6",
-        "frzb/dependency-injection": "^1.1.1",
+        "frzb/dependency-injection": "^1.6",
         "symfony/yaml": "^5.4|^6",
         "symfony/form": "^5.4|^6",
         "laravel/helpers": "^1.5",
         "frzb/php-doc-reader": "^1.0",
-        "symfony/property-access": "^6.1",
-        "symfony/uid": "^6.1"
+        "symfony/property-access": "^5.4|^6",
+        "symfony/uid": "^6"
     },
     "require-dev": {
         "symfony/config": "^5.4|^6",
@@ -65,11 +65,7 @@
     "scripts": {
         "test": [
             "@php -r \"file_exists('var/tests') || mkdir('var/tests', recursive: true);\"",
-            "php vendor/bin/phpunit --colors=always --configuration phpunit.xml.dist --log-junit var/tests/.phpunit.output.xml"
-        ],
-        "test-coverage": [
-            "@php -r \"file_exists('var/tests') || mkdir('var/tests', recursive: true);\"",
-            "php -n -dzend_extension=xdebug -dxdebug.mode=coverage vendor/bin/phpunit --colors=always --configuration phpunit.xml.dist --log-junit var/tests/.phpunit.output.xml --coverage-html var/tests/coverage --coverage-clover var/tests/coverage/coverage.xml"
+            "php -n -dzend_extension=xdebug -dxdebug.mode=coverage  vendor/bin/phpunit --colors=always --configuration phpunit.xml.dist"
         ]
     },
     "extra": {

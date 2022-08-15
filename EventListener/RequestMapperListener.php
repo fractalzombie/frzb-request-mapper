@@ -7,17 +7,17 @@ namespace FRZB\Component\RequestMapper\EventListener;
 use FRZB\Component\RequestMapper\Attribute\RequestBody;
 use FRZB\Component\RequestMapper\Data\HasHeaders;
 use FRZB\Component\RequestMapper\Helper\HeaderHelper;
-use FRZB\Component\RequestMapper\Helper\ParamConverterHelper;
-use FRZB\Component\RequestMapper\RequestMapper\RequestMapperInterface as Converter;
+use FRZB\Component\RequestMapper\Helper\RequestBodyHelper;
+use FRZB\Component\RequestMapper\RequestMapper\RequestMapperInterface as RequestMapper;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 #[AsEventListener(event: KernelEvents::CONTROLLER, method: 'onKernelController', priority: -255)]
-final class RequestMapperListener
+class RequestMapperListener
 {
     public function __construct(
-        private readonly Converter $converter,
+        private readonly RequestMapper $mapper,
     ) {
     }
 
@@ -30,14 +30,14 @@ final class RequestMapperListener
 
         foreach ($method->getParameters() as $parameter) {
             $parameterType = (string) $parameter->getType();
-            $attribute = ParamConverterHelper::getAttribute($parameter, $attributes);
-            $isNativeRequest = is_a($request, $parameterType) || is_subclass_of($request, $parameterType);
+            $attribute = RequestBodyHelper::getAttribute($parameter, $attributes);
+            $isNativeRequest = $request instanceof $parameterType;
 
             if (!$attribute || $isNativeRequest) {
                 continue;
             }
 
-            $object = $this->converter->convert($request, $attribute);
+            $object = $this->mapper->map($request, $attribute);
 
             if ($object instanceof HasHeaders) {
                 $object->setHeaders(HeaderHelper::getHeaders($request));
@@ -48,10 +48,10 @@ final class RequestMapperListener
     }
 
     /** @throws \ReflectionException */
-    private function getReflectionMethod(mixed $controller): \ReflectionMethod|\ReflectionFunction
+    private function getReflectionMethod(array|object|callable $controller): \ReflectionMethod|\ReflectionFunction
     {
         return match (true) {
-            \is_array($controller) => new \ReflectionMethod(/** @scrutinizer ignore-type */ ...$controller),
+            \is_array($controller) => new \ReflectionMethod(...$controller),
             \is_object($controller) && \is_callable($controller) => new \ReflectionMethod($controller, '__invoke'),
             default => new \ReflectionFunction($controller),
         };
@@ -60,7 +60,7 @@ final class RequestMapperListener
     /** @return array<RequestBody> */
     private function getAttributes(\ReflectionMethod|\ReflectionFunction $method): array
     {
-        return ParamConverterHelper::fromReflectionAttributes(
+        return RequestBodyHelper::fromReflectionAttributes(
             ...$method->getAttributes(RequestBody::class, \ReflectionAttribute::IS_INSTANCEOF)
         );
     }

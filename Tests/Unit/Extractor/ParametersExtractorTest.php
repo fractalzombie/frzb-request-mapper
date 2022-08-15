@@ -18,6 +18,9 @@ use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateNestedUserRequest;
 use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateUserRequest;
 use FRZB\Component\RequestMapper\Tests\Stub\Request\CreateUserWithSerializedNameRequest;
 use FRZB\Component\RequestMapper\Tests\Stub\Request\TestRequest;
+use FRZB\Component\RequestMapper\TypeExtractor\Extractor\ArrayTypeAttributeExtractor;
+use FRZB\Component\RequestMapper\TypeExtractor\Extractor\DocBlockTypeExtractor;
+use FRZB\Component\RequestMapper\TypeExtractor\TypeExtractorLocator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
@@ -26,14 +29,24 @@ use PHPUnit\Framework\TestCase;
 #[Group('request-mapper')]
 class ParametersExtractorTest extends TestCase
 {
+    private ParametersExtractor $parameterExtractor;
+
+    protected function setUp(): void
+    {
+        $readerService = new ReaderService(new ResolverService());
+        $extractors = [$docBlockExtractor = new DocBlockTypeExtractor($readerService), $attributeExtractor = new ArrayTypeAttributeExtractor()];
+        $extractorLocator = new TypeExtractorLocator($extractors);
+        $mappers = [new ArrayAsAttributePropertyMapper($attributeExtractor), new DocBlockArrayPropertyMapper($docBlockExtractor), new BuiltinPropertyMapper($extractorLocator), new DefaultPropertyMapper()];
+        $mapperLocator = new PropertyMapperLocator($mappers);
+        $classMapper = new ClassMapper($mapperLocator);
+
+        $this->parameterExtractor = new ParametersExtractor($classMapper);
+    }
+
     #[DataProvider('caseProvider')]
     public function testExtractMethod(string $class, array $parameters): void
     {
-        $readerService = new ReaderService(new ResolverService());
-        $mappers = [new ArrayAsAttributePropertyMapper(), new DocBlockArrayPropertyMapper($readerService), new BuiltinPropertyMapper($readerService), new DefaultPropertyMapper()];
-        $mapperLocator = new PropertyMapperLocator($mappers);
-        $classMapper = new ClassMapper($mapperLocator);
-        self::assertSame($parameters, (new ParametersExtractor($classMapper))->extract($class, $parameters));
+        self::assertSame($parameters, $this->parameterExtractor->extract($class, $parameters));
     }
 
     public function caseProvider(): iterable

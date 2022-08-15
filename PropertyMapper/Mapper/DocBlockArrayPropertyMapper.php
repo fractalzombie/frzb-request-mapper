@@ -6,27 +6,24 @@ namespace FRZB\Component\RequestMapper\PropertyMapper\Mapper;
 
 use FRZB\Component\DependencyInjection\Attribute\AsService;
 use FRZB\Component\DependencyInjection\Attribute\AsTagged;
-use FRZB\Component\PhpDocReader\Reader\ReaderInterface as PhpDocReader;
-use FRZB\Component\RequestMapper\Helper\ConstraintsHelper;
 use FRZB\Component\RequestMapper\Helper\PropertyHelper;
+use FRZB\Component\RequestMapper\TypeExtractor\Extractor\DocBlockTypeExtractor;
 
 #[AsService, AsTagged(PropertyMapperInterface::class, priority: 2)]
 final class DocBlockArrayPropertyMapper implements PropertyMapperInterface
 {
     public function __construct(
-        private readonly PhpDocReader $reader,
+        private readonly DocBlockTypeExtractor $extractor,
     ) {
     }
 
     public function map(\ReflectionProperty $property, mixed $value): array
     {
-        return [
-            PropertyHelper::getName($property) => array_map(fn () => PropertyHelper::getTypeFromDocBlock($property, $this->reader), range(0, \count($value))),
-        ];
+        return [PropertyHelper::getName($property) => array_map(fn () => $this->extractor->extract($property), range(0, \count($value)))];
     }
 
     public function canMap(\ReflectionProperty $property): bool
     {
-        return ConstraintsHelper::hasArrayTypeAttribute($property);
+        return $this->extractor->canExtract($property);
     }
 }
