@@ -3,19 +3,16 @@ build:
     analysis:
       tests:
         override:
-          - php-scrutinizer-run
-    coverage:
-      tests:
-        override:
-          - command: composer test
-
+        - php-scrutinizer-run
+  
   environment:
     php: 8.1.9
 
 filter:
   excluded_paths:
-    - "Tests/*"
-    - "var/*"
-    - "Resources/*"
+  - "Resources/*"
+  - "Tests/*"
+  - "var/*"
+  - "build/*"
   dependency_paths:
-    - "vendor/*"
+  - "vendor/*"

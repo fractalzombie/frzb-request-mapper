@@ -19,6 +19,7 @@
 /phpunit.xml
 /.phpunit.cache
 bin/phpunit
+**/build/
 ###< symfony/phpunit-bridge ###
 
 ###> project ###

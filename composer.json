@@ -26,33 +26,26 @@
     ],
     "require": {
         "php": "^8.1",
-        "psr/container": "^1.1.1|^2.0",
+        "fp4php/functional": "^4.19",
         "symfony/dependency-injection": "^5.4|^6",
-        "symfony/deprecation-contracts": "^2.5",
         "symfony/http-kernel": "^5.4|^6",
         "symfony/framework-bundle": "^v5.4|^6",
-        "symfony/service-contracts": "^1.1.6|^2|^3",
         "symfony/serializer-pack": "^1.1",
         "symfony/validator": "^5.4|^6",
         "symfony/event-dispatcher": "^5.4|^6",
         "frzb/dependency-injection": "^1.6",
-        "symfony/yaml": "^5.4|^6",
-        "symfony/form": "^5.4|^6",
-        "laravel/helpers": "^1.5",
         "frzb/php-doc-reader": "^1.0",
+        "symfony/yaml": "^5.4|^6",
         "symfony/property-access": "^5.4|^6",
         "symfony/uid": "^6"
     },
     "require-dev": {
-        "symfony/config": "^5.4|^6",
-        "symfony/expression-language": "^5.4|^6",
         "phpunit/phpunit": "^10.0",
         "phpunit/php-code-coverage": "^10.0",
         "php-coveralls/php-coveralls": "^2.5",
         "symfony/phpunit-bridge": "^5.4|^6",
         "friendsofphp/php-cs-fixer": "^3.9",
-        "symfony/test-pack": "^1.0.10",
-        "fakerphp/faker": "^1.20.0"
+        "symfony/test-pack": "^1.0.10"
     },
     "autoload": {
         "psr-4": {
@@ -60,12 +53,6 @@
         },
         "exclude-from-classmap": [
             "/Tests/"
-        ]
-    },
-    "scripts": {
-        "test": [
-            "@php -r \"file_exists('var/tests') || mkdir('var/tests', recursive: true);\"",
-            "php -n -dzend_extension=xdebug -dxdebug.mode=coverage  vendor/bin/phpunit --colors=always --configuration phpunit.xml.dist"
         ]
     },
     "extra": {
