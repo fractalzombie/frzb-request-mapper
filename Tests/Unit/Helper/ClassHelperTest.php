@@ -21,7 +21,7 @@ class ClassHelperTest extends TestCase
         self::assertSame($isNotBuiltinAndExists, ClassHelper::isNotBuiltinAndExists($class));
     }
 
-    public function isNotBuiltinCaseProvider(): iterable
+    public static function isNotBuiltinCaseProvider(): iterable
     {
         yield sprintf('with "%s"', CreateUserRequest::class) => [
             'class' => CreateUserRequest::class,
@@ -45,7 +45,7 @@ class ClassHelperTest extends TestCase
         self::assertSame($expectedName, ClassHelper::getShortName($className));
     }
 
-    public function getShortNameCaseProvider(): iterable
+    public static function getShortNameCaseProvider(): iterable
     {
         yield sprintf('class "%s"', CreateUserRequest::class) => [
             'class_name' => CreateUserRequest::class,
@@ -69,7 +69,7 @@ class ClassHelperTest extends TestCase
         self::assertSame($contains, ClassHelper::isNameContains($className, ...$haystack));
     }
 
-    public function nameContainsCaseProvider(): iterable
+    public static function nameContainsCaseProvider(): iterable
     {
         yield sprintf('class "%s" and haystack "%s"', CreateUserRequest::class, implode(', ', ['Request'])) => [
             'class_name' => CreateUserRequest::class,
@@ -107,7 +107,7 @@ class ClassHelperTest extends TestCase
         self::assertSame($expectedMapping, $mapping);
     }
 
-    public function getMethodParametersCaseProvider(): iterable
+    public static function getMethodParametersCaseProvider(): iterable
     {
         yield sprintf('class "%s", mapping "%s"', CreateUserRequest::class, implode(', ', ['name', 'userId', 'amount'])) => [
             'class_name' => CreateUserRequest::class,
@@ -128,7 +128,7 @@ class ClassHelperTest extends TestCase
         self::assertSame(ClassHelper::isEnum($className), $expectedResult);
     }
 
-    public function isEnumCaseProvider(): iterable
+    public static function isEnumCaseProvider(): iterable
     {
         yield sprintf('enum "%s" is valid', TestEnum::class) => [
             'value' => TestEnum::class,
@@ -147,7 +147,7 @@ class ClassHelperTest extends TestCase
         self::assertSame($expected, ClassHelper::isArrayHasAllPropertiesFromClass($properties, $class));
     }
 
-    public function isArrayHasAllPropertiesFromClassCaseProvider(): iterable
+    public static function isArrayHasAllPropertiesFromClassCaseProvider(): iterable
     {
         $properties = ['name' => TestConstant::USER_NAME, 'userId' => TestConstant::UUID, 'amount' => TestConstant::USER_AMOUNT];
 

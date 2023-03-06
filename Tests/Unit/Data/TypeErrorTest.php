@@ -32,7 +32,7 @@ final class TypeErrorTest extends TestCase
         self::assertSame($params['proposed'], $error->proposed);
     }
 
-    public function caseProvider(): iterable
+    public static function caseProvider(): iterable
     {
         yield 'all parameters are exists' => [
             'params' => [

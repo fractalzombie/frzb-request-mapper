@@ -24,7 +24,7 @@ class SerializerHelperTest extends TestCase
         }
     }
 
-    public function caseProvider(): iterable
+    public static function caseProvider(): iterable
     {
         yield sprintf('with "%s"', CreateUserWithSerializedNameRequest::class) => [
             'properties' => (new \ReflectionClass(CreateUserWithSerializedNameRequest::class))->getProperties(),

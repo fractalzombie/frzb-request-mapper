@@ -47,7 +47,7 @@ final class TypeErrorExceptionMapperTest extends TestCase
         self::assertSame($message, $error->getMessage());
     }
 
-    public function caseProvider(): iterable
+    public static function caseProvider(): iterable
     {
         yield 'test it with type of template' => [
             'parameter' => 'name',

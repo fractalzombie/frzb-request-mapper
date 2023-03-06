@@ -31,7 +31,7 @@ class RequestBodyAttributeTest extends TestCase
         self::assertSame($expected, $first->equals($second));
     }
 
-    public function equalsCaseProvider(): iterable
+    public static function equalsCaseProvider(): iterable
     {
         yield 'with equals parameter class' => [
             'first' => new RequestBody(CreateUserRequest::class),

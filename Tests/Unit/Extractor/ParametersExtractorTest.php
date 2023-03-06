@@ -49,7 +49,7 @@ class ParametersExtractorTest extends TestCase
         self::assertSame($parameters, $this->parameterExtractor->extract($class, $parameters));
     }
 
-    public function caseProvider(): iterable
+    public static function caseProvider(): iterable
     {
         $parameters = [
             'name' => TestConstant::USER_NAME,

@@ -38,11 +38,11 @@ class ExceptionFormatterLocatorTest extends KernelTestCase
     {
         $formatter = $this->locator->get($e);
 
-        self::assertSame($formatterClass, $formatter::class);
+        self::assertInstanceOf($formatterClass, $formatter);
         self::assertSame($existsInLocator, $this->locator->has($e));
     }
 
-    public function caseProvider(): iterable
+    public static function caseProvider(): iterable
     {
         yield sprintf('"%s" uses "%s" converter', HttpException::class, HttpExceptionFormatter::class) => [
             'exception' => new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, 'Internal Server Error'),

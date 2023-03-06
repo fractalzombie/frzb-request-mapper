@@ -77,7 +77,7 @@ class RequestMapperTest extends TestCase
         $this->converter->map($request, $attribute);
     }
 
-    public function caseProvider(): iterable
+    public static function caseProvider(): iterable
     {
         yield sprintf('%s::%s expects %s, exception %s, expected exception %s', DiscriminatorMapExtractor::class, 'extract', 'once', ClassExtractorException::class, ValidationException::class) => [
             'service' => 'classExtractor',

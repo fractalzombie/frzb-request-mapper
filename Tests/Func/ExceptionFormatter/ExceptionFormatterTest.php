@@ -46,7 +46,7 @@ final class ExceptionFormatterTest extends KernelTestCase
         self::assertJsonStringEqualsJsonString(json_encode($errorContract), json_encode($formattedErrorContract));
     }
 
-    public function caseProvider(): iterable
+    public static function caseProvider(): iterable
     {
         yield sprintf('Format "%s"', HttpException::class) => [
             'exception' => new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, 'Internal Server Error'),

@@ -53,7 +53,7 @@ class ExceptionListenerTest extends TestCase
         self::assertSame($headers, HeaderHelper::getHeaders($request));
     }
 
-    public function caseProvider(): iterable
+    public static function caseProvider(): iterable
     {
         yield 'with header content-type equals application/json' => [
             'headers' => ['content-type' => 'application/json'],

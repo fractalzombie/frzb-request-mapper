@@ -18,7 +18,7 @@ class StringHelperTest extends TestCase
         self::assertSame($expectedValue, StringHelper::normalize($prefix));
     }
 
-    public function normalizeProvider(): iterable
+    public static function normalizeProvider(): iterable
     {
         return [
             ['some-domain.local', 'some-domain-local'],
@@ -34,7 +34,7 @@ class StringHelperTest extends TestCase
         self::assertSame($expectedValue, StringHelper::makePrefix($prefix, $value, $delimiter));
     }
 
-    public function prefixProvider(): iterable
+    public static function prefixProvider(): iterable
     {
         return [
             ['some-domain.local', 'some-domain-local', null, '-'],
@@ -52,7 +52,7 @@ class StringHelperTest extends TestCase
         self::assertSame($expectedValue, StringHelper::toSnakeCase($sourceValue));
     }
 
-    public function snakeCaseProvider(): iterable
+    public static function snakeCaseProvider(): iterable
     {
         return [
             ['SomeTrueValue', 'some_true_value'],
@@ -67,7 +67,7 @@ class StringHelperTest extends TestCase
         self::assertSame($expectedValue, StringHelper::toCamelCase($sourceValue));
     }
 
-    public function snakeCaseToCamelCaseProvider(): iterable
+    public static function snakeCaseToCamelCaseProvider(): iterable
     {
         return [
             ['camel_case_name', 'CamelCaseName'],
@@ -84,7 +84,7 @@ class StringHelperTest extends TestCase
         self::assertSame($expectedValue, StringHelper::toLowerCamelCase($sourceValue));
     }
 
-    public function snakeCaseToLowerCamelCaseProvider(): iterable
+    public static function snakeCaseToLowerCamelCaseProvider(): iterable
     {
         return [
             ['camel_case_name', 'camelCaseName'],
@@ -101,7 +101,7 @@ class StringHelperTest extends TestCase
         self::assertSame($expectedValue, StringHelper::toKebabCase($sourceValue));
     }
 
-    public function kebabCaseProvider(): iterable
+    public static function kebabCaseProvider(): iterable
     {
         return [
             ['SomeTrueValue', 'some-true-value'],
@@ -116,7 +116,7 @@ class StringHelperTest extends TestCase
         self::assertSame($expected, StringHelper::contains($sourceValue, $subValue));
     }
 
-    public function successSubValuesProvider(): iterable
+    public static function successSubValuesProvider(): iterable
     {
         return [
             ['SomeTrueValue', 'True', true],
@@ -134,7 +134,7 @@ class StringHelperTest extends TestCase
         self::assertEquals($expectedValue, StringHelper::removeBrackets($inputValue, $brackets));
     }
 
-    public function bracketsProvider(): iterable
+    public static function bracketsProvider(): iterable
     {
         yield 'standard brackets' => [
             '[hello_world]',

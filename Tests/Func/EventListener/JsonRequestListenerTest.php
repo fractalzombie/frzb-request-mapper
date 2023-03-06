@@ -51,7 +51,7 @@ final class JsonRequestListenerTest extends KernelTestCase
     }
 
     /** @throws \JsonException */
-    public function caseProvider(): iterable
+    public static function caseProvider(): iterable
     {
         yield 'with valid GET JSON request' => [
             'method' => Request::METHOD_GET,

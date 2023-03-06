@@ -29,7 +29,7 @@ class ConstraintHelperTest extends TestCase
         }
     }
 
-    public function fromPropertyCaseProvider(): iterable
+    public static function fromPropertyCaseProvider(): iterable
     {
         yield sprintf('with "%s"', CreateUserRequest::class) => [
             'properties' => (new \ReflectionClass(CreateUserRequest::class))->getProperties(),

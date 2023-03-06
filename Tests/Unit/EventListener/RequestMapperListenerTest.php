@@ -47,7 +47,7 @@ final class RequestMapperListenerTest extends TestCase
         }
     }
 
-    public function dataProvider(): iterable
+    public static function dataProvider(): iterable
     {
         $params = ['name' => 'some name', 'model' => 'Product'];
 

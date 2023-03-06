@@ -1,0 +1,112 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - 'releases/**'
+    paths-ignore:
+      - '**/*.md'
+      - '**/*.gitignore'
+      - '**/*.gitattributes'
+
+  pull_request:
+    types:
+      - published
+      - created
+      - edited
+      - opened
+      - synchronize
+      - reopened
+    paths-ignore:
+      - '**/*.md'
+      - '**/*.gitignore'
+      - '**/*.gitattributes'
+
+jobs:
+  build:
+    name: PHP
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php:
+          - "8.1"
+          - "8.2"
+        include:
+          - php-versions: ["8.1", "8.2"]
+          - composer-options: "--ignore-platform-reqs"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "${{ matrix.php }}"
+          extensions: mbstring, intl
+          coverage: xdebug
+          tools: pecl, phpunit, composer
+          ini-values: post_max_size=256M
+    
+      - name: Setup composer
+        uses: ramsey/composer-install@v1
+        with:
+          composer-options: "${{ matrix.composer-options }}"
+      
+      - name: Validate composer files
+        run: composer validate
+      
+      - name: Cache composer packages
+        id: composer-cache
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-
+      
+      - name: Install dependencies
+        if: steps.composer-cache.outputs.cache-hit != 'true'
+        run: composer update --prefer-dist --no-progress
+
+      - name: Setup tests directories
+        run:  mkdir -p build/logs
+
+      - name: Execute unit tests
+        run: ./vendor/bin/phpunit --colors=always --configuration phpunit.xml.dist --coverage-cobertura tests-cobertura.xml --coverage-clover tests-coverage.xml --log-junit tests-execution.xml
+    
+      - name: Prepare coverages and logs
+        run: cp tests-coverage.xml build/logs/clover.xml && cp tests-cobertura.xml build/logs/cobertura.xml && cp tests-execution.xml build/logs/junit.xml
+
+      - name: Push to Coveralls
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COVERALLS_PARALLEL: true
+          COVERALLS_FLAG_NAME: php-${{ matrix.php-versions }}
+        run: |
+          composer global require php-coveralls/php-coveralls
+          php-coveralls -v
+
+      - name: SonarCloud scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          projectBaseDir: ${{ github.workspace }}
+
+  finish:
+    needs: [ build ]
+    runs-on: ubuntu-latest
+  
+    steps:
+    - name: Coveralls Finished
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        parallel-finished: true

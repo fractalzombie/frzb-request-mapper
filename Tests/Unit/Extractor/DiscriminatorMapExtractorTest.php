@@ -37,7 +37,7 @@ class DiscriminatorMapExtractorTest extends TestCase
         self::assertSame($expectedClass, $extractedClass);
     }
 
-    public function caseProvider(): iterable
+    public static function caseProvider(): iterable
     {
         yield sprintf('Class "%s" without discriminator', CreateUserRequest::class) => [
             'given_class' => CreateUserRequest::class,

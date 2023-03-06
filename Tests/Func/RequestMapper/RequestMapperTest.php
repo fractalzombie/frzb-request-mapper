@@ -64,7 +64,7 @@ final class RequestMapperTest extends KernelTestCase
     }
 
     /** @throws \Exception */
-    public function caseProvider(): iterable
+    public static function caseProvider(): iterable
     {
         $params = ['name' => TestConstant::USER_NAME, 'userId' => TestConstant::USER_ID, 'amount' => TestConstant::USER_AMOUNT, 'testEnum' => TestEnum::One->value];
         $attribute = new RequestBody(requestClass: CreateUserRequestWithEnum::class, argumentName: 'typed_request');
