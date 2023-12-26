@@ -2,6 +2,17 @@
 
 declare(strict_types=1);
 
+/**
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *
+ * Copyright (c) 2023 Mykhailo Shtanko fractalzombie@gmail.com
+ *
+ * For the full copyright and license information, please view the LICENSE.MD
+ * file that was distributed with this source code.
+ */
+
 namespace FRZB\Component\RequestMapper\RequestMapper;
 
 use FRZB\Component\DependencyInjection\Attribute\AsService;
@@ -25,6 +36,11 @@ use Symfony\Component\Validator\Validator\ValidatorInterface as Validator;
 #[AsService]
 class RequestMapper implements RequestMapperInterface
 {
+    private const SERIALIZER_CONTEXT = [
+        'disable_type_enforcement' => true,
+        'collect_denormalization_errors' => true,
+    ];
+
     private const DENORMALIZE_TYPE = 'array';
 
     public function __construct(
@@ -34,8 +50,7 @@ class RequestMapper implements RequestMapperInterface
         private readonly DiscriminatorMapExtractor $classExtractor,
         private readonly ConstraintExtractor $constraintExtractor,
         private readonly ParametersExtractor $parametersExtractor,
-    ) {
-    }
+    ) {}
 
     public function map(Request $request, RequestBody $attribute): object
     {

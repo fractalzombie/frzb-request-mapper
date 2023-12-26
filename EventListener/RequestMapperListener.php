@@ -2,6 +2,17 @@
 
 declare(strict_types=1);
 
+/**
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *
+ * Copyright (c) 2023 Mykhailo Shtanko fractalzombie@gmail.com
+ *
+ * For the full copyright and license information, please view the LICENSE.MD
+ * file that was distributed with this source code.
+ */
+
 namespace FRZB\Component\RequestMapper\EventListener;
 
 use FRZB\Component\RequestMapper\Attribute\RequestBody;
@@ -18,8 +29,7 @@ class RequestMapperListener
 {
     public function __construct(
         private readonly RequestMapper $mapper,
-    ) {
-    }
+    ) {}
 
     /** @throws \Throwable */
     public function onKernelController(ControllerEvent $event): void
@@ -48,7 +58,7 @@ class RequestMapperListener
     }
 
     /** @throws \ReflectionException */
-    private function getReflectionMethod(array|object|callable $controller): \ReflectionMethod|\ReflectionFunction
+    private function getReflectionMethod(array|callable|object $controller): \ReflectionFunction|\ReflectionMethod
     {
         return match (true) {
             \is_array($controller) => new \ReflectionMethod(...$controller),
@@ -58,7 +68,7 @@ class RequestMapperListener
     }
 
     /** @return array<RequestBody> */
-    private function getAttributes(\ReflectionMethod|\ReflectionFunction $method): array
+    private function getAttributes(\ReflectionFunction|\ReflectionMethod $method): array
     {
         return RequestBodyHelper::fromReflectionAttributes(
             ...$method->getAttributes(RequestBody::class, \ReflectionAttribute::IS_INSTANCEOF)

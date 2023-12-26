@@ -2,6 +2,17 @@
 
 declare(strict_types=1);
 
+/**
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *
+ * Copyright (c) 2023 Mykhailo Shtanko fractalzombie@gmail.com
+ *
+ * For the full copyright and license information, please view the LICENSE.MD
+ * file that was distributed with this source code.
+ */
+
 namespace FRZB\Component\RequestMapper\Extractor;
 
 use Fp\Collections\ArrayList;
@@ -18,8 +29,7 @@ class ConstraintExtractor
 {
     public function __construct(
         private readonly TypeExtractorLocator $extractorLocator,
-    ) {
-    }
+    ) {}
 
     public function extract(string $className, array $payload = []): ?Collection
     {
@@ -46,7 +56,9 @@ class ConstraintExtractor
             $propertyTypeName = PropertyHelper::getTypeName($property);
 
             $constraints[$propertyName] = match (true) {
-                $this->extractorLocator->has($property) => ArrayList::collect($propertyValue)->map(fn () => new All($this->extract($this->extractorLocator->get($property)->extract($property), $propertyValue)))->toArray(),
+                $this->extractorLocator->has($property) => ArrayList::collect($propertyValue)
+                    ->map(fn () => new All($this->extract($this->extractorLocator->get($property)->extract($property), $propertyValue)))
+                    ->toArray(),
                 ClassHelper::isNotBuiltinAndExists($propertyTypeName) => $this->extract($propertyTypeName, $propertyValue),
                 default => ConstraintsHelper::fromProperty($property),
             };

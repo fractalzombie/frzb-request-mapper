@@ -2,6 +2,17 @@
 
 declare(strict_types=1);
 
+/**
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *
+ * Copyright (c) 2023 Mykhailo Shtanko fractalzombie@gmail.com
+ *
+ * For the full copyright and license information, please view the LICENSE.MD
+ * file that was distributed with this source code.
+ */
+
 namespace FRZB\Component\RequestMapper\Helper;
 
 use Fp\Collections\ArrayList;
@@ -15,9 +26,7 @@ final class RequestBodyHelper
 {
     private const REQUEST_POSTFIXES = ['Request', 'Dto', 'DTO'];
 
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     public static function getAttribute(\ReflectionParameter $parameter, array $attributes): ?RequestBody
     {
@@ -38,8 +47,7 @@ final class RequestBodyHelper
         return ArrayList::collect($attributes)
             ->map(static fn (\ReflectionAttribute $ra): RequestBody => $ra->newInstance())
             ->map(self::mapAttribute(...))
-            ->reduce(array_merge(...))
-            ->getOrElse([])
+            ->toMergedArray()
         ;
     }
 

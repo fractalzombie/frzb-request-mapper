@@ -2,6 +2,17 @@
 
 declare(strict_types=1);
 
+/**
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *
+ * Copyright (c) 2023 Mykhailo Shtanko fractalzombie@gmail.com
+ *
+ * For the full copyright and license information, please view the LICENSE.MD
+ * file that was distributed with this source code.
+ */
+
 namespace FRZB\Component\RequestMapper\Helper;
 
 use Fp\Collections\ArrayList;
@@ -12,16 +23,13 @@ use JetBrains\PhpStorm\Immutable;
 #[Immutable]
 final class ClassHelper
 {
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     public static function isNotBuiltinAndExists(string $className): bool
     {
         return (class_exists($className) || interface_exists($className))
             && !empty((new \ReflectionClass($className))->getNamespaceName())
-            && !self::isEnum($className)
-        ;
+            && !self::isEnum($className);
     }
 
     public static function isEnum(string $className): bool
@@ -41,8 +49,8 @@ final class ClassHelper
     public static function isNameContains(string $className, string ...$haystack): bool
     {
         return ArrayList::collect($haystack)
-            ->filter(static fn (string $value): bool => StringHelper::contains(self::getShortName($className), $value))
-            ->isNonEmpty()
+            ->first(static fn (string $value): bool => StringHelper::contains(self::getShortName($className), $value))
+            ->isSome()
         ;
     }
 
@@ -60,7 +68,7 @@ final class ClassHelper
     {
         return ArrayList::collect(self::getMethodParameters($className, $classMethod))
             ->first(static fn (\ReflectionParameter $property) => $property->getName() === $parameterName)
-            ->getOrThrow(HelperException::noMethodParameter($className, $classMethod, $parameterName))
+            ->getOrElse(fn () => throw HelperException::noMethodParameter($className, $classMethod, $parameterName))
         ;
     }
 
@@ -78,7 +86,7 @@ final class ClassHelper
     {
         return ArrayList::collect(self::getProperties($className))
             ->first(static fn (\ReflectionProperty $property) => $property->getName() === $propertyName)
-            ->getOrThrow(HelperException::noClassProperty($className, $propertyName))
+            ->getOrElse(fn () => throw HelperException::noClassProperty($className, $propertyName))
         ;
     }
 
@@ -108,7 +116,7 @@ final class ClassHelper
      *
      * @return null|T
      */
-    public static function getAttribute(string|object $target, string $attributeClass): ?object
+    public static function getAttribute(object|string $target, string $attributeClass): ?object
     {
         return ArrayList::collect(self::getAttributes($target, $attributeClass))
             ->firstElement()
@@ -123,7 +131,7 @@ final class ClassHelper
      *
      * @return array<T>
      */
-    public static function getAttributes(string|object $target, string $attributeClass): array
+    public static function getAttributes(object|string $target, string $attributeClass): array
     {
         try {
             $attributes = (new \ReflectionClass($target))->getAttributes($attributeClass);
@@ -133,7 +141,7 @@ final class ClassHelper
 
         return ArrayList::collect($attributes)
             ->map(static fn (\ReflectionAttribute $a) => $a->newInstance())
-            ->toArray()
+            ->toList()
         ;
     }
 }

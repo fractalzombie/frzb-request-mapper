@@ -2,6 +2,17 @@
 
 declare(strict_types=1);
 
+/**
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *
+ * Copyright (c) 2023 Mykhailo Shtanko fractalzombie@gmail.com
+ *
+ * For the full copyright and license information, please view the LICENSE.MD
+ * file that was distributed with this source code.
+ */
+
 namespace FRZB\Component\RequestMapper\Helper;
 
 use FRZB\Component\RequestMapper\Exception\InvalidPropertyTypeException;
@@ -11,16 +22,14 @@ use JetBrains\PhpStorm\Immutable;
 #[Immutable]
 final class PropertyHelper
 {
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
-    public static function getName(\ReflectionProperty|\ReflectionParameter $property): string
+    public static function getName(\ReflectionParameter|\ReflectionProperty $property): string
     {
         return SerializerHelper::getSerializedNameAttribute($property)->getSerializedName();
     }
 
-    public static function getTypeName(\ReflectionProperty|\ReflectionParameter $property): ?string
+    public static function getTypeName(\ReflectionParameter|\ReflectionProperty $property): ?string
     {
         $type = $property->getType();
 

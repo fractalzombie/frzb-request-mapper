@@ -2,6 +2,17 @@
 
 declare(strict_types=1);
 
+/**
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *
+ * Copyright (c) 2023 Mykhailo Shtanko fractalzombie@gmail.com
+ *
+ * For the full copyright and license information, please view the LICENSE.MD
+ * file that was distributed with this source code.
+ */
+
 namespace FRZB\Component\RequestMapper\Tests\Unit\EventListener;
 
 use FRZB\Component\RequestMapper\Attribute\RequestBody;
@@ -27,7 +38,7 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as EventDispatche
 final class RequestMapperListenerTest extends TestCase
 {
     #[DataProvider('dataProvider')]
-    public function testOnKernelController(array $params, string $httpMethod, string $targetClass, string $parameterName, callable|object|array $controller): void
+    public function testOnKernelController(array $params, string $httpMethod, string $targetClass, string $parameterName, array|callable|object $controller): void
     {
         $request = RequestHelper::makeRequest(method: $httpMethod, params: $params);
         $converter = $this->makeConverter($targetClass, $params);
